@@ -5,19 +5,17 @@ import Link from "next/link";
 import { useState } from "react";
 import {
   ChevronLeft,
-  Check,
   X,
   Download,
-  FileEdit,
-  Car,
   Camera,
   Droplet,
   Wrench,
   Plus,
-  MessageCircle,
   FileText,
   AlertTriangle,
   Trash2,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { SendWorkshopModal } from "@/components/budget/send-workshop-modal";
@@ -35,6 +33,7 @@ import { confirmDialog } from "@/stores/confirm-store";
 
 const STATUS_LABEL: Record<BudgetStatus, string> = {
   draft: "Rascunho",
+  ready: "Pronto pra enviar",
   sent: "Enviado",
   reviewing: "Em análise",
   approved: "Aprovado",
@@ -44,6 +43,7 @@ const STATUS_LABEL: Record<BudgetStatus, string> = {
 
 const STATUS_COLOR: Record<BudgetStatus, string> = {
   draft: "bg-white/[0.06] text-white/70",
+  ready: "bg-white/[0.1] text-white/85",
   sent: "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary-glow)]",
   reviewing: "bg-yellow-500/15 text-yellow-300",
   approved: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
@@ -51,7 +51,6 @@ const STATUS_COLOR: Record<BudgetStatus, string> = {
   completed: "bg-emerald-500/15 text-emerald-300",
 };
 
-/** Confiança abaixo disso vira alerta amarelo. */
 const LOW_CONFIDENCE_THRESHOLD = 40;
 
 export default function BudgetDetailPage() {
@@ -59,7 +58,6 @@ export default function BudgetDetailPage() {
   const router = useRouter();
   const user = useCurrentUser();
   const budget = useBudgetsStore((s) => s.getBudget(params.id));
-  const setStatus = useBudgetsStore((s) => s.setStatus);
   const removeBudget = useBudgetsStore((s) => s.removeBudget);
   const addExtra = useBudgetsStore((s) => s.addExtra);
   const removeExtra = useBudgetsStore((s) => s.removeExtra);
@@ -73,7 +71,7 @@ export default function BudgetDetailPage() {
         <div className="premium-card p-6 text-center">
           <p className="text-sm">Orçamento não encontrado.</p>
           <Link
-            href="/dashboard"
+            href="/orcamentos"
             className="inline-flex items-center gap-1 text-xs text-[color:var(--color-primary-glow)] mt-3 hover:brightness-125"
           >
             <ChevronLeft size={12} /> Voltar
@@ -100,6 +98,9 @@ export default function BudgetDetailPage() {
   }).service;
   const grandTotal = budget.total + extrasTotal;
   const isLowConfidence = budget.confidence < LOW_CONFIDENCE_THRESHOLD;
+  const extrasCount = budget.extras?.length ?? 0;
+  const photosCount = budget.photos.length;
+  const contactsCount = budget.contactedOficinas?.length ?? 0;
 
   async function handlePDF() {
     if (!budget) return;
@@ -130,13 +131,13 @@ export default function BudgetDetailPage() {
   return (
     <DashboardShell>
       <div className="flex flex-col gap-4">
-        {/* Nav curta — só voltar */}
+        {/* Nav */}
         <div className="flex items-center justify-between">
           <Link
-            href="/dashboard"
+            href="/orcamentos"
             className="inline-flex items-center gap-1 text-xs text-[color:var(--color-muted)] hover:text-white transition-colors"
           >
-            <ChevronLeft size={13} /> Voltar ao dashboard
+            <ChevronLeft size={13} /> Meus orçamentos
           </Link>
           <span
             className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${STATUS_COLOR[budget.status]}`}
@@ -145,194 +146,38 @@ export default function BudgetDetailPage() {
           </span>
         </div>
 
-        {/* HEADER — código, veículo, total dominante, aviso de confiança */}
-        <div className="premium-card p-5 sm:p-7">
-          <div className="flex items-start justify-between gap-6 flex-wrap">
-            <div className="min-w-0">
-              <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)]">
-                Código do orçamento
-              </p>
-              <p className="font-mono text-2xl font-semibold">{budget.code}</p>
-              <div className="mt-3 flex items-center gap-2 text-sm">
-                <Car size={14} className="text-[color:var(--color-muted)]" />
-                <span className="font-medium">
-                  {budget.vehicleSnapshot.brand} {budget.vehicleSnapshot.model}
-                </span>
-                <span className="text-[color:var(--color-muted)]">·</span>
-                <span className="text-[color:var(--color-muted)]">
-                  {budget.vehicleSnapshot.year}
-                </span>
-              </div>
-              <p className="text-[11px] text-[color:var(--color-muted)] mt-2">
-                Criado em {formatDate(budget.createdAt)}
-                {budget.updatedAt !== budget.createdAt && (
-                  <> · Atualizado em {formatDate(budget.updatedAt)}</>
-                )}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)]">
-                Total estimado
-              </p>
-              <p className="text-4xl font-bold tracking-tight mt-1">
-                {formatBRL(grandTotal)}
-              </p>
-              <p className="text-[11px] text-[color:var(--color-muted)] mt-1">
-                Reparo {formatBRL(budget.total)}
-                {extrasTotal > 0 && ` + extras ${formatBRL(extrasTotal)}`}
-              </p>
-            </div>
-          </div>
+        {/* HEADER minimalista — só o valor e o veículo */}
+        <div className="premium-card p-6 sm:p-8 text-center">
+          <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)]">
+            Total estimado
+          </p>
+          <p className="text-5xl sm:text-6xl font-bold tracking-tight mt-2">
+            {formatBRL(grandTotal)}
+          </p>
+          <p className="text-sm text-[color:var(--color-muted)] mt-3">
+            {budget.vehicleSnapshot.brand} {budget.vehicleSnapshot.model} ·{" "}
+            {budget.vehicleSnapshot.year}
+          </p>
 
           {isLowConfidence && (
-            <div className="mt-5 rounded-2xl border border-yellow-500/40 bg-yellow-500/10 p-3 flex items-start gap-2.5">
+            <div className="mt-5 rounded-2xl border border-yellow-500/40 bg-yellow-500/10 p-3 flex items-start gap-2.5 text-left">
               <AlertTriangle
                 size={16}
                 className="text-yellow-300 shrink-0 mt-0.5"
               />
               <div className="text-xs leading-relaxed">
                 <p className="font-semibold text-yellow-100">
-                  Confiança baixa ({budget.confidence}%) — combinação de danos
-                  fora da tabela.
+                  Confiança baixa ({budget.confidence}%) — estimativa grosseira.
                 </p>
                 <p className="text-yellow-200/70 mt-0.5">
-                  O valor é uma estimativa grosseira. Espere variações
-                  significativas quando a oficina orçar de fato.
+                  Espere variações quando a oficina orçar de fato.
                 </p>
               </div>
             </div>
           )}
         </div>
 
-        {/* PEÇAS & DANOS */}
-        <div className="premium-card p-4 sm:p-6">
-          <h2 className="font-semibold mb-3">
-            Peças & danos ({budget.items.length})
-          </h2>
-          <div className="flex flex-col gap-2">
-            {budget.items.map((item) => (
-              <div
-                key={item.id}
-                className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      {item.partLabel}
-                    </p>
-                    <p className="text-[11px] text-[color:var(--color-muted)] truncate mt-0.5">
-                      {item.damages.map((d) => DAMAGE_LABELS[d]).join(", ")}
-                    </p>
-                    {item.notes && (
-                      <p className="text-[11px] text-[color:var(--color-muted)] mt-1 italic">
-                        &ldquo;{item.notes}&rdquo;
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-sm font-semibold">
-                      {formatBRL(item.estimatedCost)}
-                    </p>
-                    <SeverityPill severity={item.severity} />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Breakdown compacto — só a matemática, sem competir com o total */}
-          <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-[color:var(--color-muted)]">
-            <span>
-              Mão de obra + pintura:{" "}
-              <span className="text-white font-medium">
-                {formatBRL(serviceTotal)}
-              </span>
-            </span>
-            <span>
-              Peças:{" "}
-              <span className="text-white font-medium">
-                {formatBRL(budget.partsTotal)}
-              </span>
-            </span>
-            {extrasTotal > 0 && (
-              <span>
-                Extras:{" "}
-                <span className="text-white font-medium">
-                  {formatBRL(extrasTotal)}
-                </span>
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* SERVIÇOS EXTRAS */}
-        <div className="premium-card p-4 sm:p-6">
-          <div className="flex items-center justify-between mb-3 gap-3 flex-wrap">
-            <h2 className="font-semibold">
-              Serviços extras{" "}
-              <span className="text-[color:var(--color-muted)] font-normal">
-                ({budget.extras?.length ?? 0})
-              </span>
-            </h2>
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <button
-                onClick={() => addExtra(budget.id, "oil_change")}
-                className="inline-flex items-center gap-1 rounded-full bg-[#F5A524]/15 hover:bg-[#F5A524]/25 border border-[#F5A524]/30 px-2.5 py-1 text-[11px] font-medium text-[#F5A524] transition"
-              >
-                <Plus size={11} /> Troca de óleo
-              </button>
-              <button
-                onClick={() => addExtra(budget.id, "wheel_alignment")}
-                className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 px-2.5 py-1 text-[11px] font-medium text-white transition"
-              >
-                <Plus size={11} /> Geometria + balanceamento
-              </button>
-            </div>
-          </div>
-          {(budget.extras?.length ?? 0) === 0 ? (
-            <p className="text-xs text-[color:var(--color-muted)]">
-              Nenhum extra adicionado. Ofereça para o cliente durante o
-              atendimento — é upsell direto.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {budget.extras!.map((e) => (
-                <div
-                  key={e.id}
-                  className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
-                >
-                  <div className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.06] flex items-center justify-center shrink-0 text-[color:var(--color-muted)]">
-                    {e.kind === "oil_change" ? (
-                      <Droplet size={15} />
-                    ) : (
-                      <Wrench size={15} />
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{e.label}</p>
-                    <p className="text-[11px] text-[color:var(--color-muted)] mt-0.5">
-                      Adicionado em {formatDate(e.addedAt)} · Catálogo:{" "}
-                      {formatBRL(EXTRA_CATALOG[e.kind].price)}
-                    </p>
-                  </div>
-                  <p className="text-sm font-semibold shrink-0">
-                    {formatBRL(e.price)}
-                  </p>
-                  <button
-                    onClick={() => removeExtra(budget.id, e.id)}
-                    title="Remover serviço"
-                    aria-label="Remover serviço"
-                    className="w-7 h-7 rounded-full hover:bg-[color:var(--color-danger)]/15 hover:text-[color:var(--color-danger)] text-[color:var(--color-muted)] flex items-center justify-center transition-colors shrink-0"
-                  >
-                    <X size={13} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* ENVIAR PARA OFICINA — bloco principal em destaque */}
+        {/* CTA principal — enviar para oficina, lista completa */}
         <OficinasInline
           budget={budget}
           onOficinaContacted={(o) =>
@@ -345,97 +190,203 @@ export default function BudgetDetailPage() {
           onOpenFullPicker={() => setSendOpen(true)}
         />
 
-        {/* CONTATOS FEITOS — só aparece quando tem algo */}
-        {(budget.contactedOficinas?.length ?? 0) > 0 && (
-          <div className="premium-card p-4 sm:p-6">
-            <h2 className="font-semibold mb-3 flex items-center gap-2">
-              <Check size={15} className="text-[color:var(--color-success)]" />
-              Contatos feitos ({budget.contactedOficinas!.length})
-            </h2>
-            <div className="flex flex-col gap-1.5">
-              {budget.contactedOficinas!.map((c, i) => (
-                <div
-                  key={i}
-                  className="flex items-center justify-between gap-3 rounded-xl bg-white/[0.02] border border-white/[0.06] px-3 py-2"
-                >
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">{c.nome}</p>
-                    <p className="text-[11px] text-[color:var(--color-muted)]">
-                      {c.cidade}
-                    </p>
-                  </div>
-                  <p className="text-[11px] text-[color:var(--color-muted)] shrink-0">
-                    Enviado em {formatDate(c.sentAt)}
-                  </p>
-                </div>
-              ))}
+        {/* MAIS INFORMAÇÕES — tudo colapsado num seletor só */}
+        <details className="premium-card group [&_summary::-webkit-details-marker]:hidden">
+          <summary className="p-4 sm:p-5 cursor-pointer list-none flex items-center justify-between gap-3 hover:bg-white/[0.02] transition-colors rounded-[inherit]">
+            <div className="min-w-0">
+              <p className="font-semibold text-sm">Mais informações</p>
+              <p className="text-[11px] text-[color:var(--color-muted)] mt-0.5">
+                Código, peças, extras, fotos e exportações
+              </p>
             </div>
-            <p className="text-[11px] text-[color:var(--color-muted)] mt-3 leading-relaxed">
-              As respostas voltam pelo WhatsApp da oficina. Quando registrar
-              contra-propostas aqui, dá pra comparar — em breve.
-            </p>
-          </div>
-        )}
+            <ChevronDown
+              size={16}
+              className="text-[color:var(--color-muted)] shrink-0 transition-transform group-open:rotate-180"
+            />
+          </summary>
 
-        {/* FOTOS */}
-        {budget.photos.length > 0 && (
-          <div className="premium-card p-4 sm:p-6">
-            <h2 className="font-semibold mb-3 flex items-center gap-2">
-              <Camera size={14} /> Fotos ({budget.photos.length})
-            </h2>
-            <BudgetPhotoGrid refs={budget.photos} />
-          </div>
-        )}
+          <div className="px-4 sm:px-5 pb-5 flex flex-col gap-5">
+            {/* Metadados do orçamento */}
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+              <dt className="text-[color:var(--color-muted)]">Código</dt>
+              <dd className="font-mono">{budget.code}</dd>
+              <dt className="text-[color:var(--color-muted)]">Criado em</dt>
+              <dd>{formatDate(budget.createdAt)}</dd>
+              {budget.updatedAt !== budget.createdAt && (
+                <>
+                  <dt className="text-[color:var(--color-muted)]">
+                    Atualizado em
+                  </dt>
+                  <dd>{formatDate(budget.updatedAt)}</dd>
+                </>
+              )}
+              <dt className="text-[color:var(--color-muted)]">Mão de obra</dt>
+              <dd>{formatBRL(serviceTotal)}</dd>
+              <dt className="text-[color:var(--color-muted)]">Peças</dt>
+              <dd>{formatBRL(budget.partsTotal)}</dd>
+              {extrasTotal > 0 && (
+                <>
+                  <dt className="text-[color:var(--color-muted)]">Extras</dt>
+                  <dd>{formatBRL(extrasTotal)}</dd>
+                </>
+              )}
+            </dl>
 
-        {/* AÇÕES SECUNDÁRIAS — status + exportar + apagar */}
-        <div className="premium-card p-4 sm:p-6">
-          <h2 className="font-semibold mb-3 text-sm text-[color:var(--color-muted)]">
-            Ações do orçamento
-          </h2>
+            {/* Peças & danos */}
+            <div>
+              <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)] mb-2">
+                Peças & danos ({budget.items.length})
+              </p>
+              <div className="flex flex-col gap-2">
+                {budget.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate">
+                          {item.partLabel}
+                        </p>
+                        <p className="text-[11px] text-[color:var(--color-muted)] truncate mt-0.5">
+                          {item.damages.map((d) => DAMAGE_LABELS[d]).join(", ")}
+                        </p>
+                        {item.notes && (
+                          <p className="text-[11px] text-[color:var(--color-muted)] mt-1 italic">
+                            &ldquo;{item.notes}&rdquo;
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="text-sm font-semibold">
+                          {formatBRL(item.estimatedCost)}
+                        </p>
+                        <SeverityPill severity={item.severity} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-          {/* Mudança de status */}
-          {budget.status !== "approved" && budget.status !== "completed" && (
-            <div className="flex flex-wrap items-center gap-2 mb-3">
-              <button
-                onClick={() => setStatus(budget.id, "approved")}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-success)]/15 hover:bg-[color:var(--color-success)]/25 border border-[color:var(--color-success)]/30 px-3.5 py-2 text-xs font-medium text-[color:var(--color-success)] transition"
-              >
-                <Check size={13} /> Marcar como aprovado
-              </button>
-              <button
-                onClick={() => setStatus(budget.id, "rejected")}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-danger)]/10 hover:bg-[color:var(--color-danger)]/20 border border-[color:var(--color-danger)]/30 px-3.5 py-2 text-xs font-medium text-[color:var(--color-danger)] transition"
-              >
-                <X size={13} /> Recusar
-              </button>
-              {budget.status === "draft" && (
-                <button
-                  onClick={() => router.push("/dashboard")}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3.5 py-2 text-xs font-medium text-white transition"
-                >
-                  <FileEdit size={13} /> Continuar editando
-                </button>
+            {/* Serviços extras */}
+            <div>
+              <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
+                <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)]">
+                  Serviços extras
+                </p>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <button
+                    onClick={() => addExtra(budget.id, "oil_change")}
+                    className="inline-flex items-center gap-1 rounded-full bg-[#F5A524]/15 hover:bg-[#F5A524]/25 border border-[#F5A524]/30 px-2.5 py-1 text-[11px] font-medium text-[#F5A524] transition"
+                  >
+                    <Plus size={11} /> Troca de óleo
+                  </button>
+                  <button
+                    onClick={() => addExtra(budget.id, "wheel_alignment")}
+                    className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 px-2.5 py-1 text-[11px] font-medium text-white transition"
+                  >
+                    <Plus size={11} /> Geometria
+                  </button>
+                </div>
+              </div>
+              {extrasCount === 0 ? (
+                <p className="text-xs text-[color:var(--color-muted)]">
+                  Nenhum extra adicionado.
+                </p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {budget.extras!.map((e) => (
+                    <div
+                      key={e.id}
+                      className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
+                    >
+                      <div className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.06] flex items-center justify-center shrink-0 text-[color:var(--color-muted)]">
+                        {e.kind === "oil_change" ? (
+                          <Droplet size={15} />
+                        ) : (
+                          <Wrench size={15} />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium truncate">
+                          {e.label}
+                        </p>
+                        <p className="text-[11px] text-[color:var(--color-muted)] mt-0.5">
+                          Catálogo: {formatBRL(EXTRA_CATALOG[e.kind].price)}
+                        </p>
+                      </div>
+                      <p className="text-sm font-semibold shrink-0">
+                        {formatBRL(e.price)}
+                      </p>
+                      <button
+                        onClick={() => removeExtra(budget.id, e.id)}
+                        title="Remover serviço"
+                        aria-label="Remover serviço"
+                        className="w-7 h-7 rounded-full hover:bg-[color:var(--color-danger)]/15 hover:text-[color:var(--color-danger)] text-[color:var(--color-muted)] flex items-center justify-center transition-colors shrink-0"
+                      >
+                        <X size={13} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
-          )}
 
-          {/* Exportar + apagar — separados visualmente pra não competir com status */}
-          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/[0.06]">
-            <button
-              onClick={handlePDF}
-              disabled={pdfBusy}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-xs font-medium text-white transition disabled:opacity-60"
-            >
-              <FileText size={12} /> {pdfBusy ? "Gerando…" : "Baixar PDF"}
-            </button>
-            <button
-              onClick={exportJSON}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-xs font-medium text-white transition"
-              title="Exportar JSON bruto (backup)"
-            >
-              <Download size={12} /> Exportar JSON
-            </button>
-            <div className="ml-auto">
+            {/* Fotos */}
+            {photosCount > 0 && (
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)] mb-2 flex items-center gap-1.5">
+                  <Camera size={12} /> Fotos ({photosCount})
+                </p>
+                <BudgetPhotoGrid refs={budget.photos} />
+              </div>
+            )}
+
+            {/* Contatos feitos */}
+            {contactsCount > 0 && (
+              <div>
+                <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)] mb-2 flex items-center gap-1.5">
+                  <Check size={12} className="text-[color:var(--color-success)]" />
+                  Contatos feitos ({contactsCount})
+                </p>
+                <div className="flex flex-col gap-1.5">
+                  {budget.contactedOficinas!.map((c, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between gap-3 rounded-xl bg-white/[0.02] border border-white/[0.06] px-3 py-2"
+                    >
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium truncate">{c.nome}</p>
+                        <p className="text-[11px] text-[color:var(--color-muted)]">
+                          {c.cidade}
+                        </p>
+                      </div>
+                      <p className="text-[11px] text-[color:var(--color-muted)] shrink-0">
+                        {formatDate(c.sentAt)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Ações — exportar e apagar */}
+            <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/[0.06]">
+              <button
+                onClick={handlePDF}
+                disabled={pdfBusy}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-xs font-medium text-white transition disabled:opacity-60"
+              >
+                <FileText size={12} /> {pdfBusy ? "Gerando…" : "Baixar PDF"}
+              </button>
+              <button
+                onClick={exportJSON}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-xs font-medium text-white transition"
+                title="Exportar JSON bruto (backup)"
+              >
+                <Download size={12} /> Exportar JSON
+              </button>
               <button
                 onClick={async () => {
                   const ok = await confirmDialog({
@@ -445,16 +396,16 @@ export default function BudgetDetailPage() {
                   });
                   if (ok) {
                     removeBudget(budget.id);
-                    router.push("/dashboard");
+                    router.push("/orcamentos");
                   }
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.02] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-xs font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition"
+                className="ml-auto inline-flex items-center gap-1.5 rounded-xl bg-white/[0.02] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-xs font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition"
               >
-                <Trash2 size={12} /> Apagar orçamento
+                <Trash2 size={12} /> Apagar
               </button>
             </div>
           </div>
-        </div>
+        </details>
       </div>
 
       {sendOpen && budget && (
@@ -475,7 +426,6 @@ export default function BudgetDetailPage() {
   );
 }
 
-/** Referências das fotos moram no IndexedDB; o orçamento guarda só o pointer. */
 function BudgetPhotoGrid({ refs }: { refs: string[] }) {
   const urls = usePhotoUrls(refs);
   return (

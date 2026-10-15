@@ -13,6 +13,7 @@ import { confirmDialog } from "@/stores/confirm-store";
 
 const STATUS_LABEL: Record<BudgetStatus, string> = {
   draft: "Rascunho",
+  ready: "Pronto pra enviar",
   sent: "Enviado",
   reviewing: "Em análise",
   approved: "Aprovado",
@@ -22,6 +23,7 @@ const STATUS_LABEL: Record<BudgetStatus, string> = {
 
 const STATUS_STYLES: Record<BudgetStatus, string> = {
   draft: "bg-white/[0.06] text-white/70",
+  ready: "bg-white/[0.1] text-white/85",
   sent: "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary-glow)]",
   reviewing: "bg-yellow-500/15 text-yellow-300",
   approved: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
@@ -32,6 +34,7 @@ const STATUS_STYLES: Record<BudgetStatus, string> = {
 const FILTERS: { key: BudgetStatus | "all"; label: string }[] = [
   { key: "all", label: "Todos" },
   { key: "draft", label: "Rascunhos" },
+  { key: "ready", label: "Prontos" },
   { key: "sent", label: "Enviados" },
   { key: "approved", label: "Aprovados" },
   { key: "rejected", label: "Recusados" },

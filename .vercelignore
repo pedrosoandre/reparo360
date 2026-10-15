@@ -5,9 +5,7 @@
 # Se NEXT_PUBLIC_ASSETS_BASE estiver vazia, COMENTE as linhas abaixo — o app
 # vai tentar servir /cars/*.glb do próprio deploy e essas linhas quebram tudo.
 
-public/cars/
-public/scenery/
-public/hdri/
+# Assets are served by this deployment: no external asset base is configured.
 
 # Nunca precisam ir:
 oficinas-rs-scraper/
@@ -16,3 +14,5 @@ dev.log
 tsconfig.tsbuildinfo
 iniciar.bat
 iniciar.ps1
+scripts/
+tests/

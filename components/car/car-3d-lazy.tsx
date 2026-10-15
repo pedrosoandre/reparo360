@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, type ComponentProps } from "react";
+import { Component, useEffect, useState, type ComponentProps, type ReactNode } from "react";
 import { Box, Boxes } from "lucide-react";
 import { CarSvg } from "./car-svg";
 import type { CarPart } from "@/types";
@@ -75,10 +75,46 @@ export function Car3DLazy(props: ComponentProps<typeof Car3D>) {
 
   return (
     <div className="relative">
-      <Car3D key={props.modelUrl ?? "default"} {...props} />
+      <ViewerErrorBoundary
+        key={props.modelUrl ?? "default"}
+        fallback={
+          <div className="min-h-[220px] rounded-2xl bg-[#0B0F17] p-4">
+            <p role="status" className="mb-3 text-xs text-white/70">
+              Não foi possível carregar o 3D. Você pode continuar na visualização 2D.
+            </p>
+            <CarSvg
+              selectedParts={Array.from(new Set([
+                ...(props.selectedParts ?? []),
+                ...(props.damagedParts ?? []),
+                ...(props.activePart ? [props.activePart] : []),
+              ]))}
+              onSelectPart={props.onSelectPart}
+              interactive={props.interactive ?? true}
+            />
+          </div>
+        }
+      >
+        <Car3D {...props} />
+      </ViewerErrorBoundary>
       <ModeToggle lightMode={lightMode} onClick={toggleLightMode} />
     </div>
   );
+}
+
+// Asset/network failures must stay inside the viewer rather than crash the app.
+class ViewerErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
 }
 
 function ModeToggle({

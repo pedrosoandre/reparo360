@@ -76,6 +76,18 @@ e antigos vendidos no Brasil — de Fusca, Opala, Chevette, Corcel e Brasília a
 Onix, HB20, Compass e T-Cross — mais 17 modelos genéricos sem marca (10 extraídos
 de um pacote único com `@gltf-transform`).
 
+### Abertura de portas e porta-malas
+
+O visualizador 3D oferece um botão para abrir ou fechar simultaneamente as portas
+e o porta-malas, com movimento das peças reais. Os modelos configurados são
+Volkswagen Polo (`vw-polo.glb`), Volkswagen Gol (`volkswagen-gol.glb`) e Toyota
+Supra Mk4 (`toyota-supra-mk4.glb`). Nos demais, o botão informa a indisponibilidade.
+O mapeamento das peças e dobradiças está em `lib/car-openings.ts`; novos modelos
+precisam ter painéis separados e ser conferidos antes de entrar nesse mapa.
+Os testes de geometria carregam os três GLBs e verificam abertura, carroceria
+estática e retorno à posição original. `scripts/test-car-openings.mjs` verifica
+o botão no navegador local em desktop e celular.
+
 ### Troca de cor da pintura
 
 `lib/car-paint.ts` mapeia, para cada `.glb`, **qual material é a pintura da lataria**.

@@ -3,6 +3,7 @@ import type { Budget } from "@/types";
 
 const LABELS: Record<Budget["status"], string> = {
   draft: "Rascunho",
+  ready: "Pronto pra enviar",
   sent: "Enviado",
   reviewing: "Em análise",
   approved: "Aprovado",
@@ -12,6 +13,7 @@ const LABELS: Record<Budget["status"], string> = {
 
 const STYLES: Record<Budget["status"], string> = {
   draft: "bg-white/5 text-text-secondary",
+  ready: "bg-white/10 text-white/85",
   sent: "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary-soft)]",
   reviewing: "bg-yellow-500/15 text-yellow-300",
   approved: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",

@@ -14,6 +14,8 @@ import type { CarPart } from "@/types";
 import { PART_LABELS } from "@/lib/car-parts";
 import { VEHICLE_CATALOG } from "@/lib/vehicles";
 import { paintTargetFor, PAINT_COLORS } from "@/lib/car-paint";
+import { measureCarBox } from "@/lib/car-bbox";
+import { createCarOpenings, setCarOpeningProgress, supportsCarOpenings } from "@/lib/car-openings";
 import {
   SCENERY_CATALOG,
   DEFAULT_SCENERY_ID,
@@ -151,6 +153,8 @@ export function Car3D({
   const [userActive, setUserActive] = useState(false);
   const [focusing, setFocusing] = useState(false);
   const [markersHidden, setMarkersHidden] = useState(false);
+  const [openingsOpen, setOpeningsOpen] = useState(false);
+  const [openingsReady, setOpeningsReady] = useState(false);
   const [sceneryState, setSceneryState] = useState<string>(
     sceneryId ?? DEFAULT_SCENERY_ID,
   );
@@ -166,11 +170,15 @@ export function Car3D({
   const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   // Marcadores efetivos: prop `showHotspots` respeita, mas o botão do
   // usuário sobrescreve pra "modo cliente" (carro limpo, sem bolinhas).
-  const showMarkers = showHotspots && !markersHidden;
+  const showMarkers = showHotspots && !markersHidden && !openingsOpen;
 
   // Orientação: catálogo define flipFront; a tecla F alterna em runtime
   // pra facilitar a calibração de modelos novos.
   const glbFile = modelUrl.split("/").pop() ?? "";
+  useEffect(() => {
+    setOpeningsOpen(false);
+    setOpeningsReady(false);
+  }, [modelUrl]);
   const catalogEntry = useMemo(
     () => VEHICLE_CATALOG.find((v) => v.glb === glbFile),
     [glbFile],
@@ -340,10 +348,13 @@ export function Car3D({
 
           <group position={groupPosition}>
             <CarModel
+              key={`${modelUrl}-${effectiveFlip}`}
               url={modelUrl}
               bodyColor={bodyColor}
               flipFront={effectiveFlip}
               onMeasured={handleMeasured}
+              openingsOpen={openingsOpen}
+              onOpeningsReady={setOpeningsReady}
             />
 
             {showMarkers &&
@@ -386,7 +397,7 @@ export function Car3D({
           // Gira devagar quando o usuário não está mexendo; pausa enquanto
           // interage. Custa um frameloop "always" enquanto girando — desligado
           // no mobile pra não travar a UI thread.
-          autoRotate={effectiveAutoRotate && !userActive}
+          autoRotate={effectiveAutoRotate && !userActive && !openingsOpen}
           autoRotateSpeed={0.6}
           minPolarAngle={Math.PI / 4}
           maxPolarAngle={Math.PI / 2.1}
@@ -395,6 +406,25 @@ export function Car3D({
           target={orbitTarget}
         />
       </Canvas>
+
+      {interactive && (
+        <div className="absolute top-3 left-3 right-14 z-10 flex flex-col items-start gap-1">
+          <button
+            type="button"
+            disabled={!openingsReady}
+            aria-pressed={openingsOpen}
+            onClick={() => setOpeningsOpen((value) => !value)}
+            className="min-h-10 rounded-xl border border-white/20 bg-black/70 px-3 py-2 text-xs font-medium text-white backdrop-blur hover:bg-black/90 disabled:cursor-not-allowed disabled:text-white/50"
+          >
+            {openingsOpen ? "Fechar portas e porta-malas" : "Abrir portas e porta-malas"}
+          </button>
+          {!supportsCarOpenings(glbFile) && (
+            <span className="max-w-64 rounded bg-black/70 px-2 py-1 text-[10px] text-white/70">
+              Modelo sem articulação configurada. Disponível no Polo, Gol e Supra MK4.
+            </span>
+          )}
+        </div>
+      )}
 
       {interactive && (
         <div className="absolute bottom-3 left-3 z-10 flex flex-col-reverse items-start gap-1.5">
@@ -543,11 +573,15 @@ function CarModel({
   bodyColor,
   flipFront,
   onMeasured,
+  openingsOpen,
+  onOpeningsReady,
 }: {
   url: string;
   bodyColor: string | null;
   flipFront: boolean;
   onMeasured?: (dims: CarDims) => void;
+  openingsOpen: boolean;
+  onOpeningsReady: (ready: boolean) => void;
 }) {
   const { scene } = useGLTF(url);
   const invalidate = useThree((s) => s.invalidate);
@@ -636,47 +670,22 @@ function CarModel({
   // Ambas rotações são aplicadas direto no `cloned` antes de medir a bbox — assim
   // as dims reportadas e o centro já refletem a orientação final.
   //
-  // BBox robusta: alguns GLBs do Sketchfab (ex.: hyundai-hb20.glb) trazem meshes
-  // com escala local disparada (0.01 ao lado de 16.0) — Box3.setFromObject inclui
-  // os outliers e a bbox estoura, o que faz `4.2 / size.x` encolher o carro
-  // visível pra caber num volume fantasma. Coletamos as bboxes por mesh, achamos
-  // a mediana do raio e descartamos meshes com raio > 4× mediana antes da união.
+  // BBox ancorada na lataria (ver lib/car-bbox.ts): vários GLBs trazem
+  // geometria que não é o carro — 23 pneus de um Honda Civic no hyundai-hb20,
+  // uma quadra de basquete no porsche-court-test — e como `scale` é 4.2/size.x
+  // esse lixo encolhia o carro visível pra caber num volume fantasma.
   const { size, center, boxMinY, scale } = useMemo(() => {
-    const collect = (): THREE.Box3[] => {
-      const out: THREE.Box3[] = [];
-      cloned.traverse((obj) => {
-        const mesh = obj as THREE.Mesh;
-        if (!mesh.isMesh || !mesh.geometry) return;
-        const b = new THREE.Box3().setFromObject(mesh);
-        if (!b.isEmpty()) out.push(b);
-      });
-      return out;
-    };
-    const robustBox = (boxes: THREE.Box3[]): THREE.Box3 => {
-      if (boxes.length === 0) return new THREE.Box3().setFromObject(cloned);
-      const radii = boxes.map((b) => b.getSize(new THREE.Vector3()).length());
-      const sorted = [...radii].sort((a, b) => a - b);
-      const median = sorted[Math.floor(sorted.length / 2)] || 1;
-      const cutoff = median * 4;
-      const kept = boxes.filter((_, i) => radii[i] <= cutoff);
-      const use = kept.length ? kept : boxes;
-      const out = new THREE.Box3();
-      for (const b of use) out.union(b);
-      return out;
-    };
-
     cloned.rotation.set(0, 0, 0);
     cloned.updateMatrixWorld(true);
-    const raw = robustBox(collect());
-    const rawSize = raw.getSize(new THREE.Vector3());
+    const rawSize = measureCarBox(cloned, paintNames).getSize(new THREE.Vector3());
     const auto = rawSize.z > rawSize.x ? Math.PI / 2 : 0;
     cloned.rotation.y = auto + (flipFront ? Math.PI : 0);
     cloned.updateMatrixWorld(true);
-    const box = robustBox(collect());
+    const box = measureCarBox(cloned, paintNames);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     return { size, center, boxMinY: box.min.y, scale: 4.2 / size.x };
-  }, [cloned, flipFront]);
+  }, [cloned, flipFront, paintNames]);
 
   useEffect(() => {
     onMeasured?.({
@@ -685,6 +694,22 @@ function CarModel({
       width: size.z * scale,
     });
   }, [size.x, size.y, size.z, scale, onMeasured]);
+
+  const rig = useMemo(() => createCarOpenings(cloned, url.split("/").pop() ?? ""), [cloned, url]);
+  const openingProgress = useRef(0);
+  useEffect(() => { onOpeningsReady(rig.ready); }, [rig, onOpeningsReady]);
+  useEffect(() => { invalidate(); }, [openingsOpen, invalidate]);
+  useFrame((_, delta) => {
+    const target = openingsOpen ? 1 : 0;
+    const previous = openingProgress.current;
+    if (previous === target) return;
+    const step = delta / 0.8;
+    openingProgress.current = target > previous
+      ? Math.min(target, previous + step)
+      : Math.max(target, previous - step);
+    setCarOpeningProgress(rig.openings, openingProgress.current);
+    invalidate();
+  });
 
   // Ao trocar de carro, libera a VRAM do modelo anterior. useGLTF mantém um
   // cache global (module-level) que nunca esvazia — sem isso, cada swap
@@ -703,7 +728,7 @@ function CarModel({
       position={[-center.x * scale, -boxMinY * scale, -center.z * scale]}
       scale={scale}
     >
-      <primitive object={cloned} />
+      <primitive object={rig.root} />
     </group>
   );
 }

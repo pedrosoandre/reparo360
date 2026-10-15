@@ -144,7 +144,7 @@ export const useBudgetsStore = create<BudgetsState>()(
       budgets: [],
 
       createFromDashboard: (input) => {
-        const budget = buildBudget(input, "sent");
+        const budget = buildBudget(input, "ready");
         set((s) => ({ budgets: [budget, ...s.budgets] }));
         return budget;
       },
@@ -219,8 +219,13 @@ export const useBudgetsStore = create<BudgetsState>()(
             if (b.id !== budgetId) return b;
             // Contactou a mesma oficina de novo — deixamos os dois registros,
             // porque o cliente pode estar reforçando um envio anterior.
+            // Bump de status só na primeira vez: "draft"/"ready" → "sent".
+            // Preserva estados posteriores (reviewing/approved/rejected/completed).
+            const nextStatus: BudgetStatus =
+              b.status === "draft" || b.status === "ready" ? "sent" : b.status;
             return {
               ...b,
+              status: nextStatus,
               contactedOficinas: [...(b.contactedOficinas ?? []), entry],
               updatedAt: new Date().toISOString(),
             };

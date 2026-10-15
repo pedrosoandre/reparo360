@@ -96,6 +96,7 @@ export interface DamageItem {
 
 export type BudgetStatus =
   | "draft"
+  | "ready"
   | "sent"
   | "reviewing"
   | "approved"

@@ -5,7 +5,6 @@ import {
   ShieldCheck,
   FileText,
   Car,
-  Trash2,
   Settings,
   ChevronRight,
   Receipt,
@@ -25,7 +24,6 @@ const NAV = [
   { icon: Wrench, label: "Avaliação de danos", href: "/dashboard" },
   { icon: Receipt, label: "Meus orçamentos", href: "/orcamentos" },
   { icon: Car, label: "Meus veículos", href: "/veiculos" },
-  { icon: Trash2, label: "Rascunhos", href: "/rascunhos" },
   { icon: FileText, label: "Meus documentos", href: "/documentos" },
   { icon: ShieldCheck, label: "Seguro válido", href: "/seguro", dot: true },
   { icon: Settings, label: "Configurações", href: "/configuracoes" },
@@ -54,7 +52,7 @@ export function SidebarBody({ onNavigate }: { onNavigate?: () => void } = {}) {
           const active =
             pathname === it.href ||
             (it.href !== "/dashboard" && pathname.startsWith(`${it.href}/`));
-          const badge = it.href === "/rascunhos" && drafts.length > 0 ? drafts.length : undefined;
+          const badge = it.href === "/orcamentos" && drafts.length > 0 ? drafts.length : undefined;
           return (
             <Link
               key={it.label}
