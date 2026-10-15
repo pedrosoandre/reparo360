@@ -1,0 +1,18 @@
+# Vercel-only ignore. Se você configurou NEXT_PUBLIC_ASSETS_BASE apontando pra
+# um CDN externo (Vercel Blob, R2, S3), estes diretórios NÃO precisam ir no
+# deploy — o `lib/assets.ts` resolve tudo pela base configurada.
+#
+# Se NEXT_PUBLIC_ASSETS_BASE estiver vazia, COMENTE as linhas abaixo — o app
+# vai tentar servir /cars/*.glb do próprio deploy e essas linhas quebram tudo.
+
+public/cars/
+public/scenery/
+public/hdri/
+
+# Nunca precisam ir:
+oficinas-rs-scraper/
+carros/
+dev.log
+tsconfig.tsbuildinfo
+iniciar.bat
+iniciar.ps1

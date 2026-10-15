@@ -1,0 +1,21 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.log
+.vercel
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Assets pesados moram no Cloudflare R2 em produção.
+# Dev local usa os arquivos abaixo direto do disco (NEXT_PUBLIC_ASSETS_BASE vazia).
+# NÃO commitar — 1.8 GB de binário no git é doloroso pra sempre.
+public/cars/
+public/scenery/
+public/hdri/
+
+.vercel

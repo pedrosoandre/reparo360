@@ -1,0 +1,151 @@
+{
+  "version": "2026.08-uncalibrated",
+  "effectiveFrom": "2026-08-08",
+  "source": "Estimativa interna. NÃO calibrada contra orçamentos reais de oficina — os valores são placeholders. Substituir por dados de oficinas parceiras (ou Audatex) antes de usar comercialmente.",
+  "rates": {
+    "laborHourRate": 160,
+    "materialsMultiplier": 0.12,
+    "workshopMargin": 0.18,
+    "overlapFactor": 0.3
+  },
+  "vehicleFactor": {
+    "referenceMarketValue": 80000,
+    "marketValueExponent": 0.4,
+    "min": 0.8,
+    "max": 3.5,
+    "category": {
+      "hatchback": 0.9,
+      "sedan": 1.0,
+      "wagon": 1.05,
+      "minivan": 1.05,
+      "utility": 1.1,
+      "van": 1.1,
+      "suv": 1.15,
+      "pickup": 1.15,
+      "coupe": 1.2,
+      "sports": 1.5
+    },
+    "brandTier": {
+      "mainstream": 1.0,
+      "premium": 1.5,
+      "exotic": 2.6
+    },
+    "brands": {
+      "Alfa Romeo": "premium",
+      "Aston Martin": "exotic",
+      "Audi": "premium",
+      "BMW": "premium",
+      "Bugatti": "exotic",
+      "Cadillac": "premium",
+      "Ferrari": "exotic",
+      "Jaguar": "premium",
+      "Koenigsegg": "exotic",
+      "Lamborghini": "exotic",
+      "Land Rover": "premium",
+      "Lexus": "premium",
+      "Lincoln": "premium",
+      "Lotus": "exotic",
+      "Maserati": "exotic",
+      "McLaren": "exotic",
+      "Mercedes-Benz": "premium",
+      "Mini": "premium",
+      "Pagani": "exotic",
+      "Porsche": "premium",
+      "Rolls-Royce": "exotic",
+      "Tesla": "premium",
+      "Volvo": "premium"
+    }
+  },
+  "businessRules": {
+    "_nota": "Limiar de perda total é prática de mercado, não lei. O percentual exato sai na apólice — confirmar com cada seguradora parceira.",
+    "totalLossThreshold": 0.75,
+    "totalLossWarnBand": 0.6
+  },
+  "fallback": { "labor_hours": 3, "paint_cost": 300, "parts_cost": 100 },
+  "parts": {
+    "front_bumper": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 250, "parts_cost": 0 },
+      "scratch_deep": { "labor_hours": 3, "paint_cost": 380, "parts_cost": 60 },
+      "dent_light": { "labor_hours": 3, "paint_cost": 320, "parts_cost": 40 },
+      "dent_medium": { "labor_hours": 5, "paint_cost": 480, "parts_cost": 180 },
+      "break": { "labor_hours": 4, "paint_cost": 380, "parts_cost": 920 },
+      "misalignment": { "labor_hours": 2, "paint_cost": 0, "parts_cost": 80 }
+    },
+    "rear_bumper": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 240, "parts_cost": 0 },
+      "scratch_deep": { "labor_hours": 3, "paint_cost": 360, "parts_cost": 60 },
+      "dent_light": { "labor_hours": 3, "paint_cost": 300, "parts_cost": 40 },
+      "dent_medium": { "labor_hours": 5, "paint_cost": 460, "parts_cost": 180 },
+      "break": { "labor_hours": 4, "paint_cost": 360, "parts_cost": 880 }
+    },
+    "hood": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 320, "parts_cost": 0 },
+      "scratch_deep": { "labor_hours": 3, "paint_cost": 480, "parts_cost": 0 },
+      "dent_light": { "labor_hours": 4, "paint_cost": 420, "parts_cost": 0 },
+      "dent_medium": { "labor_hours": 6, "paint_cost": 620, "parts_cost": 120 },
+      "break": { "labor_hours": 5, "paint_cost": 520, "parts_cost": 1400 }
+    },
+    "fender_left": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 220, "parts_cost": 0 },
+      "scratch_deep": { "labor_hours": 3, "paint_cost": 340, "parts_cost": 40 },
+      "dent_light": { "labor_hours": 3, "paint_cost": 300, "parts_cost": 40 },
+      "dent_medium": { "labor_hours": 5, "paint_cost": 460, "parts_cost": 120 },
+      "break": { "labor_hours": 4, "paint_cost": 360, "parts_cost": 780 }
+    },
+    "fender_right": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 220, "parts_cost": 0 },
+      "scratch_deep": { "labor_hours": 3, "paint_cost": 340, "parts_cost": 40 },
+      "dent_light": { "labor_hours": 3, "paint_cost": 300, "parts_cost": 40 },
+      "dent_medium": { "labor_hours": 5, "paint_cost": 460, "parts_cost": 120 },
+      "break": { "labor_hours": 4, "paint_cost": 360, "parts_cost": 780 }
+    },
+    "door_front_left": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 260, "parts_cost": 0 },
+      "scratch_deep": { "labor_hours": 3, "paint_cost": 400, "parts_cost": 40 },
+      "dent_light": { "labor_hours": 4, "paint_cost": 360, "parts_cost": 60 },
+      "dent_medium": { "labor_hours": 6, "paint_cost": 520, "parts_cost": 160 },
+      "break": { "labor_hours": 6, "paint_cost": 480, "parts_cost": 1200 }
+    },
+    "door_front_right": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 260, "parts_cost": 0 },
+      "dent_medium": { "labor_hours": 6, "paint_cost": 520, "parts_cost": 160 }
+    },
+    "door_rear_left": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 260, "parts_cost": 0 },
+      "dent_medium": { "labor_hours": 6, "paint_cost": 520, "parts_cost": 160 }
+    },
+    "door_rear_right": {
+      "scratch_light": { "labor_hours": 2, "paint_cost": 260, "parts_cost": 0 },
+      "dent_medium": { "labor_hours": 6, "paint_cost": 520, "parts_cost": 160 }
+    },
+    "headlight_left": {
+      "scratch_light": { "labor_hours": 1, "paint_cost": 0, "parts_cost": 40 },
+      "break": { "labor_hours": 2, "paint_cost": 0, "parts_cost": 1450 }
+    },
+    "headlight_right": {
+      "scratch_light": { "labor_hours": 1, "paint_cost": 0, "parts_cost": 40 },
+      "break": { "labor_hours": 2, "paint_cost": 0, "parts_cost": 1450 }
+    },
+    "taillight_left": {
+      "break": { "labor_hours": 1.5, "paint_cost": 0, "parts_cost": 720 }
+    },
+    "taillight_right": {
+      "break": { "labor_hours": 1.5, "paint_cost": 0, "parts_cost": 720 }
+    },
+    "mirror_left": {
+      "scratch_light": { "labor_hours": 1, "paint_cost": 120, "parts_cost": 0 },
+      "break": { "labor_hours": 1.5, "paint_cost": 0, "parts_cost": 480 }
+    },
+    "mirror_right": {
+      "scratch_light": { "labor_hours": 1, "paint_cost": 120, "parts_cost": 0 },
+      "break": { "labor_hours": 1.5, "paint_cost": 0, "parts_cost": 480 }
+    },
+    "trunk": {
+      "scratch_deep": { "labor_hours": 3, "paint_cost": 420, "parts_cost": 0 },
+      "dent_medium": { "labor_hours": 5, "paint_cost": 540, "parts_cost": 120 }
+    },
+    "roof": {
+      "dent_medium": { "labor_hours": 6, "paint_cost": 680, "parts_cost": 120 }
+    }
+  }
+}
