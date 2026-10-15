@@ -1,10 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, type ComponentProps } from "react";
+import { Component, useEffect, useState, type ComponentProps, type ReactNode } from "react";
 import { Box, Boxes } from "lucide-react";
 import { CarSvg } from "./car-svg";
 import type { CarPart } from "@/types";
+import { probeWebGL, type WebGLProbe } from "@/lib/webgl";
 
 const Car3D = dynamic(() => import("./car-3d").then((m) => m.Car3D), {
   ssr: false,
@@ -26,19 +27,23 @@ function LoadingPlaceholder() {
 
 /**
  * Default 3D em todo mundo (mobile e desktop). Toggle no canto permite
- * cair pro SVG 2D — preferência persistida em localStorage.
- * O `Car3D` já cuida das otimizações mobile internamente (DPR 1,
- * frameloop="demand", autoRotate off, dispose de VRAM).
+ * cair pro SVG 2D — preferência persistida em localStorage. Sem WebGL, ou se
+ * a cena 3D quebrar, também cai pro 2D, com um aviso dizendo o motivo.
+ * O `Car3D` já cuida das otimizações mobile internamente (DPR 1, sem
+ * spotLight, dispose de VRAM).
  */
 export function Car3DLazy(props: ComponentProps<typeof Car3D>) {
   const [lightMode, setLightMode] = useState<boolean | null>(null);
+  const [webgl, setWebgl] = useState<WebGLProbe | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") {
       setLightMode(false);
+      setWebgl({ ok: true });
       return;
     }
     setLightMode(window.localStorage.getItem(LIGHT_MODE_KEY) === "1");
+    setWebgl(probeWebGL());
   }, []);
 
   function toggleLightMode() {
@@ -51,9 +56,10 @@ export function Car3DLazy(props: ComponentProps<typeof Car3D>) {
     });
   }
 
-  if (lightMode === null) return <LoadingPlaceholder />;
+  if (lightMode === null || webgl === null) return <LoadingPlaceholder />;
 
-  if (lightMode) {
+  // 2D: escolhido pelo usuário (modo leve) ou fallback quando o 3D não abre.
+  function svgView(notice?: ReactNode) {
     const highlighted: CarPart[] = Array.from(
       new Set<CarPart>([
         ...(props.selectedParts ?? []),
@@ -68,15 +74,87 @@ export function Car3DLazy(props: ComponentProps<typeof Car3D>) {
           onSelectPart={props.onSelectPart}
           interactive={props.interactive ?? true}
         />
-        <ModeToggle lightMode={lightMode} onClick={toggleLightMode} />
+        {notice ?? <ModeToggle lightMode onClick={toggleLightMode} />}
       </div>
     );
   }
 
+  if (lightMode) return svgView();
+
+  if (!webgl.ok) {
+    return svgView(
+      <ViewerNotice
+        title="O navegador bloqueou o 3D. Feche todas as janelas dele e abra de novo."
+        detail={webgl.reason}
+      />,
+    );
+  }
+
   return (
-    <div className="relative">
-      <Car3D key={props.modelUrl ?? "default"} {...props} />
-      <ModeToggle lightMode={lightMode} onClick={toggleLightMode} />
+    <ViewerErrorBoundary
+      key={props.modelUrl ?? "default"}
+      fallback={(message) =>
+        svgView(
+          <ViewerNotice
+            title="Não foi possível carregar o 3D. Você pode continuar no 2D."
+            detail={message}
+          />,
+        )
+      }
+    >
+      <div className="relative">
+        <Car3D {...props} />
+        <ModeToggle lightMode={lightMode} onClick={toggleLightMode} />
+      </div>
+    </ViewerErrorBoundary>
+  );
+}
+
+// Falha de rede/asset/GPU dentro da cena 3D sobe pelo <Canvas> como erro de
+// render — sem este boundary derrubava a página inteira ("Application error").
+class ViewerErrorBoundary extends Component<
+  { children: ReactNode; fallback: (message: string) => ReactNode },
+  { message: string | null }
+> {
+  state: { message: string | null } = { message: null };
+
+  static getDerivedStateFromError(error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return { message: message || "erro desconhecido" };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error("[Car3D] falha no visualizador 3D:", error);
+  }
+
+  render() {
+    return this.state.message === null
+      ? this.props.children
+      : this.props.fallback(this.state.message);
+  }
+}
+
+// O motivo técnico fica visível (pequeno) pra que um print da tela já diga o
+// que aconteceu, sem precisar abrir o console.
+function ViewerNotice({ title, detail }: { title: string; detail: string }) {
+  return (
+    <div
+      role="status"
+      className="absolute inset-x-3 top-3 z-20 flex items-start gap-3 rounded-xl border border-white/[0.12] bg-black/75 px-3 py-2 backdrop-blur"
+    >
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-medium text-white">{title}</p>
+        <p className="truncate text-[10px] text-white/45" title={detail}>
+          {detail}
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => window.location.reload()}
+        className="shrink-0 rounded-full bg-[color:var(--color-primary)] px-3 py-1 text-[11px] font-medium text-white hover:opacity-90"
+      >
+        Tentar de novo
+      </button>
     </div>
   );
 }

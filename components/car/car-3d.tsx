@@ -9,7 +9,7 @@ import {
 } from "@react-three/drei";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { Plus, Minus, RotateCcw, Eye, EyeOff, Images, Palette } from "lucide-react";
+import { Plus, Minus, RotateCcw, Eye, EyeOff, Images, Palette, Pause, Play } from "lucide-react";
 import type { CarPart } from "@/types";
 import { PART_LABELS } from "@/lib/car-parts";
 import { VEHICLE_CATALOG } from "@/lib/vehicles";
@@ -27,6 +27,12 @@ const DANGER = "#EF4444";
 const NEUTRAL = "#64748B";
 const PRIMARY = "#4F6BFF";
 const CAR_URL = assetUrl(`/cars/${VEHICLE_CATALOG[0].glb}`);
+
+const CAMERA_START: [number, number, number] = [3.6, 1.9, 4.4];
+const ORBIT_TARGET: [number, number, number] = [0, 0.7, 0];
+const ORBIT_CENTER = new THREE.Vector3(...ORBIT_TARGET);
+/** Segundos por volta do giro automático (~15°/s — dá pra ver girando). */
+const TURNTABLE_SECONDS = 24;
 
 interface Hotspot3D {
   id: CarPart;
@@ -142,13 +148,18 @@ export function Car3D({
     );
   }, []);
   const controlsRef = useRef<any>(null);
-  const initialCamPos = useRef<THREE.Vector3 | null>(null);
-  const initialTarget = useRef<THREE.Vector3 | null>(null);
   // Ponte pra chamar `invalidate()` a partir de handlers fora do Canvas
   // (botões +/- e reset). Necessária no frameloop="demand" do mobile —
   // sem isso, mexer no zoom não repinta.
   const invalidateRef = useRef<() => void>(() => {});
   const [userActive, setUserActive] = useState(false);
+  // Botão de pausar o giro. Quem pediu "menos movimento" no sistema
+  // (prefers-reduced-motion) já começa parado e liga se quiser.
+  const [spinPaused, setSpinPaused] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
   const [focusing, setFocusing] = useState(false);
   const [markersHidden, setMarkersHidden] = useState(false);
   const [sceneryState, setSceneryState] = useState<string>(
@@ -200,30 +211,23 @@ export function Car3D({
     return () => window.removeEventListener("keydown", onKey);
   }, [glbFile, catalogFlip]);
 
-  useEffect(() => {
-    const controls = controlsRef.current;
-    if (!controls) return;
-
-    if (!initialCamPos.current) {
-      initialCamPos.current = controls.object.position.clone();
-      initialTarget.current = controls.target.clone();
-    }
-
-    const onStart = () => {
-      setUserActive(true);
-      if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    };
-    const onEnd = () => {
-      resumeTimer.current = setTimeout(() => setUserActive(false), 2500);
-    };
-    controls.addEventListener("start", onStart);
-    controls.addEventListener("end", onEnd);
-    return () => {
-      controls.removeEventListener("start", onStart);
-      controls.removeEventListener("end", onEnd);
-      if (resumeTimer.current) clearTimeout(resumeTimer.current);
-    };
+  // Pausa o giro enquanto o usuário arrasta/dá zoom e retoma 2,5s depois.
+  // Vai pelas props onStart/onEnd do OrbitControls: o controlsRef ainda é null
+  // no mount (o r3f monta os filhos do Canvas depois), então pendurar listeners
+  // num useEffect([]) nunca funcionava.
+  const handleControlsStart = useCallback(() => {
+    setUserActive(true);
+    if (resumeTimer.current) clearTimeout(resumeTimer.current);
   }, []);
+  const handleControlsEnd = useCallback(() => {
+    resumeTimer.current = setTimeout(() => setUserActive(false), 2500);
+  }, []);
+  useEffect(
+    () => () => {
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!focusSignal) return;
@@ -245,9 +249,9 @@ export function Car3D({
 
   function resetView() {
     const controls = controlsRef.current;
-    if (!controls || !initialCamPos.current || !initialTarget.current) return;
-    controls.object.position.copy(initialCamPos.current);
-    controls.target.copy(initialTarget.current);
+    if (!controls) return;
+    controls.object.position.set(...CAMERA_START);
+    controls.target.copy(ORBIT_CENTER);
     controls.update();
     invalidateRef.current();
   }
@@ -274,6 +278,9 @@ export function Car3D({
   // custa CPU/GPU no celular — se voltar a travar cliques (troca de cor,
   // seleção de peça), reintroduzir o gate `&& !isLightDevice` aqui.
   const effectiveAutoRotate = autoRotate;
+  // Para enquanto há peça selecionada: o FocusRig mira a câmera na peça e o
+  // giro tiraria ela de vista.
+  const spinning = effectiveAutoRotate && !userActive && !spinPaused && !activePart;
 
   // Objetos/arrays passados pro Canvas precisam ser referência ESTÁVEL — se
   // mudarem a cada render, o r3f pode re-instanciar internals (camera, GL,
@@ -282,15 +289,11 @@ export function Car3D({
     () => (isLightDevice ? [1, 1] : [1, 1.5]),
     [isLightDevice],
   );
-  const canvasCamera = useMemo(
-    () => ({ position: [3.6, 1.9, 4.4] as [number, number, number], fov: 30 }),
-    [],
-  );
+  const canvasCamera = useMemo(() => ({ position: CAMERA_START, fov: 30 }), []);
   const canvasGl = useMemo(
     () => ({ antialias: true, toneMapping: THREE.ACESFilmicToneMapping }),
     [],
   );
-  const orbitTarget = useMemo<[number, number, number]>(() => [0, 0.7, 0], []);
   const groupPosition = useMemo<[number, number, number]>(
     () => [0, scenery.floorY, 0],
     [scenery.floorY],
@@ -378,21 +381,23 @@ export function Car3D({
           <InvalidateBridge invalidateRef={invalidateRef} />
         </Suspense>
 
+        <Turntable controlsRef={controlsRef} spinning={spinning} />
         <OrbitControls
           ref={controlsRef}
           enablePan={false}
           enableZoom={interactive}
           enableRotate={interactive}
-          // Gira devagar quando o usuário não está mexendo; pausa enquanto
-          // interage. Custa um frameloop "always" enquanto girando — desligado
-          // no mobile pra não travar a UI thread.
-          autoRotate={effectiveAutoRotate && !userActive}
-          autoRotateSpeed={0.6}
+          // Gira sozinho quando ninguém está mexendo (velocidade no
+          // <Turntable>). Custa um frameloop "always" nas instâncias com
+          // autoRotate.
+          autoRotate={spinning}
+          onStart={handleControlsStart}
+          onEnd={handleControlsEnd}
           minPolarAngle={Math.PI / 4}
           maxPolarAngle={Math.PI / 2.1}
           minDistance={4}
           maxDistance={6.5}
-          target={orbitTarget}
+          target={ORBIT_TARGET}
         />
       </Canvas>
 
@@ -495,6 +500,14 @@ export function Car3D({
 
       {interactive && (
         <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5">
+          {effectiveAutoRotate && (
+            <ZoomBtn
+              onClick={() => setSpinPaused((v) => !v)}
+              label={spinPaused ? "Girar o carro" : "Pausar o giro"}
+            >
+              {spinPaused ? <Play size={13} /> : <Pause size={13} />}
+            </ZoomBtn>
+          )}
           {showHotspots && (
             <ZoomBtn
               onClick={() => setMarkersHidden((v) => !v)}
@@ -899,6 +912,37 @@ function Hotspot({
       )}
     </group>
   );
+}
+
+/**
+ * Velocidade do giro automático. O OrbitControls do drei chama update() sem
+ * delta, então o three gira um ângulo fixo POR FRAME — em tela de 120/144 Hz
+ * o carro girava 2x mais rápido que em 60 Hz. Aqui a velocidade é recalculada
+ * pelo delta a cada frame (prioridade -2: roda antes do update do drei, que é
+ * -1) pra manter TURNTABLE_SECONDS por volta em qualquer tela.
+ *
+ * Enquanto gira, também puxa o alvo de volta pro centro do carro: depois de
+ * focar uma peça (FocusRig move o alvo pra ela), o giro voltava orbitando a
+ * peça e o carro "varria" a tela.
+ */
+function Turntable({
+  controlsRef,
+  spinning,
+}: {
+  controlsRef: React.RefObject<any>;
+  spinning: boolean;
+}) {
+  useFrame((_, delta) => {
+    const controls = controlsRef.current;
+    if (!controls) return;
+    // Teto no delta: ao voltar de outra aba o primeiro frame vem com segundos
+    // acumulados e o carro "pularia" meia volta.
+    const dt = Math.min(delta, 0.1);
+    // three: ângulo por frame = 2π/3600 · speed → speed = 3600 · Δt / período
+    controls.autoRotateSpeed = (3600 * dt) / TURNTABLE_SECONDS;
+    if (spinning) controls.target.lerp(ORBIT_CENTER, 1 - Math.exp(-dt * 1.5));
+  }, -2);
+  return null;
 }
 
 function FocusRig({
