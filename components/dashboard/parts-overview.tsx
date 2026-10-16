@@ -228,6 +228,7 @@ export function PartsOverview({
             interactive
             autoRotate
             showHotspots
+            hotspotsStartHidden
           />
 
           {/* Só um "toast" mínimo mostrando a peça selecionada — detalhes cheios ficam na lista abaixo */}

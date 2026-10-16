@@ -118,6 +118,11 @@ interface Car3DProps {
   interactive?: boolean;
   autoRotate?: boolean;
   showHotspots?: boolean;
+  /**
+   * Abre com os marcadores das peças escondidos (carro limpo); o botão de olho
+   * mostra. Só faz sentido com `showHotspots`.
+   */
+  hotspotsStartHidden?: boolean;
   /** null = mantém a cor original do modelo */
   bodyColor?: string | null;
   /**
@@ -145,6 +150,7 @@ export function Car3D({
   interactive = true,
   autoRotate = true,
   showHotspots = true,
+  hotspotsStartHidden = false,
   bodyColor = null,
   onBodyColorChange,
   modelUrl = CAR_URL,
@@ -177,7 +183,7 @@ export function Car3D({
       window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
   const [focusing, setFocusing] = useState(false);
-  const [markersHidden, setMarkersHidden] = useState(false);
+  const [markersHidden, setMarkersHidden] = useState(hotspotsStartHidden);
   const [sceneryState, setSceneryState] = useState<string>(
     sceneryId ?? DEFAULT_SCENERY_ID,
   );
