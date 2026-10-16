@@ -537,6 +537,11 @@ export const VEHICLE_CATALOG: VehicleCatalogEntry[] = [
   { brand: "Toyota", model: "Supra Mk4", years: yearRange(2000, 2024), glb: "toyota-supra-mk4.glb", category: "coupe" },
   { brand: "Toyota", model: "SW4", years: yearRange(2000, 2024), glb: "toyota-sw4.glb", category: "suv" },
   { brand: "Toyota", model: "Yaris", years: yearRange(2018, 2024), glb: "toyota-yaris.glb", category: "hatchback" },
+  // Carros dos filmes. R34 e Charger reaproveitam os .glb que já estão em Nissan e Dodge.
+  { brand: "Velozes & Furiosos", model: "Dodge Charger R/T", years: yearRange(1970, 1970), glb: "dodge-dominic-toretto-s.glb", category: "coupe" },
+  { brand: "Velozes & Furiosos", model: "Mitsubishi Eclipse", years: yearRange(1995, 1995), glb: "mitsubishi-eclipse-robocar.glb", category: "coupe" },
+  { brand: "Velozes & Furiosos", model: "Nissan Skyline R34", years: yearRange(1999, 1999), glb: "nissan-gt-r.glb", category: "sports" },
+  { brand: "Velozes & Furiosos", model: "Toyota Supra MK IV", years: yearRange(1994, 1994), glb: "toyota-supra-mk4-ff.glb", category: "sports" },
   { brand: "Volkswagen", model: "Amarok", years: yearRange(2010, 2024), glb: "vw-amarok.glb", category: "pickup" },
   { brand: "Volkswagen", model: "Apollo", years: yearRange(2000, 2024), glb: "volkswagen-apollo.glb", category: "sedan" },
   { brand: "Volkswagen", model: "Beetle", years: yearRange(1963, 1963), glb: "volkswagen-beetle.glb", category: "coupe" },
