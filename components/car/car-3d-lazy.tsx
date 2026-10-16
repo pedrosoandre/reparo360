@@ -6,6 +6,7 @@ import { Box, Boxes } from "lucide-react";
 import { CarSvg } from "./car-svg";
 import type { CarPart } from "@/types";
 import { probeWebGL, type WebGLProbe } from "@/lib/webgl";
+import { VIEWER_BOX } from "./viewer-box";
 
 const Car3D = dynamic(() => import("./car-3d").then((m) => m.Car3D), {
   ssr: false,
@@ -16,7 +17,7 @@ const LIGHT_MODE_KEY = "reparo360.viewer.lightMode";
 
 function LoadingPlaceholder() {
   return (
-    <div className="w-full aspect-[16/8] min-h-[220px] max-h-[38vh] rounded-2xl bg-gradient-to-b from-[#0F1523] to-[#0B0F17] flex items-center justify-center">
+    <div className={`${VIEWER_BOX} rounded-2xl bg-gradient-to-b from-[#0F1523] to-[#0B0F17] flex items-center justify-center`}>
       <div className="flex flex-col items-center gap-3">
         <div className="w-10 h-10 rounded-full border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] animate-spin" />
         <p className="text-xs text-text-secondary">Carregando visualização…</p>
@@ -68,7 +69,7 @@ export function Car3DLazy(props: ComponentProps<typeof Car3D>) {
       ]),
     );
     return (
-      <div className="w-full aspect-[16/8] min-h-[220px] max-h-[38vh] rounded-2xl overflow-hidden bg-gradient-to-b from-[#0F1523] to-[#0B0F17] flex items-center justify-center relative">
+      <div className={`${VIEWER_BOX} rounded-2xl overflow-hidden bg-gradient-to-b from-[#0F1523] to-[#0B0F17] flex items-center justify-center relative`}>
         <CarSvg
           selectedParts={highlighted}
           onSelectPart={props.onSelectPart}

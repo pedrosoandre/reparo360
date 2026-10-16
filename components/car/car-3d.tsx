@@ -20,6 +20,7 @@ import {
   getScenery,
 } from "@/lib/scenery";
 import { assetUrl } from "@/lib/assets";
+import { VIEWER_BOX } from "./viewer-box";
 
 const GOLD = "#F5A524";
 const GOLD_GLOW = "#FBBF24";
@@ -29,6 +30,21 @@ const PRIMARY = "#4F6BFF";
 const CAR_URL = assetUrl(`/cars/${VEHICLE_CATALOG[0].glb}`);
 
 const CAMERA_START: [number, number, number] = [3.6, 1.9, 4.4];
+/**
+ * FOV vertical calibrado no card largo do desktop (16:8). Em cards mais
+ * estreitos o FOV abre pra manter a mesma largura enquadrada — com FOV fixo,
+ * o carro estourava as bordas no celular. Ver <ResponsiveFov>.
+ */
+const BASE_FOV = 30;
+const BASE_ASPECT = 2;
+/**
+ * No card 4:3 do celular as colunas de botões das laterais cobrem ~30% da
+ * largura (contra ~15% no desktop); lá o enquadramento fica 15% mais largo pro
+ * carro não passar embaixo delas ao girar. Entre 16:8 e 4:3 a folga cresce aos
+ * poucos, sem salto.
+ */
+const NARROW_ASPECT = 4 / 3;
+const NARROW_EXTRA_WIDTH = 1.15;
 const ORBIT_TARGET: [number, number, number] = [0, 0.7, 0];
 const ORBIT_CENTER = new THREE.Vector3(...ORBIT_TARGET);
 /** Segundos por volta do giro automático (~15°/s — dá pra ver girando). */
@@ -289,7 +305,7 @@ export function Car3D({
     () => (isLightDevice ? [1, 1] : [1, 1.5]),
     [isLightDevice],
   );
-  const canvasCamera = useMemo(() => ({ position: CAMERA_START, fov: 30 }), []);
+  const canvasCamera = useMemo(() => ({ position: CAMERA_START, fov: BASE_FOV }), []);
   const canvasGl = useMemo(
     () => ({ antialias: true, toneMapping: THREE.ACESFilmicToneMapping }),
     [],
@@ -304,7 +320,7 @@ export function Car3D({
   );
 
   return (
-    <div className="w-full aspect-[16/8] max-h-[38vh] min-h-[220px] relative">
+    <div className={`${VIEWER_BOX} relative`}>
       <Canvas
         // Sombras dinâmicas dropadas em tudo — a `ContactShadows` bakada dá o
         // "chão" visual e não custa por frame. Real-time shadow map do
@@ -382,6 +398,7 @@ export function Car3D({
         </Suspense>
 
         <Turntable controlsRef={controlsRef} spinning={spinning} />
+        <ResponsiveFov />
         <OrbitControls
           ref={controlsRef}
           enablePan={false}
@@ -942,6 +959,42 @@ function Turntable({
     controls.autoRotateSpeed = (3600 * dt) / TURNTABLE_SECONDS;
     if (spinning) controls.target.lerp(ORBIT_CENTER, 1 - Math.exp(-dt * 1.5));
   }, -2);
+  return null;
+}
+
+/**
+ * Abre o FOV vertical quando o card é mais estreito que o 16:8 do desktop,
+ * mantendo a largura enquadrada constante: o carro cabe igual no celular, e o
+ * card mais alto ganha espaço em cima e embaixo em vez de cortar as pontas.
+ */
+function ResponsiveFov() {
+  const camera = useThree((s) => s.camera);
+  const width = useThree((s) => s.size.width);
+  const height = useThree((s) => s.size.height);
+  const invalidate = useThree((s) => s.invalidate);
+
+  useEffect(() => {
+    if (!(camera instanceof THREE.PerspectiveCamera) || !width || !height) return;
+    const aspect = width / height;
+    const narrowness = THREE.MathUtils.clamp(
+      (BASE_ASPECT - aspect) / (BASE_ASPECT - NARROW_ASPECT),
+      0,
+      1,
+    );
+    const halfWidth =
+      Math.tan(THREE.MathUtils.degToRad(BASE_FOV / 2)) *
+      BASE_ASPECT *
+      THREE.MathUtils.lerp(1, NARROW_EXTRA_WIDTH, narrowness);
+    const fov =
+      aspect >= BASE_ASPECT
+        ? BASE_FOV
+        : THREE.MathUtils.radToDeg(2 * Math.atan(halfWidth / aspect));
+    if (Math.abs(camera.fov - fov) < 0.01) return;
+    camera.fov = fov;
+    camera.updateProjectionMatrix();
+    invalidate();
+  }, [camera, width, height, invalidate]);
+
   return null;
 }
 
