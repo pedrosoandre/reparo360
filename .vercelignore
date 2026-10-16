@@ -1,13 +1,10 @@
-# Vercel-only ignore. Se você configurou NEXT_PUBLIC_ASSETS_BASE apontando pra
-# um CDN externo (Vercel Blob, R2, S3), estes diretórios NÃO precisam ir no
-# deploy — o `lib/assets.ts` resolve tudo pela base configurada.
+# Vercel-only ignore.
 #
-# Se NEXT_PUBLIC_ASSETS_BASE estiver vazia, COMENTE as linhas abaixo — o app
-# vai tentar servir /cars/*.glb do próprio deploy e essas linhas quebram tudo.
-
-public/cars/
-public/scenery/
-public/hdri/
+# public/cars, public/scenery e public/hdri PRECISAM ir no deploy enquanto
+# NEXT_PUBLIC_ASSETS_BASE estiver vazia (é o caso hoje): o app busca os .glb do
+# próprio deploy. Só exclua essas pastas depois de subir os arquivos pra um CDN
+# e configurar a base no painel da Vercel. Se excluir sem a base, o
+# `scripts/check-assets.mjs` derruba o build de propósito.
 
 # Nunca precisam ir:
 oficinas-rs-scraper/
