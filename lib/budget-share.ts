@@ -11,6 +11,7 @@
  * pra oficina). Atacante determinado recomputa a assinatura. Quando existir
  * backend, o link vira `/o/<code>` opaco resolvido no servidor.
  */
+import { z } from "zod";
 import type { Budget } from "@/types";
 import { formatBRL } from "@/lib/utils";
 import { DAMAGE_LABELS } from "@/lib/car-parts";
@@ -66,6 +67,25 @@ export interface ShareableBudget {
   grandTotal: number;
   createdAt: string;
 }
+
+/**
+ * Formato aceito ao LER um link. O payload vem da URL, então qualquer coisa
+ * pode chegar; sem isto, um `?d=e30` ("{}") derrubava /o/[code] com
+ * "Application error". Links antigos sem extras abrem com lista vazia.
+ */
+const shareableSchema = z.object({
+  code: z.string(),
+  vehicle: z.string(),
+  vehicleYear: z.number(),
+  customerName: z.string().default(""),
+  customerPhone: z.string().optional(),
+  items: z.array(z.object({ label: z.string(), damages: z.array(z.string()), cost: z.number() })),
+  extras: z.array(z.object({ label: z.string(), price: z.number() })).default([]),
+  totalRepair: z.number(),
+  totalExtras: z.number().default(0),
+  grandTotal: z.number(),
+  createdAt: z.string(),
+});
 
 export function toShareable(budget: Budget): ShareableBudget {
   const items = budget.items.map((i) => ({
@@ -159,14 +179,16 @@ export function readPublicBudget(
   s: string | null,
 ): PublicBudgetRead | null {
   if (!d) return null;
-  let budget: ShareableBudget;
+  let raw: unknown;
   try {
-    budget = fromBase64Url<ShareableBudget>(d);
+    raw = fromBase64Url(d);
   } catch {
     return null;
   }
   const verified = s !== null && verifyPayload(d, s);
   // Se veio assinatura e ela não bate, é sabotagem intencional: recuse.
   if (s !== null && !verified) return null;
-  return { budget, verified };
+  const parsed = shareableSchema.safeParse(raw);
+  if (!parsed.success) return null;
+  return { budget: parsed.data, verified };
 }

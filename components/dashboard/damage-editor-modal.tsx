@@ -6,8 +6,8 @@ import { PART_LABELS, DAMAGE_LABELS } from "@/lib/car-parts";
 import { estimate, splitServiceParts } from "@/lib/pricing";
 import { formatBRL } from "@/lib/utils";
 import { cn } from "@/lib/utils";
-import { MAX_PHOTO_MB, filesToPhotos } from "@/lib/photos";
-import { deleteBlob, refToDataUrl } from "@/lib/blob-store";
+import { filesToPhotos, refToAnalysisDataUrl } from "@/lib/photos";
+import { deleteBlob } from "@/lib/blob-store";
 import { usePhotoUrls } from "@/lib/use-photo-urls";
 import type { CarPart, DamageRecord, DamageType } from "@/types";
 import { toast } from "@/stores/toast-store";
@@ -142,8 +142,9 @@ export function DamageEditorModal({
     setAnalysis(null);
     try {
       // A API precisa do base64; o estado guarda só referências do IndexedDB.
-      const inline = (await Promise.all(photos.map((p) => refToDataUrl(p).catch(() => null))))
-        .filter((x): x is string => x !== null);
+      const inline = (
+        await Promise.all(photos.map((p) => refToAnalysisDataUrl(p).catch(() => null)))
+      ).filter((x): x is string => x !== null);
 
       if (inline.length === 0) {
         setAnalysisError("Não foi possível ler as fotos gravadas no navegador.");
@@ -159,9 +160,17 @@ export function DamageEditorModal({
           vehicle,
         }),
       });
-      const data = await res.json();
+      // 413/504 da Vercel vêm em HTML: sem esta checagem o res.json() lançava
+      // e o usuário via "Falha de rede", que não era o problema.
+      const isJson = res.headers.get("content-type")?.includes("application/json");
+      const data = isJson ? await res.json() : null;
       if (!res.ok) {
-        setAnalysisError(data?.message ?? "Não foi possível analisar as fotos.");
+        setAnalysisError(
+          data?.message ??
+            (res.status === 413
+              ? "As fotos ficaram grandes demais pra análise. Tente com menos fotos."
+              : `A análise não respondeu (erro ${res.status}). Tente de novo em instantes.`),
+        );
         return;
       }
       setAnalysis(data as AnalysisResult);
@@ -319,7 +328,7 @@ export function DamageEditorModal({
             </div>
           ) : (
             <p className="text-[11px] text-[color:var(--color-muted)]">
-              Anexe fotos do dano (opcional). Até {MAX_PHOTO_MB}MB por imagem.
+              Anexe fotos do dano (opcional). Fotos grandes são reduzidas automaticamente.
             </p>
           )}
 

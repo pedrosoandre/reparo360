@@ -353,6 +353,12 @@ export function PartsOverview({
                     MAX_PHOTOS_PER_DAMAGE - d.photos.length,
                   );
                   if (next.refs.length) addPhotosToDamage(d.id, next.refs);
+                  if (next.rejected.length) {
+                    toast(
+                      next.rejected.map((r) => `"${r.name}": ${r.reason}`).join(" · "),
+                      "error",
+                    );
+                  }
                 }}
                 onNotesChange={(text) => setDamageNotes(d.id, text)}
                 slotsLeft={MAX_PHOTOS_PER_DAMAGE - d.photos.length}

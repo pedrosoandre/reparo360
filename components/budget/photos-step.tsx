@@ -5,17 +5,32 @@ import { useBudgetDraft } from "@/stores/budget-store";
 import { Upload, X, Camera } from "lucide-react";
 import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { filesToPhotos } from "@/lib/photos";
+import { deleteBlob } from "@/lib/blob-store";
+import { usePhotoUrls } from "@/lib/use-photo-urls";
+import { toast } from "@/stores/toast-store";
+
+const MAX_PHOTOS = 10;
 
 export function PhotosStep() {
   const { photos, addPhoto, removePhoto, customerName, customerPhone, setCustomer } = useBudgetDraft();
   const inputRef = useRef<HTMLInputElement>(null);
+  const urls = usePhotoUrls(photos);
 
-  function handleFiles(files: FileList | null) {
-    if (!files) return;
-    Array.from(files).forEach((f) => {
-      const url = URL.createObjectURL(f);
-      addPhoto(url);
-    });
+  // Mesmo caminho do dashboard (comprime e grava no IndexedDB). Antes eram
+  // blob: URLs, que somem no reload e nunca apareciam no orçamento salvo.
+  async function handleFiles(files: FileList | null) {
+    const next = await filesToPhotos(files, MAX_PHOTOS - photos.length);
+    next.refs.forEach(addPhoto);
+    if (next.rejected.length) {
+      toast(next.rejected.map((r) => `"${r.name}": ${r.reason}`).join(" · "), "error");
+    }
+    if (inputRef.current) inputRef.current.value = "";
+  }
+
+  function handleRemove(ref: string) {
+    removePhoto(ref);
+    deleteBlob(ref).catch(() => {});
   }
 
   return (
@@ -32,7 +47,9 @@ export function PhotosStep() {
         >
           <Upload size={28} className="text-[color:var(--color-primary-soft)]" />
           <span className="text-sm font-medium">Arraste ou clique para enviar</span>
-          <span className="text-xs text-text-secondary">PNG, JPG até 10MB</span>
+          <span className="text-xs text-text-secondary">
+            JPG ou PNG, até {MAX_PHOTOS} fotos. Fotos grandes são reduzidas.
+          </span>
         </button>
         <input
           ref={inputRef}
@@ -45,18 +62,20 @@ export function PhotosStep() {
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
           <AnimatePresence>
-            {photos.map((url) => (
+            {photos.map((ref, i) => (
               <motion.div
-                key={url}
+                key={ref}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 className="relative aspect-square rounded-2xl overflow-hidden group border border-[color:var(--color-border)]"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt="Foto do veículo" className="w-full h-full object-cover" />
+                {urls[i] && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={urls[i]!} alt="Foto do veículo" className="w-full h-full object-cover" />
+                )}
                 <button
-                  onClick={() => removePhoto(url)}
+                  onClick={() => handleRemove(ref)}
                   className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <X size={14} />

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePhotoUrls } from "@/lib/use-photo-urls";
+import { useFipe } from "@/lib/use-fipe";
 import {
   ChevronRight,
   ChevronDown,
@@ -261,6 +262,10 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
     [allDamages, vehicle.id],
   );
   const summary = useMemo(() => summarize(damages), [damages]);
+  // Mesma consulta do PartsOverview (o /api/fipe guarda em cache): o orçamento
+  // salvo precisa usar o valor FIPE que deu o preço mostrado na tela.
+  const fipe = useFipe(vehicle);
+  const marketValue = fipe.status === "found" ? fipe.marketValue : undefined;
   const clearDamagesForVehicle = useDamagesStore((s) => s.clearForVehicle);
   const createFromDashboard = useBudgetsStore((s) => s.createFromDashboard);
   const saveDraft = useBudgetsStore((s) => s.saveDraft);
@@ -284,6 +289,7 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
       customerPhone: user.phone,
       source: "dashboard",
       color: bodyColor ?? undefined,
+      marketValue,
     });
     pushNotification(user.id, {
       title: `Orçamento ${budget.code} enviado`,
@@ -313,6 +319,7 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
       customerPhone: user.phone,
       source: "dashboard",
       color: bodyColor ?? undefined,
+      marketValue,
     });
     toast(`Rascunho salvo (${draft.code}).`, "success");
   }

@@ -37,7 +37,15 @@ export function VehicleStep() {
         <Field label="Marca">
           <select
             value={vehicle.brand ?? ""}
-            onChange={(e) => setVehicle({ brand: e.target.value, model: "", year: undefined })}
+            onChange={(e) =>
+              setVehicle({
+                brand: e.target.value,
+                model: "",
+                year: undefined,
+                category: undefined,
+                glb: undefined,
+              })
+            }
             className="input"
           >
             <option value="">Selecione…</option>
@@ -50,7 +58,17 @@ export function VehicleStep() {
         <Field label="Modelo">
           <select
             value={vehicle.model ?? ""}
-            onChange={(e) => setVehicle({ model: e.target.value, year: undefined })}
+            onChange={(e) => {
+              // Categoria e glb vêm do catálogo: o resumo calcula o preço com
+              // a categoria, e o orçamento salvo também (via findVehicle).
+              const entry = findVehicle(vehicle.brand, e.target.value);
+              setVehicle({
+                model: e.target.value,
+                year: undefined,
+                category: entry?.category,
+                glb: entry?.glb,
+              });
+            }}
             disabled={!vehicle.brand}
             className="input"
           >

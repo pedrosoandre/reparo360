@@ -181,6 +181,21 @@ describe("integridade do link", () => {
     expect(out.budget.code).toBe("R360-A3F9K");
   });
 
+  it("readPublicBudget recusa payload sem a estrutura de orçamento (derrubava /o/[code])", () => {
+    expect(readPublicBudget("e30", null)).toBeNull(); // "{}"
+    const soCodigo = toBase64Url({ code: "R360-A3F9K" });
+    expect(readPublicBudget(soCodigo, signPayload(soCodigo))).toBeNull();
+    const itemsErrado = toBase64Url({ ...toShareable(BUDGET), items: "capô" });
+    expect(readPublicBudget(itemsErrado, null)).toBeNull();
+  });
+
+  it("readPublicBudget abre link antigo sem extras, com lista vazia", () => {
+    const { extras: _extras, totalExtras: _total, ...antigo } = toShareable(BUDGET);
+    const out = readPublicBudget(toBase64Url(antigo), null)!;
+    expect(out.budget.extras).toEqual([]);
+    expect(out.budget.items).toHaveLength(BUDGET.items.length);
+  });
+
   it("readPublicBudget devolve null quando falta o payload", () => {
     expect(readPublicBudget(null, null)).toBeNull();
     expect(readPublicBudget("", null)).toBeNull();

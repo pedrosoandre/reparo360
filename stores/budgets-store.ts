@@ -40,6 +40,11 @@ export interface BuildBudgetInput {
   notes?: string;
   source: Budget["source"];
   color?: string;
+  /**
+   * Valor FIPE que a tela usou pro preço. Sem ele o orçamento salvo cai na
+   * heurística de categoria/marca e o total diverge do que o usuário viu.
+   */
+  marketValue?: number;
 }
 
 function buildBudget(input: BuildBudgetInput, status: BudgetStatus): Budget {
@@ -59,6 +64,7 @@ function buildBudget(input: BuildBudgetInput, status: BudgetStatus): Budget {
     const r = estimate(d.part, d.damages, {
       category: input.vehicle.category,
       brand: input.vehicle.brand,
+      marketValue: input.marketValue,
     });
     labor += r.labor;
     paint += r.paint;
