@@ -42,8 +42,8 @@ export function SummaryStep() {
         <GlassCard className="p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-xl font-semibold">Estimativa gerada</h2>
-              <p className="text-sm text-text-secondary">
+              <h2 className="text-title font-semibold">Estimativa gerada</h2>
+              <p className="text-body text-text-secondary">
                 {vehicle.brand} {vehicle.model} {vehicle.year} · {customerName || "Cliente"}
               </p>
             </div>
@@ -53,13 +53,13 @@ export function SummaryStep() {
         </GlassCard>
 
         <GlassCard className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Itens do orçamento</h3>
+          <h3 className="text-title font-semibold mb-4">Itens do orçamento</h3>
           <div className="flex flex-col divide-y divide-[color:var(--color-border)]">
             {breakdown.rows.map((r) => (
               <div key={r.part} className="py-4 first:pt-0 last:pb-0 flex items-start justify-between gap-4">
                 <div>
                   <p className="font-medium">{PART_LABELS[r.part]}</p>
-                  <p className="text-sm text-text-secondary">
+                  <p className="text-body text-text-secondary">
                     {r.damages.map((d) => DAMAGE_LABELS[d]).join(", ") || "Sem danos selecionados"}
                   </p>
                 </div>
@@ -72,14 +72,14 @@ export function SummaryStep() {
 
       <div className="flex flex-col gap-4">
         <GlassCard glow className="p-6">
-          <p className="text-xs uppercase tracking-wider text-text-secondary">Valor estimado</p>
-          <p className="text-4xl font-semibold mt-1">{formatBRL(breakdown.total)}</p>
-          <div className="mt-4 flex flex-col gap-2 text-sm">
+          <p className="text-meta uppercase tracking-[0.08em] text-text-secondary">Valor estimado</p>
+          <p className="tabular text-metric font-semibold mt-1">{formatBRL(breakdown.total)}</p>
+          <div className="mt-4 flex flex-col gap-2 text-label">
             <Row label="Pintura/Mão de obra" value={breakdown.service} />
             <Row label="Peças" value={breakdown.parts} />
           </div>
           {breakdown.hasFallback && (
-            <p className="mt-3 text-xs text-[color:var(--color-warning,#f59e0b)]">
+            <p className="mt-3 text-label text-[color:var(--color-warning,#f59e0b)]">
               Parte deste orçamento usa valor genérico — a combinação de peça e dano não
               está na tabela. Confirme com a oficina.
             </p>
@@ -91,7 +91,7 @@ export function SummaryStep() {
             <CheckCircle2 className="text-[color:var(--color-success)] mt-0.5" size={20} />
             <div>
               <p className="font-medium">Pronto para enviar</p>
-              <p className="text-sm text-text-secondary">
+              <p className="text-body text-text-secondary">
                 {photos.length} fotos anexadas · {items.length} peças analisadas
               </p>
             </div>

@@ -32,8 +32,8 @@ export function DamageStep() {
       {items.map((it) => (
         <GlassCard key={it.part} className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold">{PART_LABELS[it.part]}</h3>
-            <span className="text-xs text-text-secondary">
+            <h3 className="text-title font-semibold">{PART_LABELS[it.part]}</h3>
+            <span className="text-label text-text-secondary">
               {it.damages.length} {it.damages.length === 1 ? "dano" : "danos"} selecionado(s)
             </span>
           </div>
@@ -50,7 +50,7 @@ export function DamageStep() {
                     setDamages(it.part, next);
                   }}
                   className={cn(
-                    "rounded-2xl px-4 py-2.5 text-sm border transition-all duration-200",
+                    "rounded-2xl px-4 py-2.5 text-label border transition-all duration-200",
                     active
                       ? "bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/50 text-[color:var(--color-primary-soft)]"
                       : "bg-white/[0.02] border-[color:var(--color-border)] text-text-secondary hover:text-text hover:border-[color:var(--color-primary)]/30",
@@ -66,13 +66,13 @@ export function DamageStep() {
 
       <GlassCard className="p-6">
         <label className="flex flex-col gap-2">
-          <span className="text-xs uppercase tracking-wider text-text-secondary">Observações (opcional)</span>
+          <span className="text-meta uppercase tracking-[0.08em] text-text-secondary">Observações (opcional)</span>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={4}
             placeholder="Descreva contexto adicional: colisão traseira, batida em poste, etc."
-            className="w-full p-4 rounded-2xl bg-white/[0.03] border border-[color:var(--color-border)] text-sm resize-none focus:outline-none focus:border-[color:var(--color-primary)] focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
+            className="w-full p-4 rounded-2xl bg-white/[0.03] border border-[color:var(--color-border)] text-body resize-none focus:outline-none focus:border-[color:var(--color-primary)] focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
           />
         </label>
       </GlassCard>

@@ -36,8 +36,8 @@ export function PhotosStep() {
   return (
     <div className="grid lg:grid-cols-[1fr_360px] gap-6">
       <GlassCard className="p-6">
-        <h2 className="text-xl font-semibold mb-1">Envie fotos do veículo</h2>
-        <p className="text-sm text-text-secondary mb-4">
+        <h2 className="text-title font-semibold mb-1">Envie fotos do veículo</h2>
+        <p className="text-body text-text-secondary mb-4">
           Adicione ao menos 3 fotos: geral, área danificada de perto e ângulo lateral.
         </p>
 
@@ -46,8 +46,8 @@ export function PhotosStep() {
           className="w-full h-40 rounded-2xl border-2 border-dashed border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50 bg-white/[0.02] hover:bg-[color:var(--color-primary)]/[0.05] transition-all flex flex-col items-center justify-center gap-2"
         >
           <Upload size={28} className="text-[color:var(--color-primary-soft)]" />
-          <span className="text-sm font-medium">Arraste ou clique para enviar</span>
-          <span className="text-xs text-text-secondary">
+          <span className="text-body font-medium">Arraste ou clique para enviar</span>
+          <span className="text-label text-text-secondary">
             JPG ou PNG, até {MAX_PHOTOS} fotos. Fotos grandes são reduzidas.
           </span>
         </button>
@@ -86,7 +86,7 @@ export function PhotosStep() {
         </div>
 
         {photos.length === 0 && (
-          <div className="mt-4 flex items-center gap-2 text-xs text-text-secondary">
+          <div className="mt-4 flex items-center gap-2 text-label text-text-secondary">
             <Camera size={14} />
             Nenhuma foto enviada ainda
           </div>
@@ -94,7 +94,7 @@ export function PhotosStep() {
       </GlassCard>
 
       <GlassCard className="p-6 h-fit">
-        <h3 className="text-lg font-semibold mb-4">Seus dados</h3>
+        <h3 className="text-title font-semibold mb-4">Seus dados</h3>
         <div className="flex flex-col gap-4">
           <Field label="Nome completo">
             <input
@@ -142,7 +142,7 @@ export function PhotosStep() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="flex flex-col gap-2">
-      <span className="text-xs uppercase tracking-wider text-text-secondary">{label}</span>
+      <span className="text-meta uppercase tracking-[0.08em] text-text-secondary">{label}</span>
       {children}
     </label>
   );

@@ -60,8 +60,8 @@ export default function OrcamentosPage() {
         <div className="premium-card p-4 sm:p-5">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
             <div>
-              <h1 className="text-lg font-semibold">Meus orçamentos</h1>
-              <p className="text-xs text-[color:var(--color-muted)]">
+              <h1 className="text-title font-semibold">Meus orçamentos</h1>
+              <p className="tabular text-label text-[color:var(--color-muted)]">
                 {budgets.length} no total · {formatBRL(total)} estimado
               </p>
             </div>
@@ -80,14 +80,14 @@ export default function OrcamentosPage() {
                   key={f.key}
                   onClick={() => setFilter(f.key)}
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] transition-colors",
+                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-label transition-colors",
                     active
                       ? "bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/40 text-white"
                       : "bg-white/[0.02] border-white/[0.06] text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.05]",
                   )}
                 >
                   {f.label}
-                  <span className="text-[10px] opacity-60">{count}</span>
+                  <span className="tabular text-meta opacity-60">{count}</span>
                 </button>
               );
             })}
@@ -114,21 +114,21 @@ export default function OrcamentosPage() {
                     <Receipt size={16} />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium truncate">
+                    <p className="text-body font-medium truncate">
                       {b.vehicleSnapshot.brand} {b.vehicleSnapshot.model} ·{" "}
                       {b.vehicleSnapshot.year}
                     </p>
-                    <p className="text-[11px] text-[color:var(--color-muted)] flex items-center gap-2 mt-0.5">
+                    <p className="tabular text-meta text-[color:var(--color-muted)] flex items-center gap-2 mt-0.5">
                       <span className="font-mono">{b.code}</span>
                       <span>· {b.items.length} peça(s)</span>
                       <span>· {formatDate(b.updatedAt)}</span>
                     </p>
                   </div>
                   <div className="text-right shrink-0 mr-2">
-                    <p className="text-sm font-semibold">{formatBRL(b.total)}</p>
+                    <p className="tabular text-body font-semibold">{formatBRL(b.total)}</p>
                     <span
                       className={cn(
-                        "inline-block mt-0.5 text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded",
+                        "inline-block mt-1 text-meta font-semibold uppercase tracking-[0.08em] px-2 py-0.5 rounded",
                         STATUS_STYLES[b.status],
                       )}
                     >

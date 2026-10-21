@@ -71,10 +71,10 @@ export default function BudgetDetailPage() {
     return (
       <DashboardShell>
         <div className="premium-card p-6 text-center">
-          <p className="text-sm">Orçamento não encontrado.</p>
+          <p className="text-body">Orçamento não encontrado.</p>
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1 text-xs text-[color:var(--color-primary-glow)] mt-3 hover:brightness-125"
+            className="inline-flex items-center gap-1 text-label text-[color:var(--color-primary-glow)] mt-3 hover:brightness-125"
           >
             <ChevronLeft size={12} /> Voltar
           </Link>
@@ -87,7 +87,7 @@ export default function BudgetDetailPage() {
     return (
       <DashboardShell>
         <div className="premium-card p-6 text-center">
-          <p className="text-sm">Este orçamento não é seu.</p>
+          <p className="text-body">Este orçamento não é seu.</p>
         </div>
       </DashboardShell>
     );
@@ -134,12 +134,12 @@ export default function BudgetDetailPage() {
         <div className="flex items-center justify-between">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1 text-xs text-[color:var(--color-muted)] hover:text-white transition-colors"
+            className="inline-flex items-center gap-1 text-label text-[color:var(--color-muted)] hover:text-white transition-colors"
           >
             <ChevronLeft size={13} /> Voltar ao dashboard
           </Link>
           <span
-            className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${STATUS_COLOR[budget.status]}`}
+            className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-meta font-semibold uppercase tracking-[0.08em] ${STATUS_COLOR[budget.status]}`}
           >
             {STATUS_LABEL[budget.status]}
           </span>
@@ -149,11 +149,11 @@ export default function BudgetDetailPage() {
         <div className="premium-card p-5 sm:p-7">
           <div className="flex items-start justify-between gap-6 flex-wrap">
             <div className="min-w-0">
-              <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)]">
+              <p className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)]">
                 Código do orçamento
               </p>
-              <p className="font-mono text-2xl font-semibold">{budget.code}</p>
-              <div className="mt-3 flex items-center gap-2 text-sm">
+              <p className="font-mono tabular text-metric font-semibold">{budget.code}</p>
+              <div className="mt-3 flex items-center gap-2 text-label">
                 <Car size={14} className="text-[color:var(--color-muted)]" />
                 <span className="font-medium">
                   {budget.vehicleSnapshot.brand} {budget.vehicleSnapshot.model}
@@ -163,7 +163,7 @@ export default function BudgetDetailPage() {
                   {budget.vehicleSnapshot.year}
                 </span>
               </div>
-              <p className="text-[11px] text-[color:var(--color-muted)] mt-2">
+              <p className="text-meta text-[color:var(--color-muted)] mt-2">
                 Criado em {formatDate(budget.createdAt)}
                 {budget.updatedAt !== budget.createdAt && (
                   <> · Atualizado em {formatDate(budget.updatedAt)}</>
@@ -171,13 +171,13 @@ export default function BudgetDetailPage() {
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[11px] uppercase tracking-wider text-[color:var(--color-muted)]">
+              <p className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)]">
                 Total estimado
               </p>
-              <p className="text-4xl font-bold tracking-tight mt-1">
+              <p className="tabular text-metric font-bold mt-1">
                 {formatBRL(grandTotal)}
               </p>
-              <p className="text-[11px] text-[color:var(--color-muted)] mt-1">
+              <p className="text-meta text-[color:var(--color-muted)] mt-1">
                 Reparo {formatBRL(budget.total)}
                 {extrasTotal > 0 && ` + extras ${formatBRL(extrasTotal)}`}
               </p>
@@ -190,7 +190,7 @@ export default function BudgetDetailPage() {
                 size={16}
                 className="text-yellow-300 shrink-0 mt-0.5"
               />
-              <div className="text-xs leading-relaxed">
+              <div className="text-label leading-relaxed">
                 <p className="font-semibold text-yellow-100">
                   Confiança baixa ({budget.confidence}%) — combinação de danos
                   fora da tabela.
@@ -217,20 +217,20 @@ export default function BudgetDetailPage() {
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">
+                    <p className="text-body font-medium truncate">
                       {item.partLabel}
                     </p>
-                    <p className="text-[11px] text-[color:var(--color-muted)] truncate mt-0.5">
+                    <p className="text-meta text-[color:var(--color-muted)] truncate mt-0.5">
                       {item.damages.map((d) => DAMAGE_LABELS[d]).join(", ")}
                     </p>
                     {item.notes && (
-                      <p className="text-[11px] text-[color:var(--color-muted)] mt-1 italic">
+                      <p className="text-meta text-[color:var(--color-muted)] mt-1 italic">
                         &ldquo;{item.notes}&rdquo;
                       </p>
                     )}
                   </div>
                   <div className="text-right shrink-0">
-                    <p className="text-sm font-semibold">
+                    <p className="tabular text-body font-semibold">
                       {formatBRL(item.estimatedCost)}
                     </p>
                     <SeverityPill severity={item.severity} />
@@ -241,7 +241,7 @@ export default function BudgetDetailPage() {
           </div>
 
           {/* Breakdown compacto — só a matemática, sem competir com o total */}
-          <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs text-[color:var(--color-muted)]">
+          <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-meta text-[color:var(--color-muted)]">
             <span>
               Mão de obra + pintura:{" "}
               <span className="text-white font-medium">
@@ -277,20 +277,20 @@ export default function BudgetDetailPage() {
             <div className="flex items-center gap-1.5 flex-wrap">
               <button
                 onClick={() => addExtra(budget.id, "oil_change")}
-                className="inline-flex items-center gap-1 rounded-full bg-[#F5A524]/15 hover:bg-[#F5A524]/25 border border-[#F5A524]/30 px-2.5 py-1 text-[11px] font-medium text-[#F5A524] transition"
+                className="inline-flex items-center gap-1 rounded-full bg-[#F5A524]/15 hover:bg-[#F5A524]/25 border border-[#F5A524]/30 px-2.5 py-1 text-label font-medium text-[#F5A524] transition"
               >
                 <Plus size={11} /> Troca de óleo
               </button>
               <button
                 onClick={() => addExtra(budget.id, "wheel_alignment")}
-                className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 px-2.5 py-1 text-[11px] font-medium text-white transition"
+                className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 px-2.5 py-1 text-label font-medium text-white transition"
               >
                 <Plus size={11} /> Geometria + balanceamento
               </button>
             </div>
           </div>
           {(budget.extras?.length ?? 0) === 0 ? (
-            <p className="text-xs text-[color:var(--color-muted)]">
+            <p className="text-label text-[color:var(--color-muted)]">
               Nenhum extra adicionado. Ofereça para o cliente durante o
               atendimento — é upsell direto.
             </p>
@@ -309,13 +309,13 @@ export default function BudgetDetailPage() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{e.label}</p>
-                    <p className="text-[11px] text-[color:var(--color-muted)] mt-0.5">
+                    <p className="text-body font-medium truncate">{e.label}</p>
+                    <p className="text-meta text-[color:var(--color-muted)] mt-0.5">
                       Adicionado em {formatDate(e.addedAt)} · Catálogo:{" "}
                       {formatBRL(EXTRA_CATALOG[e.kind].price)}
                     </p>
                   </div>
-                  <p className="text-sm font-semibold shrink-0">
+                  <p className="tabular text-body font-semibold shrink-0">
                     {formatBRL(e.price)}
                   </p>
                   <button
@@ -359,18 +359,18 @@ export default function BudgetDetailPage() {
                   className="flex items-center justify-between gap-3 rounded-xl bg-white/[0.02] border border-white/[0.06] px-3 py-2"
                 >
                   <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">{c.nome}</p>
-                    <p className="text-[11px] text-[color:var(--color-muted)]">
+                    <p className="text-body font-medium truncate">{c.nome}</p>
+                    <p className="text-meta text-[color:var(--color-muted)]">
                       {c.cidade}
                     </p>
                   </div>
-                  <p className="text-[11px] text-[color:var(--color-muted)] shrink-0">
+                  <p className="text-meta text-[color:var(--color-muted)] shrink-0">
                     Enviado em {formatDate(c.sentAt)}
                   </p>
                 </div>
               ))}
             </div>
-            <p className="text-[11px] text-[color:var(--color-muted)] mt-3 leading-relaxed">
+            <p className="text-meta text-[color:var(--color-muted)] mt-3 leading-relaxed">
               As respostas voltam pelo WhatsApp da oficina. Quando registrar
               contra-propostas aqui, dá pra comparar — em breve.
             </p>
@@ -389,7 +389,7 @@ export default function BudgetDetailPage() {
 
         {/* AÇÕES SECUNDÁRIAS — status + exportar + apagar */}
         <div className="premium-card p-4 sm:p-6">
-          <h2 className="font-semibold mb-3 text-sm text-[color:var(--color-muted)]">
+          <h2 className="font-semibold mb-3 text-label uppercase tracking-[0.08em] text-[color:var(--color-muted)]">
             Ações do orçamento
           </h2>
 
@@ -398,20 +398,20 @@ export default function BudgetDetailPage() {
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <button
                 onClick={() => setStatus(budget.id, "approved")}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-success)]/15 hover:bg-[color:var(--color-success)]/25 border border-[color:var(--color-success)]/30 px-3.5 py-2 text-xs font-medium text-[color:var(--color-success)] transition"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-success)]/15 hover:bg-[color:var(--color-success)]/25 border border-[color:var(--color-success)]/30 px-3.5 py-2 text-label font-medium text-[color:var(--color-success)] transition"
               >
                 <Check size={13} /> Marcar como aprovado
               </button>
               <button
                 onClick={() => setStatus(budget.id, "rejected")}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-danger)]/10 hover:bg-[color:var(--color-danger)]/20 border border-[color:var(--color-danger)]/30 px-3.5 py-2 text-xs font-medium text-[color:var(--color-danger)] transition"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-danger)]/10 hover:bg-[color:var(--color-danger)]/20 border border-[color:var(--color-danger)]/30 px-3.5 py-2 text-label font-medium text-[color:var(--color-danger)] transition"
               >
                 <X size={13} /> Recusar
               </button>
               {budget.status === "draft" && (
                 <button
                   onClick={() => router.push("/dashboard")}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3.5 py-2 text-xs font-medium text-white transition"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3.5 py-2 text-label font-medium text-white transition"
                 >
                   <FileEdit size={13} /> Continuar editando
                 </button>
@@ -424,13 +424,13 @@ export default function BudgetDetailPage() {
             <button
               onClick={handlePDF}
               disabled={pdfBusy}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-xs font-medium text-white transition disabled:opacity-60"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition disabled:opacity-60"
             >
               <FileText size={12} /> {pdfBusy ? "Gerando…" : "Baixar PDF"}
             </button>
             <button
               onClick={exportJSON}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-xs font-medium text-white transition"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition"
               title="Exportar JSON bruto (backup)"
             >
               <Download size={12} /> Exportar JSON
@@ -448,7 +448,7 @@ export default function BudgetDetailPage() {
                     router.push("/dashboard");
                   }
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.02] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-xs font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.02] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-label font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition"
               >
                 <Trash2 size={12} /> Apagar orçamento
               </button>
@@ -515,7 +515,7 @@ function SeverityPill({ severity }: { severity: "low" | "medium" | "high" }) {
   const it = map[severity];
   return (
     <span
-      className={`inline-block mt-1 text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded ${it.cls}`}
+      className={`inline-block mt-1 text-meta font-semibold uppercase tracking-[0.08em] px-1.5 py-0.5 rounded ${it.cls}`}
     >
       {it.label}
     </span>

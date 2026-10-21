@@ -104,12 +104,12 @@ export function OficinasInline({
   return (
     <div className="premium-card p-4 sm:p-6 border border-[#25D366]/25">
       <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
-        <h2 className="font-semibold flex items-center gap-2 text-base">
+        <h2 className="font-semibold flex items-center gap-2 text-title">
           <MessageCircle size={16} className="text-[#25D366]" />
           Enviar para oficina
         </h2>
         {cidade && (
-          <div className="flex items-center gap-2 text-xs text-[color:var(--color-muted)]">
+          <div className="flex items-center gap-2 text-label text-[color:var(--color-muted)]">
             <MapPin size={12} />
             <span>
               {cidade.nome}
@@ -126,23 +126,23 @@ export function OficinasInline({
       </div>
 
       {loadError && (
-        <p className="text-xs text-[color:var(--color-danger)] mb-2">
+        <p className="text-label text-[color:var(--color-danger)] mb-2">
           Falha ao carregar oficinas: {loadError}
         </p>
       )}
 
       {!catalog ? (
-        <div className="flex items-center gap-2 text-xs text-[color:var(--color-muted)] py-3">
+        <div className="flex items-center gap-2 text-label text-[color:var(--color-muted)] py-3">
           <Loader2 size={13} className="animate-spin" /> Carregando oficinas…
         </div>
       ) : !ranking || ranking.top.length === 0 ? (
         <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 text-center">
-          <p className="text-xs text-[color:var(--color-muted)]">
+          <p className="text-label text-[color:var(--color-muted)]">
             Nenhuma oficina catalogada em {cidade?.nome ?? "sua cidade"}.
           </p>
           <button
             onClick={onOpenFullPicker}
-            className="mt-2 inline-flex items-center gap-1 text-xs text-[color:var(--color-primary-glow)] hover:brightness-125"
+            className="mt-2 inline-flex items-center gap-1 text-label text-[color:var(--color-primary-glow)] hover:brightness-125"
           >
             <Search size={12} /> Buscar em outra cidade
           </button>
@@ -157,16 +157,16 @@ export function OficinasInline({
                   key={o.nome + o.endereco}
                   className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
                 >
-                  <span className="w-7 h-7 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-[11px] font-bold text-white flex items-center justify-center shrink-0">
+                  <span className="w-7 h-7 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-label font-bold text-white flex items-center justify-center shrink-0">
                     {i + 1}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">{o.nome}</p>
-                    <p className="text-[11px] text-[color:var(--color-muted)] truncate mt-0.5">
+                    <p className="text-body font-medium truncate">{o.nome}</p>
+                    <p className="text-meta text-[color:var(--color-muted)] truncate mt-0.5">
                       {o.endereco || "Endereço não disponível"}
                     </p>
                   </div>
-                  <div className="hidden sm:flex items-center gap-1 text-[11px] shrink-0">
+                  <div className="hidden sm:flex items-center gap-1 text-meta shrink-0">
                     {o.rating !== null ? (
                       <>
                         <Star size={11} className="text-[#F5A524] fill-[#F5A524]" />
@@ -186,7 +186,7 @@ export function OficinasInline({
                   <button
                     onClick={() => handleSend(o)}
                     disabled={!o.waId}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#25D366] hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-white/[0.06] disabled:text-[color:var(--color-muted)] px-3 py-1.5 text-xs font-semibold text-white transition shrink-0"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#25D366] hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-white/[0.06] disabled:text-[color:var(--color-muted)] px-3 py-1.5 text-label font-semibold text-white transition shrink-0"
                     title={o.waId ? "Enviar orçamento via WhatsApp" : "Sem WhatsApp cadastrado"}
                   >
                     {contacted ? <Check size={12} /> : <MessageCircle size={12} />}
@@ -200,7 +200,7 @@ export function OficinasInline({
           {(ranking.outras.length > 0 || (cidade && cidade.total > ranking.top.length)) && (
             <button
               onClick={onOpenFullPicker}
-              className="mt-3 w-full text-xs text-[color:var(--color-muted)] hover:text-white transition inline-flex items-center justify-center gap-1"
+              className="mt-3 w-full text-label text-[color:var(--color-muted)] hover:text-white transition inline-flex items-center justify-center gap-1"
             >
               Ver mais {ranking.outras.length} oficinas em {cidade?.nome}
               <ChevronRight size={12} />

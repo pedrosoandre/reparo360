@@ -156,13 +156,13 @@ export function SendWorkshopModal({
               <ChevronLeft size={16} />
             </button>
           )}
-          <h2 className="text-base font-semibold">
+          <h2 className="text-title font-semibold">
             {step === "city" && "Escolha a cidade"}
             {step === "oficina" && `Oficinas em ${selectedCity?.nome}`}
             {step === "send" && "Enviar orçamento"}
           </h2>
         </div>
-        <p className="text-xs text-[color:var(--color-muted)] mb-4">
+        <p className="text-label text-[color:var(--color-muted)] mb-4">
           {step === "city" && "Selecione a cidade da oficina que vai receber."}
           {step === "oficina" &&
             `${selectedCity?.total} oficinas · top ${ranking.top.length} por avaliação do Google.`}
@@ -170,7 +170,7 @@ export function SendWorkshopModal({
         </p>
 
         {loadError && (
-          <p className="text-xs text-[color:var(--color-danger)]">
+          <p className="text-label text-[color:var(--color-danger)]">
             Falha ao carregar catálogo: {loadError}
           </p>
         )}
@@ -185,11 +185,11 @@ export function SendWorkshopModal({
                 value={cityQuery}
                 onChange={(e) => setCityQuery(e.target.value)}
                 placeholder={`Buscar entre ${catalog?.cidades.length ?? "…"} cidades`}
-                className="w-full bg-transparent text-sm text-white placeholder:text-[color:var(--color-muted)] outline-none"
+                className="w-full bg-transparent text-body text-white placeholder:text-[color:var(--color-muted)] outline-none"
               />
             </div>
             {!catalog ? (
-              <div className="flex items-center gap-2 text-xs text-[color:var(--color-muted)] py-4">
+              <div className="flex items-center gap-2 text-label text-[color:var(--color-muted)] py-4">
                 <Loader2 size={13} className="animate-spin" /> Carregando catálogo…
               </div>
             ) : (
@@ -198,17 +198,17 @@ export function SendWorkshopModal({
                   <button
                     key={c.nome}
                     onClick={() => pickCity(c)}
-                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-left text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.04] transition-colors"
+                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-label text-left text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.04] transition-colors"
                   >
                     <MapPin size={13} className="shrink-0" />
                     <span className="truncate flex-1 font-medium">{c.nome}</span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.06] shrink-0">
+                    <span className="text-meta px-1.5 py-0.5 rounded-md bg-white/[0.06] shrink-0">
                       {c.total} oficina{c.total === 1 ? "" : "s"}
                     </span>
                   </button>
                 ))}
                 {cidadesFiltradas.length === 0 && catalog && (
-                  <p className="text-xs text-[color:var(--color-muted)] text-center py-6">
+                  <p className="text-label text-[color:var(--color-muted)] text-center py-6">
                     Nenhuma cidade encontrada.
                   </p>
                 )}
@@ -222,7 +222,7 @@ export function SendWorkshopModal({
           <div className="flex-1 min-h-0 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
             {ranking.top.length > 0 && (
               <>
-                <p className="text-[10px] uppercase tracking-wider text-[color:var(--color-muted)] px-1 mb-1">
+                <p className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)] px-1 mb-1">
                   Top {ranking.top.length} do Google
                 </p>
                 {ranking.top.map((o, i) => (
@@ -237,7 +237,7 @@ export function SendWorkshopModal({
             )}
             {ranking.outras.length > 0 && (
               <>
-                <p className="text-[10px] uppercase tracking-wider text-[color:var(--color-muted)] px-1 mt-3 mb-1">
+                <p className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)] px-1 mt-3 mb-1">
                   Outras ({ranking.outras.length})
                 </p>
                 {ranking.outras.map((o) => (
@@ -250,7 +250,7 @@ export function SendWorkshopModal({
               </>
             )}
             {selectedCity.oficinas.length === 0 && (
-              <p className="text-xs text-[color:var(--color-muted)] text-center py-6">
+              <p className="text-label text-[color:var(--color-muted)] text-center py-6">
                 Nenhuma oficina catalogada nessa cidade.
               </p>
             )}
@@ -261,11 +261,11 @@ export function SendWorkshopModal({
         {step === "send" && selectedOficina && (
           <div className="flex flex-col gap-3">
             <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-3">
-              <p className="text-sm font-semibold">{selectedOficina.nome}</p>
-              <p className="text-[11px] text-[color:var(--color-muted)] mt-0.5">
+              <p className="tabular text-body font-semibold">{selectedOficina.nome}</p>
+              <p className="text-meta text-[color:var(--color-muted)] mt-0.5">
                 {selectedOficina.endereco} · {selectedOficina.cidade}
               </p>
-              <div className="flex items-center gap-3 mt-2 text-[11px] text-[color:var(--color-muted)]">
+              <div className="flex items-center gap-3 mt-2 text-meta text-[color:var(--color-muted)]">
                 {selectedOficina.rating !== null && (
                   <span className="inline-flex items-center gap-1 text-white/85">
                     <Star size={11} className="text-[#F5A524] fill-[#F5A524]" />
@@ -283,7 +283,7 @@ export function SendWorkshopModal({
             <button
               onClick={handleWhatsApp}
               disabled={!selectedOficina.waId}
-              className="w-full h-11 rounded-2xl bg-[#25D366] hover:brightness-105 text-white font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="w-full h-11 rounded-2xl bg-[#25D366] hover:brightness-105 text-white font-semibold text-label flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition"
             >
               <MessageCircle size={15} />
               {selectedOficina.waId
@@ -294,7 +294,7 @@ export function SendWorkshopModal({
             <button
               onClick={handleDownloadPDF}
               disabled={pdfBusy}
-              className="w-full h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-xs font-medium flex items-center justify-center gap-2 transition disabled:opacity-60"
+              className="w-full h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-label font-medium flex items-center justify-center gap-2 transition disabled:opacity-60"
             >
               {pdfBusy ? (
                 <Loader2 size={13} className="animate-spin" />
@@ -304,7 +304,7 @@ export function SendWorkshopModal({
               Baixar PDF do orçamento
             </button>
 
-            <p className="text-[10px] text-[color:var(--color-muted)] leading-relaxed mt-1">
+            <p className="text-meta text-[color:var(--color-muted)] leading-relaxed mt-1">
               O WhatsApp abre com uma mensagem pronta e um link público do
               orçamento. A oficina responde direto por lá com o valor final.
             </p>
@@ -332,18 +332,18 @@ function OficinaRow({
       )}
     >
       {rank !== undefined && (
-        <span className="w-6 h-6 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-[10px] font-bold text-white flex items-center justify-center shrink-0">
+        <span className="w-6 h-6 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-label font-bold text-white flex items-center justify-center shrink-0">
           {rank}
         </span>
       )}
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{oficina.nome}</p>
-        <p className="text-[11px] text-[color:var(--color-muted)] truncate mt-0.5">
+        <p className="text-body font-medium truncate">{oficina.nome}</p>
+        <p className="text-meta text-[color:var(--color-muted)] truncate mt-0.5">
           {oficina.endereco || "Endereço não disponível"}
         </p>
       </div>
       {oficina.rating !== null ? (
-        <span className="inline-flex items-center gap-1 text-[11px] text-white/85 shrink-0">
+        <span className="inline-flex items-center gap-1 text-meta text-white/85 shrink-0">
           <Star size={11} className="text-[#F5A524] fill-[#F5A524]" />
           {oficina.rating.toFixed(1)}
           <span className="text-[color:var(--color-muted)]">
@@ -351,7 +351,7 @@ function OficinaRow({
           </span>
         </span>
       ) : (
-        <span className="text-[10px] text-[color:var(--color-muted)] shrink-0">sem nota</span>
+        <span className="text-meta text-[color:var(--color-muted)] shrink-0">sem nota</span>
       )}
     </button>
   );

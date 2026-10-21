@@ -26,8 +26,8 @@ export function VehicleStep() {
           <Car size={22} />
         </div>
         <div>
-          <h2 className="text-xl font-semibold">Dados do veículo</h2>
-          <p className="text-sm text-[color:var(--color-muted)]">
+          <h2 className="text-title font-semibold">Dados do veículo</h2>
+          <p className="text-body text-[color:var(--color-muted)]">
             Escolha o veículo — a lista mostra apenas modelos com visualização 3D disponível.
           </p>
         </div>
@@ -158,7 +158,7 @@ export function VehicleStep() {
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="flex flex-col gap-2">
-      <span className="text-xs uppercase tracking-wider text-[color:var(--color-muted)]">{label}</span>
+      <span className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)]">{label}</span>
       {children}
     </label>
   );

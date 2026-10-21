@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Send, MessageCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, MessageCircle, Check } from "lucide-react";
 import { Stepper } from "@/components/budget/stepper";
 import { VehicleStep } from "@/components/budget/vehicle-step";
 import { PartsStep } from "@/components/budget/parts-step";
@@ -103,10 +103,16 @@ export default function SolicitarPage() {
             animate={{ opacity: 1, y: 0 }}
             className="glass rounded-3xl p-12 max-w-md text-center"
           >
-            <div className="w-16 h-16 rounded-full bg-[color:var(--color-success)]/15 text-[color:var(--color-success)] flex items-center justify-center mx-auto mb-4 text-3xl">
-              ✓
+            {/* Era um "✓" de texto: o traço e o peso vinham da fonte, então
+                não casava com nenhum outro ícone da tela. Lucide, como o resto
+                do app. */}
+            <div className="w-16 h-16 rounded-full bg-[color:var(--color-success)]/15 text-[color:var(--color-success)] flex items-center justify-center mx-auto mb-4">
+              <Check size={32} strokeWidth={2.5} />
             </div>
-            <h2 className="text-2xl font-semibold">Orçamento pronto!</h2>
+            {/* Único lugar onde `metric` não é número: nesta tela de sucesso a
+                frase É o maior elemento, e abrir um sexto papel para uma
+                ocorrência não se paga. */}
+            <h2 className="text-metric font-semibold">Orçamento pronto!</h2>
             <p className="text-text-secondary mt-2">
               Código{" "}
               <span className="font-mono font-semibold text-white">{savedBudget.code}</span>
@@ -120,7 +126,7 @@ export default function SolicitarPage() {
                 <MessageCircle size={16} /> Enviar para oficina
               </PremiumButton>
               <Link href={`/orcamentos/${savedBudget.id}`}>
-                <button className="w-full h-11 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-sm font-medium transition">
+                <button className="w-full h-11 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-label font-medium transition">
                   Ver detalhes do orçamento
                 </button>
               </Link>
@@ -129,7 +135,7 @@ export default function SolicitarPage() {
                   reset();
                   setSavedBudget(null);
                 }}
-                className="text-sm text-text-secondary hover:text-text mt-1"
+                className="text-body text-text-secondary hover:text-text mt-1"
               >
                 Criar novo orçamento
               </button>
@@ -157,12 +163,15 @@ export default function SolicitarPage() {
   return (
     <div className="min-h-screen grid-bg pb-24">
       <header className="sticky top-0 z-30 backdrop-blur-xl border-b border-[color:var(--color-border)] bg-bg/70">
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary-soft)] flex items-center justify-center text-white font-bold">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 px-4 sm:px-6 py-4">
+          <Link href="/" className="flex items-center gap-2 shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary-soft)] flex items-center justify-center text-white font-bold shrink-0">
               R
             </div>
-            <span className="font-semibold tracking-tight">Reparo360</span>
+            {/* No celular o nome sai e fica só a marca: o logo ocupava 146px
+                dos 375 e empurrava o stepper 91px para fora da tela. Dentro do
+                wizard o nome é redundante — você sabe onde está. */}
+            <span className="hidden sm:inline font-semibold tracking-tight">Reparo360</span>
           </Link>
           <Stepper current={step} />
         </div>
