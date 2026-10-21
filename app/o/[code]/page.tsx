@@ -56,10 +56,10 @@ export default function OrcamentoPublicoPage() {
     return (
       <PageWrap>
         <div className="premium-card p-6 text-center max-w-md mx-auto">
-          <p className="text-sm text-[color:var(--color-danger)]">{error}</p>
+          <p className="text-body text-[color:var(--color-danger)]">{error}</p>
           <Link
             href="/"
-            className="inline-flex items-center gap-1 text-xs text-[color:var(--color-primary-glow)] mt-3 hover:brightness-125"
+            className="inline-flex items-center gap-1 text-label text-[color:var(--color-primary-glow)] mt-3 hover:brightness-125"
           >
             <ArrowLeft size={12} /> Voltar
           </Link>
@@ -106,7 +106,7 @@ export default function OrcamentoPublicoPage() {
     <PageWrap>
       <div className="max-w-2xl mx-auto flex flex-col gap-4">
         {!verified && (
-          <div className="premium-card p-3 text-xs text-[color:var(--color-warn,#f59e0b)] border border-[color:var(--color-warn,#f59e0b)]/30">
+          <div className="premium-card p-3 text-label text-[color:var(--color-warn,#f59e0b)] border border-[color:var(--color-warn,#f59e0b)]/30">
             Link antigo sem assinatura de integridade. Confirme os valores com quem enviou antes de fechar orçamento.
           </div>
         )}
@@ -116,22 +116,22 @@ export default function OrcamentoPublicoPage() {
             <div>
               <div className="flex items-center gap-2 mb-1">
                 <ShieldCheck size={14} className="text-[color:var(--color-primary-glow)]" />
-                <span className="text-[10px] uppercase tracking-wider text-[color:var(--color-muted)]">
+                <span className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)]">
                   Orçamento Reparo360
                 </span>
               </div>
-              <p className="font-mono text-lg font-semibold">{budget.code}</p>
-              <p className="text-xs text-[color:var(--color-muted)] mt-1">
+              <p className="font-mono tabular text-title font-semibold">{budget.code}</p>
+              <p className="text-label text-[color:var(--color-muted)] mt-1">
                 Solicitado por <span className="text-white font-medium">{budget.customerName}</span>
                 {budget.customerPhone && ` · ${budget.customerPhone}`}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase tracking-wider text-[color:var(--color-muted)]">
+              <p className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)]">
                 Estimativa
               </p>
-              <p className="text-2xl font-semibold">{formatBRL(budget.grandTotal)}</p>
-              <p className="text-[10px] text-[color:var(--color-muted)]">
+              <p className="tabular text-metric font-semibold">{formatBRL(budget.grandTotal)}</p>
+              <p className="text-meta text-[color:var(--color-muted)]">
                 (gerada pelo sistema, sujeita ao seu orçamento oficial)
               </p>
             </div>
@@ -140,17 +140,17 @@ export default function OrcamentoPublicoPage() {
 
         {/* Veículo */}
         <div className="premium-card p-4 sm:p-5">
-          <h2 className="font-semibold mb-2 flex items-center gap-2 text-sm">
+          <h2 className="text-title font-semibold mb-2 flex items-center gap-2">
             <Car size={14} /> Veículo
           </h2>
-          <p className="text-sm">
+          <p className="text-body">
             {budget.vehicle} · {budget.vehicleYear}
           </p>
         </div>
 
         {/* Peças */}
         <div className="premium-card p-4 sm:p-5">
-          <h2 className="font-semibold mb-3 text-sm">
+          <h2 className="text-title font-semibold mb-3">
             Peças com dano ({budget.items.length})
           </h2>
           <div className="flex flex-col gap-2">
@@ -160,12 +160,12 @@ export default function OrcamentoPublicoPage() {
                 className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{it.label}</p>
-                  <p className="text-[11px] text-[color:var(--color-muted)] truncate mt-0.5">
+                  <p className="text-body font-medium truncate">{it.label}</p>
+                  <p className="text-meta text-[color:var(--color-muted)] truncate mt-0.5">
                     {it.damages.join(", ")}
                   </p>
                 </div>
-                <p className="text-sm font-semibold shrink-0">
+                <p className="tabular text-body font-semibold shrink-0">
                   {formatBRL(it.cost)}
                 </p>
               </div>
@@ -176,7 +176,7 @@ export default function OrcamentoPublicoPage() {
         {/* Extras */}
         {budget.extras.length > 0 && (
           <div className="premium-card p-4 sm:p-5">
-            <h2 className="font-semibold mb-3 text-sm">
+            <h2 className="text-title font-semibold mb-3">
               Serviços extras ({budget.extras.length})
             </h2>
             <div className="flex flex-col gap-2">
@@ -188,8 +188,8 @@ export default function OrcamentoPublicoPage() {
                   <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.06] flex items-center justify-center shrink-0 text-[color:var(--color-muted)]">
                     {/oleo|óleo/i.test(e.label) ? <Droplet size={14} /> : <Wrench size={14} />}
                   </div>
-                  <p className="text-sm flex-1">{e.label}</p>
-                  <p className="text-sm font-semibold shrink-0">
+                  <p className="text-body flex-1">{e.label}</p>
+                  <p className="tabular text-body font-semibold shrink-0">
                     {formatBRL(e.price)}
                   </p>
                 </div>
@@ -200,17 +200,17 @@ export default function OrcamentoPublicoPage() {
 
         {/* Totais */}
         <div className="premium-card p-4 sm:p-5">
-          <div className="flex justify-between text-sm">
+          <div className="tabular flex justify-between text-body">
             <span className="text-[color:var(--color-muted)]">Reparo estimado</span>
             <span>{formatBRL(budget.totalRepair)}</span>
           </div>
-          <div className="flex justify-between text-sm mt-1">
+          <div className="tabular flex justify-between text-body mt-1">
             <span className="text-[color:var(--color-muted)]">Serviços extras</span>
             <span>{formatBRL(budget.totalExtras)}</span>
           </div>
           <div className="mt-3 pt-3 border-t border-white/[0.08] flex justify-between items-center">
             <span className="font-semibold">Total geral</span>
-            <span className="text-xl font-semibold">
+            <span className="tabular text-metric font-semibold">
               {formatBRL(budget.grandTotal)}
             </span>
           </div>
@@ -218,29 +218,29 @@ export default function OrcamentoPublicoPage() {
 
         {/* Ações da oficina */}
         <div className="premium-card p-4 sm:p-5">
-          <h2 className="font-semibold mb-3 text-sm flex items-center gap-2">
+          <h2 className="text-title font-semibold mb-3 flex items-center gap-2">
             <Handshake size={14} /> Sua resposta
           </h2>
-          <p className="text-xs text-[color:var(--color-muted)] mb-3">
+          <p className="text-label text-[color:var(--color-muted)] mb-3">
             Cada botão abre o WhatsApp com uma mensagem pronta pro cliente
             {budget.customerPhone ? "" : " (adicione o número quando pedir)"}.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <button
               onClick={() => respond("aceitar")}
-              className="h-11 rounded-2xl bg-[color:var(--color-success)]/15 hover:bg-[color:var(--color-success)]/25 border border-[color:var(--color-success)]/30 text-[color:var(--color-success)] font-semibold text-sm flex items-center justify-center gap-2 transition"
+              className="h-11 rounded-2xl bg-[color:var(--color-success)]/15 hover:bg-[color:var(--color-success)]/25 border border-[color:var(--color-success)]/30 text-[color:var(--color-success)] font-semibold text-label flex items-center justify-center gap-2 transition"
             >
               <Check size={14} /> Aceitar valor
             </button>
             <button
               onClick={() => respond("contra")}
-              className="h-11 rounded-2xl bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 text-white font-semibold text-sm flex items-center justify-center gap-2 transition"
+              className="h-11 rounded-2xl bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 text-white font-semibold text-label flex items-center justify-center gap-2 transition"
             >
               <MessageCircle size={14} /> Contra-proposta
             </button>
             <button
               onClick={() => respond("recusar")}
-              className="h-11 rounded-2xl bg-white/[0.04] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 hover:text-[color:var(--color-danger)] text-[color:var(--color-muted)] font-semibold text-sm flex items-center justify-center gap-2 transition"
+              className="h-11 rounded-2xl bg-white/[0.04] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 hover:text-[color:var(--color-danger)] text-[color:var(--color-muted)] font-semibold text-label flex items-center justify-center gap-2 transition"
             >
               <X size={14} /> Recusar
             </button>
@@ -248,7 +248,7 @@ export default function OrcamentoPublicoPage() {
           {budget.customerPhone && (
             <a
               href={`tel:${budget.customerPhone}`}
-              className="mt-2 w-full h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-xs font-medium flex items-center justify-center gap-2 transition"
+              className="mt-2 w-full h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-label font-medium flex items-center justify-center gap-2 transition"
             >
               <Phone size={12} /> Ligar pro cliente ({budget.customerPhone})
             </a>
