@@ -35,6 +35,14 @@ describe("assetUrl", () => {
     expect(assetUrl("/hdri/x.hdr")).toBe("https://cdn.reparo360.app/hdri/x.hdr");
   });
 
+  it("glbUrlFor do catálogo passa pela base (o lib/vehicles.ts, não uma cópia .js antiga)", async () => {
+    // Webpack e vitest resolvem .js antes de .ts: um lib/vehicles.js esquecido
+    // ao lado do .ts vira o catálogo de produção sem ninguém perceber.
+    process.env.NEXT_PUBLIC_ASSETS_BASE = "https://cdn.reparo360.app";
+    const { glbUrlFor } = await import("@/lib/vehicles");
+    expect(glbUrlFor("Fiat", "Uno")).toBe("https://cdn.reparo360.app/cars/fiat-uno.glb");
+  });
+
   it("path sem barra inicial ainda funciona", async () => {
     process.env.NEXT_PUBLIC_ASSETS_BASE = "https://cdn.reparo360.app";
     const { assetUrl } = await import("@/lib/assets");

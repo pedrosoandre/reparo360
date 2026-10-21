@@ -11,11 +11,12 @@ build/
 next-env.d.ts
 tsconfig.tsbuildinfo
 
-# Assets pesados moram no Cloudflare R2 em produção.
-# Dev local usa os arquivos abaixo direto do disco (NEXT_PUBLIC_ASSETS_BASE vazia).
+# Assets pesados: hoje vão no upload do deploy (NEXT_PUBLIC_ASSETS_BASE vazia);
+# quando subirem pro CDN (scripts/upload-assets-r2.ps1), a base resolve.
 # NÃO commitar — 1.8 GB de binário no git é doloroso pra sempre.
 public/cars/
 public/scenery/
 public/hdri/
 
-.vercel
+# Saída de tsc em lib/ sombreia o .ts: webpack e vitest resolvem .js primeiro.
+lib/**/*.js

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { PART_LABELS, DAMAGE_LABELS } from "@/lib/car-parts";
+import { createRateLimiter } from "@/lib/rate-limit";
 import type { CarPart, DamageType } from "@/types";
 
 export const runtime = "nodejs";
@@ -11,6 +12,45 @@ const DAMAGE_TYPES = Object.keys(DAMAGE_LABELS) as [DamageType, ...DamageType[]]
 
 const ALLOWED_MEDIA = ["image/jpeg", "image/png", "image/gif", "image/webp"] as const;
 const MAX_PHOTOS = 6;
+/** Abaixo dos 4,5 MB da Vercel, pra responder em JSON em vez do HTML dela. */
+const MAX_BODY_BYTES = 4 * 1024 * 1024;
+
+// Cada análise custa dinheiro e a rota é pública: freio por IP e um teto por
+// instância (ver lib/rate-limit.ts sobre o que isto cobre e o que não cobre).
+const perIp = createRateLimiter({ limit: 8, windowMs: 10 * 60_000 });
+const perInstance = createRateLimiter({ limit: 60, windowMs: 10 * 60_000 });
+
+const UNAVAILABLE =
+  "A análise por IA está indisponível no momento. Você pode marcar a peça e o tipo de dano manualmente.";
+
+function clientIp(req: Request): string {
+  return (
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "desconhecido"
+  );
+}
+
+/** Navegador sempre manda Origin num POST; de outro site, recusa. */
+function isCrossOrigin(req: Request): boolean {
+  const origin = req.headers.get("origin");
+  if (!origin) return false;
+  try {
+    return new URL(origin).host !== new URL(req.url).host;
+  } catch {
+    return true;
+  }
+}
+
+function tooManyRequests(retryAfterSec: number) {
+  return NextResponse.json(
+    {
+      error: "rate_limited",
+      message: "Muitas análises seguidas. Espere alguns minutos e tente de novo.",
+    },
+    { status: 429, headers: { "Retry-After": String(retryAfterSec) } },
+  );
+}
 
 /** Structured outputs garante que a resposta valida contra este schema. */
 const ANALYSIS_SCHEMA = {
@@ -91,15 +131,29 @@ function parseDataUrl(dataUrl: string): { media_type: string; data: string } | n
 
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) {
+    // O detalhe técnico vai pro log; o cliente vê o que pode fazer.
+    console.warn("analyze-damage: ANTHROPIC_API_KEY não definida (Vercel → Settings → Environment Variables).");
+    return NextResponse.json({ error: "not_configured", message: UNAVAILABLE }, { status: 503 });
+  }
+
+  if (isCrossOrigin(req)) {
+    return NextResponse.json({ error: "forbidden", message: "Origem não permitida." }, { status: 403 });
+  }
+
+  if (Number(req.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) {
     return NextResponse.json(
       {
-        error: "not_configured",
-        message:
-          "Análise por IA indisponível: defina ANTHROPIC_API_KEY no .env.local e reinicie o servidor.",
+        error: "too_large",
+        message: "As fotos ficaram grandes demais pra análise. Tente com menos fotos.",
       },
-      { status: 503 },
+      { status: 413 },
     );
   }
+
+  const ipCheck = perIp.check(clientIp(req));
+  if (!ipCheck.ok) return tooManyRequests(ipCheck.retryAfterSec);
+  const instanceCheck = perInstance.check("total");
+  if (!instanceCheck.ok) return tooManyRequests(instanceCheck.retryAfterSec);
 
   let body: {
     photos?: unknown;
@@ -222,20 +276,19 @@ export async function POST(req: Request) {
       );
     }
     if (err instanceof Anthropic.AuthenticationError) {
-      return NextResponse.json(
-        { error: "auth", message: "ANTHROPIC_API_KEY inválida." },
-        { status: 502 },
-      );
+      console.error("analyze-damage: ANTHROPIC_API_KEY inválida.");
+      return NextResponse.json({ error: "auth", message: UNAVAILABLE }, { status: 502 });
     }
     if (err instanceof Anthropic.APIConnectionError) {
       return NextResponse.json(
-        { error: "network", message: "Não foi possível falar com a API da Anthropic." },
+        { error: "network", message: "A análise não respondeu. Tente de novo em instantes." },
         { status: 502 },
       );
     }
     if (err instanceof Anthropic.APIError) {
+      console.error(`analyze-damage: erro da API (${err.status}): ${err.message}`);
       return NextResponse.json(
-        { error: "api", message: `Erro da API (${err.status}): ${err.message}` },
+        { error: "api", message: "A análise falhou. Tente de novo em instantes." },
         { status: 502 },
       );
     }
