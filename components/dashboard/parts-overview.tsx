@@ -17,7 +17,7 @@ import {
   MessageSquare,
   ImagePlus,
 } from "lucide-react";
-import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { CarPart, DamageRecord } from "@/types";
 import { useDamagesStore, withCost, summarize } from "@/stores/damages-store";
 import { useVehiclesStore } from "@/stores/vehicles-store";
@@ -270,32 +270,36 @@ export function PartsOverview({
 
         {/* Métricas + Detalhes dos danos */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-3 shrink-0">
-          <button
+          <MetricCard
+            title="Local do acidente"
+            icon={<MapPin size={22} />}
             onClick={onLocationClick}
-            className="relative rounded-2xl border border-white/[0.06] overflow-hidden group text-left min-h-[68px]"
-          >
-            <MapTexture />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0A0B0F]/80 via-transparent to-transparent" />
-            <div className="absolute inset-0 flex items-end p-3">
-              <span className="flex items-center gap-2 text-xs text-white/90 group-hover:text-white transition-colors">
-                Adicionar local do acidente <MapPin size={14} />
-              </span>
-            </div>
-          </button>
+            backdrop={
+              <>
+                <MapTexture />
+                {/* Escurece a textura sob o texto: sem isto o rótulo cai em
+                    cima das linhas claras do mapa e perde contraste. */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0B0F]/85 via-[#0A0B0F]/45 to-transparent" />
+              </>
+            }
+          />
 
           <MetricCard title="Em análise" value={summary.activeCount > 0 ? "Aberto" : "—"} />
           <MetricCard
-            title="Danificadas"
-            value={`${summary.activeCount} peça${summary.activeCount === 1 ? "" : "s"}`}
+            title={`Peça${summary.activeCount === 1 ? "" : "s"} danificada${summary.activeCount === 1 ? "" : "s"}`}
+            value={summary.activeCount}
           />
 
-          <div className="rounded-2xl p-3 bg-[color:var(--color-primary)] shadow-[0_10px_30px_-10px_rgba(79,107,255,0.6)]">
-            <p className="text-xl font-semibold tracking-tight text-white">
-              {totalMain}
-              <span className="text-white/50">,{totalCents}</span>
-            </p>
-            <p className="text-[11px] mt-0.5 text-white/80">Valor estimado</p>
-          </div>
+          <MetricCard
+            tone="accent"
+            title="Valor estimado"
+            value={
+              <>
+                {totalMain}
+                <span className="text-white/55">,{totalCents}</span>
+              </>
+            }
+          />
         </div>
 
         {vehicle && summary.total > 0 && (
@@ -309,7 +313,9 @@ export function PartsOverview({
           </div>
         )}
 
-        <h3 className="text-sm font-semibold mb-2 shrink-0">Detalhes dos danos</h3>
+        {/* Mais respiro acima do que abaixo: o título pertence ao que vem
+            depois dele, não ao bloco que acabou. */}
+        <h3 className="text-title font-semibold mt-5 mb-2.5 shrink-0">Detalhes dos danos</h3>
         {summary.items.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-white/[0.08] p-6 text-center">
             <p className="text-xs text-[color:var(--color-muted)]">
@@ -407,12 +413,79 @@ export function PartsOverview({
   );
 }
 
-function MetricCard({ title, value }: { title: string; value: string }) {
+/**
+ * Card da grade de resumo.
+ *
+ * Os quatro cards eram três implementações: dois deste componente, um `<div>`
+ * com a cor primária copiada à mão e um `<button>` com textura e o rótulo
+ * ancorado embaixo. Resultado na mesma grade: três alturas, dois tamanhos de
+ * rótulo e dois pontos de ancoragem — o olho não conseguia ler os quatro como
+ * um conjunto.
+ *
+ * Agora a geometria (altura, respiro, papéis tipográficos, ordem valor→rótulo)
+ * mora aqui, e a variante decide só a superfície. Somar um quinto card é
+ * escolher um `tone`, não copiar markup.
+ */
+function MetricCard({
+  title,
+  value,
+  icon,
+  tone = "default",
+  onClick,
+  backdrop,
+}: {
+  title: string;
+  /** O que responde a pergunta. Ausente em card de ação, que mostra `icon`. */
+  value?: ReactNode;
+  icon?: ReactNode;
+  tone?: "default" | "accent";
+  onClick?: () => void;
+  /** Camada decorativa atrás do conteúdo (ex.: textura de mapa). */
+  backdrop?: ReactNode;
+}) {
+  const interactive = typeof onClick === "function";
+  const Tag = interactive ? "button" : "div";
+
+  // O azul da marca é claro demais para carregar texto de 14px: branco puro
+  // sobre `--color-primary` dá 4,30:1 e a AA pede 4,5. O gradiente mantém o
+  // card inequivocamente azul no topo, onde fica o valor (26px, precisa só
+  // 3:1), e escurece na base, onde fica o rótulo — que sobe para 6,5:1.
+  const surface =
+    tone === "accent"
+      ? "border-transparent bg-gradient-to-b from-[color:var(--color-primary)] to-[#3A4FD0] shadow-[0_10px_30px_-12px_rgba(79,107,255,0.55)]"
+      : "bg-[#171A21] border-white/[0.06]";
+
   return (
-    <div className="rounded-2xl p-3 bg-[#171A21] border border-white/[0.06]">
-      <p className="text-xl font-semibold tracking-tight text-white">{value}</p>
-      <p className="text-[11px] mt-0.5 text-[color:var(--color-muted)]">{title}</p>
-    </div>
+    <Tag
+      {...(interactive ? { onClick, type: "button" as const } : {})}
+      className={[
+        "relative isolate overflow-hidden rounded-2xl border p-3 text-left",
+        // Altura mínima igual nos quatro: é o que faz a grade ler como grade.
+        // `justify-between` ancora o rótulo embaixo mesmo quando o valor quebra.
+        "flex min-h-[76px] flex-col justify-between",
+        surface,
+        interactive
+          ? "transition-colors hover:border-white/[0.14] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-primary-glow)]"
+          : "",
+      ].join(" ")}
+    >
+      {backdrop}
+      <div className="relative">
+        {value !== undefined ? (
+          <p className="tabular text-metric font-semibold text-white">{value}</p>
+        ) : (
+          <span className="flex h-[26px] items-center text-white/70">{icon}</span>
+        )}
+      </div>
+      <p
+        className={
+          "relative text-label " +
+          (tone === "accent" ? "text-white" : "text-[color:var(--color-muted)]")
+        }
+      >
+        {title}
+      </p>
+    </Tag>
   );
 }
 

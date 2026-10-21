@@ -109,11 +109,16 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
           }}
           className="w-full flex items-center gap-2 text-left group"
         >
+          {/* O modelo é o que identifica o carro do cliente; a marca só
+              qualifica. Antes era o contrário — marca em 18px bold azul e
+              modelo em 14px —, então "Volkswagen" gritava e "T-Cross, 2024"
+              sussurrava. O azul fica, menor: a cor marca a marca, o tamanho
+              marca o assunto. */}
           <span className="flex items-baseline gap-1.5 min-w-0">
-            <span className="text-lg lg:text-xl font-bold text-[color:var(--color-primary-glow)] truncate">
+            <span className="text-label font-semibold text-[color:var(--color-primary-glow)] shrink-0">
               {vehicle.brand}
             </span>
-            <span className="text-sm font-medium text-white truncate">
+            <span className="text-title font-semibold text-white truncate">
               {vehicle.model}, {vehicle.year}
             </span>
           </span>
@@ -126,7 +131,9 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
             )}
           />
         </button>
-        <p className="text-[10px] tracking-wide text-[color:var(--color-muted)] mt-1 uppercase">
+        {/* Ficha técnica: metadado, não leitura. Caixa alta em 12px com
+            tracking aberto — em 10px virava textura ilegível no celular. */}
+        <p className="text-meta tracking-[0.08em] text-[color:var(--color-muted)] mt-1.5 uppercase">
           {spec}
         </p>
 
@@ -347,15 +354,15 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
       {/* Fotos */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-sm font-semibold">
+          <h4 className="text-title font-semibold">
             Fotos dos danos{" "}
-            <span className="text-[color:var(--color-muted)] text-xs font-normal">
+            <span className="tabular text-[color:var(--color-muted)] text-label font-normal">
               ({damagePhotos.length})
             </span>
           </h4>
         </div>
         {damagePhotos.length === 0 ? (
-          <p className="text-xs text-[color:var(--color-muted)]">
+          <p className="text-label text-[color:var(--color-muted)]">
             Envie fotos ao cadastrar um dano.
           </p>
         ) : (

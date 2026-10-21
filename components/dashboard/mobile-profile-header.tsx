@@ -37,15 +37,15 @@ export function MobileProfileHeader() {
             aria-label="Voltar ao dashboard"
             className="flex items-center gap-2.5 min-w-0 flex-1 group"
           >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 border border-white/10 group-hover:border-white/30 transition-colors flex items-center justify-center font-semibold text-white shrink-0 text-xs">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 border border-white/10 group-hover:border-white/30 transition-colors flex items-center justify-center font-semibold text-white shrink-0 text-label">
               {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="font-medium text-sm truncate leading-tight group-hover:text-white transition-colors">
+              <p className="font-medium text-body truncate leading-tight group-hover:text-white transition-colors">
                 {displayName}
               </p>
-              <p className="text-[10px] text-[color:var(--color-muted)] leading-tight mt-0.5 flex items-center gap-1">
-                <MapPin size={10} className="shrink-0" />
+              <p className="text-meta text-[color:var(--color-muted)] mt-0.5 flex items-center gap-1.5">
+                <MapPin size={12} className="shrink-0" />
                 <span className="truncate">
                   {user?.city ? (
                     <span className="text-white font-medium">{user.city}</span>
@@ -56,13 +56,16 @@ export function MobileProfileHeader() {
               </p>
             </div>
           </Link>
+          {/* O círculo visível tem 40px pra emparelhar com o avatar, mas o alvo
+              de toque se estende 4px além por um pseudo-elemento: a marca fica
+              discreta sem o dedo precisar de pontaria. */}
           <button
             onClick={openMenu}
             title="Abrir menu"
             aria-label="Abrir menu"
-            className="w-9 h-9 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white transition-colors flex items-center justify-center shrink-0"
+            className="relative w-10 h-10 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white transition-colors flex items-center justify-center shrink-0 after:absolute after:-inset-1 after:content-['']"
           >
-            <Menu size={17} />
+            <Menu size={18} />
           </button>
         </div>
       </header>
