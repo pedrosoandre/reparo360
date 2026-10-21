@@ -1,0 +1,32 @@
+# Roda em todo push pro main e em todo PR: typecheck, lint, testes e build.
+# O deploy continua pelo `npm run deploy` (scripts/deploy.mjs), que sobe os
+# .glb — eles não estão no git, por isso o build aqui pula o check-assets.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24 # mesma da Vercel (projeto: 24.x)
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - name: Build (sem os .glb)
+        run: npx next build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"

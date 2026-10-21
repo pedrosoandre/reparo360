@@ -6,9 +6,14 @@
 # e configurar a base no painel da Vercel. Se excluir sem a base, o
 # `scripts/check-assets.mjs` derruba o build de propósito.
 
-# Nunca precisam ir:
+# Nunca precisam ir (o `npm run deploy` já publica de uma cópia limpa do
+# commit; isto protege um `vercel deploy` rodado direto da pasta):
 oficinas-rs-scraper/
 carros/
+video/
+.claude/
+.github/
+scripts/*.png
 dev.log
 tsconfig.tsbuildinfo
 iniciar.bat
