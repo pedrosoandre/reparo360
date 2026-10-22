@@ -18,6 +18,21 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "//": "Lista de permissão, não de exclusão: `**/*.ts` varria o diretório inteiro, então qualquer pasta alheia largada aqui entrava no typecheck e derrubava o CI e o deploy (que roda npm run check). Pasta nova do projeto precisa ser somada aqui.",
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "components/**/*.ts",
+    "components/**/*.tsx",
+    "lib/**/*.ts",
+    "lib/**/*.tsx",
+    "scripts/**/*.ts",
+    "stores/**/*.ts",
+    "tests/**/*.ts",
+    "types/**/*.ts",
+    "vitest.config.mts"
+  ],
   "exclude": ["node_modules"]
 }

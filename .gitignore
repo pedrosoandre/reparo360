@@ -20,3 +20,16 @@ public/hdri/
 
 # Saída de tsc em lib/ sombreia o .ts: webpack e vitest resolvem .js primeiro.
 lib/**/*.js
+
+# Projetos de outras frentes que foram parar dentro desta pasta. Não são do
+# reparo360; ficam aqui só pra não poluírem o `git status`. O lugar certo
+# deles é fora do repo.
+/elec_RPI_Robot_HAT/
+/microduck/
+/microduck-rebuild/
+/microduck-replica/
+/microduck-replica-cad/
+/microduck-simulator/
+/outputs/
+/rea/
+/video/
