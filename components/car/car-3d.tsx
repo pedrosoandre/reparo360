@@ -9,7 +9,7 @@ import {
 } from "@react-three/drei";
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
-import { Plus, Minus, RotateCcw, Eye, EyeOff, Images, Palette, Pause, Play } from "lucide-react";
+import { Plus, Minus, RotateCcw, Eye, EyeOff, Images, Palette, Pause, Play, Wrench } from "lucide-react";
 import type { CarPart } from "@/types";
 import { PART_LABELS } from "@/lib/car-parts";
 import { VEHICLE_CATALOG } from "@/lib/vehicles";
@@ -49,6 +49,15 @@ const ORBIT_TARGET: [number, number, number] = [0, 0.7, 0];
 const ORBIT_CENTER = new THREE.Vector3(...ORBIT_TARGET);
 /** Segundos por volta do giro automático (~15°/s — dá pra ver girando). */
 const TURNTABLE_SECONDS = 24;
+/**
+ * Capô que abre: o .glb traz o capô num nó "capo_abre" com a origem na
+ * dobradiça (preparado por carros/scratch/capo-prototipo/abrir-capo.mjs).
+ * Girar em X negativo levanta a frente do capô.
+ */
+const HOOD_NODE = "capo_abre";
+const HOOD_OPEN_ANGLE = THREE.MathUtils.degToRad(58);
+/** Câmera ao abrir: um pouco à frente e acima do cofre, olhando pro motor. */
+const HOOD_CAMERA_OFFSET = new THREE.Vector3(2.8, 2.3, 1.5);
 
 interface Hotspot3D {
   id: CarPart;
@@ -214,6 +223,20 @@ export function Car3D({
   useEffect(() => setRuntimeFlip(false), [glbFile]);
   const effectiveFlip = catalogFlip !== runtimeFlip;
 
+  // Capô: o botão só aparece quando o modelo carregado tem o nó "capo_abre".
+  // `hoodNonce` dispara o movimento de câmera do <HoodRig> a cada clique.
+  const [hoodAvailable, setHoodAvailable] = useState(false);
+  const [hoodOpen, setHoodOpen] = useState(false);
+  const [hoodNonce, setHoodNonce] = useState(0);
+  useEffect(() => {
+    setHoodOpen(false);
+    setHoodAvailable(false);
+  }, [glbFile]);
+  function toggleHood() {
+    setHoodOpen((v) => !v);
+    setHoodNonce((n) => n + 1);
+  }
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key !== "f" && e.key !== "F") return;
@@ -300,9 +323,10 @@ export function Car3D({
   // custa CPU/GPU no celular — se voltar a travar cliques (troca de cor,
   // seleção de peça), reintroduzir o gate `&& !isLightDevice` aqui.
   const effectiveAutoRotate = autoRotate;
-  // Para enquanto há peça selecionada: o FocusRig mira a câmera na peça e o
-  // giro tiraria ela de vista.
-  const spinning = effectiveAutoRotate && !userActive && !spinPaused && !activePart;
+  // Para enquanto há peça selecionada (o FocusRig mira a câmera na peça e o
+  // giro tiraria ela de vista) e enquanto o capô está aberto.
+  const spinning =
+    effectiveAutoRotate && !userActive && !spinPaused && !activePart && !hoodOpen;
 
   // Objetos/arrays passados pro Canvas precisam ser referência ESTÁVEL — se
   // mudarem a cada render, o r3f pode re-instanciar internals (camera, GL,
@@ -369,6 +393,8 @@ export function Car3D({
               bodyColor={bodyColor}
               flipFront={effectiveFlip}
               onMeasured={handleMeasured}
+              hoodOpen={hoodOpen}
+              onHoodAvailable={setHoodAvailable}
             />
 
             {showMarkers &&
@@ -400,6 +426,7 @@ export function Car3D({
           />
 
           <FocusRig signal={focusSignal} dims={dims} controlsRef={controlsRef} />
+          <HoodRig open={hoodOpen} nonce={hoodNonce} dims={dims} controlsRef={controlsRef} />
           <InvalidateBridge invalidateRef={invalidateRef} />
         </Suspense>
 
@@ -521,6 +548,17 @@ export function Car3D({
         </div>
       )}
 
+      {interactive && hoodAvailable && (
+        <button
+          onClick={toggleHood}
+          aria-pressed={hoodOpen}
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 h-8 px-3.5 rounded-full bg-black/60 backdrop-blur border border-white/[0.14] text-white/90 hover:text-white hover:bg-black/75 transition-colors text-xs font-medium flex items-center gap-1.5"
+        >
+          <Wrench size={13} />
+          {hoodOpen ? "Fechar capô" : "Abrir capô"}
+        </button>
+      )}
+
       {interactive && (
         <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5">
           {effectiveAutoRotate && (
@@ -579,11 +617,15 @@ function CarModel({
   bodyColor,
   flipFront,
   onMeasured,
+  hoodOpen = false,
+  onHoodAvailable,
 }: {
   url: string;
   bodyColor: string | null;
   flipFront: boolean;
   onMeasured?: (dims: CarDims) => void;
+  hoodOpen?: boolean;
+  onHoodAvailable?: (available: boolean) => void;
 }) {
   const { scene } = useGLTF(url);
   const invalidate = useThree((s) => s.invalidate);
@@ -721,6 +763,23 @@ function CarModel({
       width: size.z * scale,
     });
   }, [size.x, size.y, size.z, scale, onMeasured]);
+
+  // Capô: o nó vem pronto no .glb (ver HOOD_NODE). Como ele fica dentro do
+  // `cloned`, o giro de 90°/180° da orientação acima não muda o eixo da dobradiça.
+  const hood = useMemo(() => cloned.getObjectByName(HOOD_NODE) ?? null, [cloned]);
+  useEffect(() => {
+    onHoodAvailable?.(!!hood);
+  }, [hood, onHoodAvailable]);
+  useFrame((_, delta) => {
+    if (!hood) return;
+    const target = hoodOpen ? -HOOD_OPEN_ANGLE : 0;
+    const diff = target - hood.rotation.x;
+    if (Math.abs(diff) < 1e-4) return;
+    // Amortecido: ~0,7 s até parar, sem depender da taxa de quadros.
+    hood.rotation.x += diff * (1 - Math.exp(-Math.min(delta, 0.1) * 7));
+    if (Math.abs(target - hood.rotation.x) < 1e-3) hood.rotation.x = target;
+    invalidate();
+  });
 
   // Ao trocar de carro, libera a VRAM do modelo anterior. useGLTF mantém um
   // cache global (module-level) que nunca esvazia — sem isso, cada swap
@@ -1000,6 +1059,63 @@ function ResponsiveFov() {
     camera.updateProjectionMatrix();
     invalidate();
   }, [camera, width, height, invalidate]);
+
+  return null;
+}
+
+/**
+ * Câmera do capô: ao abrir, desce pra frente e acima do cofre olhando o motor;
+ * ao fechar, volta pra posição inicial. Cada clique no botão muda `nonce`.
+ */
+function HoodRig({
+  open,
+  nonce,
+  dims,
+  controlsRef,
+}: {
+  open: boolean;
+  nonce: number;
+  dims: CarDims;
+  controlsRef: React.RefObject<any>;
+}) {
+  const active = useRef(false);
+  const t0 = useRef(0);
+  const fromPos = useRef(new THREE.Vector3());
+  const fromTarget = useRef(new THREE.Vector3());
+  const toPos = useRef(new THREE.Vector3());
+  const toTarget = useRef(new THREE.Vector3());
+  const invalidate = useThree((s) => s.invalidate);
+
+  useEffect(() => {
+    if (!nonce || !controlsRef.current) return;
+    const controls = controlsRef.current;
+    fromPos.current.copy(controls.object.position);
+    fromTarget.current.copy(controls.target);
+    if (open) {
+      // Motor fica no terço da frente do carro, um pouco abaixo da metade da altura.
+      toTarget.current.set(dims.length * 0.28, dims.height * 0.42, 0);
+      toPos.current.copy(toTarget.current).add(HOOD_CAMERA_OFFSET);
+    } else {
+      toTarget.current.copy(ORBIT_CENTER);
+      toPos.current.set(...CAMERA_START);
+    }
+    t0.current = performance.now();
+    active.current = true;
+    invalidate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nonce]);
+
+  useFrame(() => {
+    if (!active.current || !controlsRef.current) return;
+    invalidate();
+    const controls = controlsRef.current;
+    const t = Math.min(1, (performance.now() - t0.current) / 900);
+    const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    controls.object.position.lerpVectors(fromPos.current, toPos.current, ease);
+    controls.target.lerpVectors(fromTarget.current, toTarget.current, ease);
+    controls.update();
+    if (t >= 1) active.current = false;
+  });
 
   return null;
 }
