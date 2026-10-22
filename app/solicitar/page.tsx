@@ -190,18 +190,22 @@ export default function SolicitarPage() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="mt-8 flex items-center justify-between">
+        {/* Celular: barra fixa no rodapé (o "Continuar" ficava abaixo da
+            primeira tela, depois do formulário inteiro). Do lg pra cima volta
+            a ser a linha de sempre, logo abaixo do passo. O contêiner da
+            página já reserva o espaço com pb-24. */}
+        <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-white/[0.08] bg-[#0F1116] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-12px_30px_-12px_rgba(0,0,0,0.6)] lg:static lg:mt-8 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
           <PremiumButton variant="ghost" onClick={back} disabled={step === 0}>
             <ArrowLeft size={16} />
             Voltar
           </PremiumButton>
           {step < STEPS.length - 1 ? (
-            <PremiumButton onClick={next} disabled={!canProceed}>
+            <PremiumButton className="flex-1 lg:flex-none" onClick={next} disabled={!canProceed}>
               Continuar
               <ArrowRight size={16} />
             </PremiumButton>
           ) : (
-            <PremiumButton onClick={handleSend}>
+            <PremiumButton className="flex-1 lg:flex-none" onClick={handleSend}>
               Enviar para oficina
               <Send size={16} />
             </PremiumButton>

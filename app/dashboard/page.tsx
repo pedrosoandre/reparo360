@@ -114,7 +114,7 @@ export default function DashboardPage() {
               onResetPaint={() => setBodyColor(null)}
             />
           </div>
-          <div className="hidden lg:block lg:order-none lg:col-start-1 lg:row-span-2 lg:min-h-0">
+          <div className="hidden lg:block lg:order-none lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:min-h-0">
             <Sidebar />
           </div>
         </div>

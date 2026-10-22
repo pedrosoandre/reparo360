@@ -32,6 +32,7 @@ import { useDamagesStore, summarize } from "@/stores/damages-store";
 import { useBudgetsStore } from "@/stores/budgets-store";
 import { useNotificationsStore } from "@/stores/notifications-store";
 import { Lightbox } from "@/components/ui/lightbox";
+import { MobileActionBar } from "@/components/ui/mobile-action-bar";
 import { toast } from "@/stores/toast-store";
 import { confirmDialog } from "@/stores/confirm-store";
 
@@ -268,11 +269,20 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
     () => allDamages.filter((d) => d.vehicleId === vehicle.id),
     [allDamages, vehicle.id],
   );
-  const summary = useMemo(() => summarize(damages), [damages]);
-  // Mesma consulta do PartsOverview (o /api/fipe guarda em cache): o orçamento
-  // salvo precisa usar o valor FIPE que deu o preço mostrado na tela.
+  // Mesma consulta do PartsOverview (o /api/fipe guarda em cache): o total da
+  // barra do celular e o orçamento salvo precisam usar o valor FIPE que deu o
+  // preço mostrado na tela.
   const fipe = useFipe(vehicle);
   const marketValue = fipe.status === "found" ? fipe.marketValue : undefined;
+  const summary = useMemo(
+    () =>
+      summarize(damages, {
+        category: vehicle.category,
+        brand: vehicle.brand,
+        marketValue,
+      }),
+    [damages, vehicle.category, vehicle.brand, marketValue],
+  );
   const clearDamagesForVehicle = useDamagesStore((s) => s.clearForVehicle);
   const createFromDashboard = useBudgetsStore((s) => s.createFromDashboard);
   const saveDraft = useBudgetsStore((s) => s.saveDraft);
@@ -350,6 +360,7 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
   }
 
   return (
+    <>
     <aside className="premium-card p-4 sm:p-5 flex flex-col gap-4 lg:h-full lg:min-h-0 lg:overflow-y-auto">
       {/* Fotos */}
       <div>
@@ -396,21 +407,26 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
       <div className="flex flex-col gap-2">
         <button
           onClick={handleClearAll}
-          className="w-full h-9 rounded-xl bg-transparent hover:bg-[color:var(--color-danger)]/10 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] font-medium text-[11px] transition-colors flex items-center justify-center gap-1.5"
+          className="w-full h-11 lg:h-9 rounded-xl bg-transparent hover:bg-[color:var(--color-danger)]/10 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] font-medium text-meta lg:text-[11px] transition-colors flex items-center justify-center gap-1.5"
         >
           <Eraser size={12} />
           Apagar tudo (mantém o veículo)
         </button>
         <button
           onClick={handleSaveDraft}
-          className="w-full h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white font-medium text-xs transition-colors flex items-center justify-center gap-1.5"
+          className="w-full h-11 lg:h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white font-medium text-xs transition-colors flex items-center justify-center gap-1.5"
         >
           <FileEdit size={13} />
           Salvar rascunho
         </button>
+        {/* No celular, com dano cadastrado, o "Finalizar" mora na barra fixa
+            lá embaixo; aqui ele só aparece sem dano (e no desktop). */}
         <button
           onClick={handleFinalize}
-          className="w-full h-12 rounded-2xl bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)] text-white font-semibold text-sm shadow-[0_10px_30px_-10px_rgba(79,107,255,0.6)] transition-colors flex items-center justify-center gap-2"
+          className={cn(
+            "w-full h-12 rounded-2xl bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)] text-white font-semibold text-sm shadow-[0_10px_30px_-10px_rgba(79,107,255,0.6)] transition-colors flex items-center justify-center gap-2",
+            summary.activeCount > 0 && "max-lg:hidden",
+          )}
         >
           <Send size={14} />
           Finalizar orçamento
@@ -425,6 +441,23 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
         />
       )}
     </aside>
+
+    {summary.activeCount > 0 && (
+      <MobileActionBar>
+        <div className="min-w-0 flex-1">
+          <p className="text-meta text-[color:var(--color-muted)]">Total estimado</p>
+          <p className="text-title font-semibold tabular truncate">{summary.formattedTotal}</p>
+        </div>
+        <button
+          onClick={handleFinalize}
+          className="h-12 shrink-0 rounded-2xl bg-[color:var(--color-primary)] px-5 text-label font-semibold text-white flex items-center gap-2"
+        >
+          <Send size={14} />
+          Finalizar orçamento
+        </button>
+      </MobileActionBar>
+    )}
+    </>
   );
 }
 

@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ChevronLeft,
   Check,
@@ -22,6 +22,7 @@ import {
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { SendWorkshopModal } from "@/components/budget/send-workshop-modal";
 import { OficinasInline } from "@/components/budget/oficinas-inline";
+import { MobileActionBar } from "@/components/ui/mobile-action-bar";
 import { useCurrentUser } from "@/stores/auth-store";
 import { EXTRA_CATALOG, useBudgetsStore } from "@/stores/budgets-store";
 import { downloadBudgetPDF } from "@/lib/budget-pdf";
@@ -66,6 +67,24 @@ export default function BudgetDetailPage() {
   const recordOficinaContact = useBudgetsStore((s) => s.recordOficinaContact);
   const [sendOpen, setSendOpen] = useState(false);
   const [pdfBusy, setPdfBusy] = useState(false);
+
+  // A barra fixa do celular leva até a seção de oficinas; quando a seção já
+  // está na tela, a barra sai pra não cobrir os botões de WhatsApp.
+  const oficinasRef = useRef<HTMLDivElement>(null);
+  const [oficinasVisible, setOficinasVisible] = useState(false);
+  const budgetId = budget?.id;
+  useEffect(() => {
+    const el = oficinasRef.current;
+    if (!el) return;
+    // isIntersecting é true com 1px visível; o que conta é quanto da seção
+    // está na tela, por isso a proporção e os dois limiares.
+    const io = new IntersectionObserver(
+      ([entry]) => setOficinasVisible(entry.intersectionRatio >= 0.15),
+      { threshold: [0, 0.15] },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [budgetId]);
 
   if (!budget) {
     return (
@@ -333,6 +352,7 @@ export default function BudgetDetailPage() {
         </div>
 
         {/* ENVIAR PARA OFICINA — bloco principal em destaque */}
+        <div ref={oficinasRef} id="enviar-oficina" className="scroll-mt-20">
         <OficinasInline
           budget={budget}
           onOficinaContacted={(o) =>
@@ -344,6 +364,7 @@ export default function BudgetDetailPage() {
           }
           onOpenFullPicker={() => setSendOpen(true)}
         />
+        </div>
 
         {/* CONTATOS FEITOS — só aparece quando tem algo */}
         {(budget.contactedOficinas?.length ?? 0) > 0 && (
@@ -398,20 +419,20 @@ export default function BudgetDetailPage() {
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <button
                 onClick={() => setStatus(budget.id, "approved")}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-success)]/15 hover:bg-[color:var(--color-success)]/25 border border-[color:var(--color-success)]/30 px-3.5 py-2 text-label font-medium text-[color:var(--color-success)] transition"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[color:var(--color-success)]/15 hover:bg-[color:var(--color-success)]/25 border border-[color:var(--color-success)]/30 px-3.5 py-2 text-label font-medium text-[color:var(--color-success)] transition lg:min-h-0"
               >
                 <Check size={13} /> Marcar como aprovado
               </button>
               <button
                 onClick={() => setStatus(budget.id, "rejected")}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-danger)]/10 hover:bg-[color:var(--color-danger)]/20 border border-[color:var(--color-danger)]/30 px-3.5 py-2 text-label font-medium text-[color:var(--color-danger)] transition"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[color:var(--color-danger)]/10 hover:bg-[color:var(--color-danger)]/20 border border-[color:var(--color-danger)]/30 px-3.5 py-2 text-label font-medium text-[color:var(--color-danger)] transition lg:min-h-0"
               >
                 <X size={13} /> Recusar
               </button>
               {budget.status === "draft" && (
                 <button
                   onClick={() => router.push("/dashboard")}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3.5 py-2 text-label font-medium text-white transition"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3.5 py-2 text-label font-medium text-white transition lg:min-h-0"
                 >
                   <FileEdit size={13} /> Continuar editando
                 </button>
@@ -424,18 +445,20 @@ export default function BudgetDetailPage() {
             <button
               onClick={handlePDF}
               disabled={pdfBusy}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition disabled:opacity-60"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition disabled:opacity-60 lg:min-h-0"
             >
               <FileText size={12} /> {pdfBusy ? "Gerando…" : "Baixar PDF"}
             </button>
             <button
               onClick={exportJSON}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition lg:min-h-0"
               title="Exportar JSON bruto (backup)"
             >
               <Download size={12} /> Exportar JSON
             </button>
-            <div className="ml-auto">
+            {/* "Apagar" sozinho numa linha, com divisória: no celular ele ficava
+                8px abaixo do PDF e do JSON, com a mesma altura. */}
+            <div className="ml-auto max-lg:ml-0 max-lg:mt-2 max-lg:w-full max-lg:border-t max-lg:border-white/[0.06] max-lg:pt-4">
               <button
                 onClick={async () => {
                   const ok = await confirmDialog({
@@ -448,7 +471,7 @@ export default function BudgetDetailPage() {
                     router.push("/dashboard");
                   }
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.02] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-label font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.02] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-label font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition max-lg:w-full max-lg:justify-center lg:min-h-0"
               >
                 <Trash2 size={12} /> Apagar orçamento
               </button>
@@ -456,6 +479,29 @@ export default function BudgetDetailPage() {
           </div>
         </div>
       </div>
+
+      {!oficinasVisible && (
+        <MobileActionBar>
+          <div className="min-w-0 flex-1">
+            <p className="text-meta text-[color:var(--color-muted)]">Total estimado</p>
+            <p className="text-title font-semibold tabular truncate">{formatBRL(grandTotal)}</p>
+          </div>
+          <button
+            onClick={() =>
+              document.getElementById("enviar-oficina")?.scrollIntoView({
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+                  ? "auto"
+                  : "smooth",
+                block: "start",
+              })
+            }
+            className="h-12 shrink-0 rounded-2xl bg-[color:var(--color-primary)] px-5 text-label font-semibold text-white flex items-center gap-2"
+          >
+            <MessageCircle size={16} />
+            Enviar para oficina
+          </button>
+        </MobileActionBar>
+      )}
 
       {sendOpen && budget && (
         <SendWorkshopModal

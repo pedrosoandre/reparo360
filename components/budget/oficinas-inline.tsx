@@ -117,7 +117,7 @@ export function OficinasInline({
             </span>
             <button
               onClick={onOpenFullPicker}
-              className="text-[color:var(--color-primary-glow)] hover:brightness-125 font-medium"
+              className="inline-flex min-h-11 items-center px-2 text-[color:var(--color-primary-glow)] hover:brightness-125 font-medium lg:min-h-0 lg:px-0"
             >
               trocar cidade
             </button>
@@ -186,7 +186,7 @@ export function OficinasInline({
                   <button
                     onClick={() => handleSend(o)}
                     disabled={!o.waId}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#25D366] hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-white/[0.06] disabled:text-[color:var(--color-muted)] px-3 py-1.5 text-label font-semibold text-white transition shrink-0"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-white/[0.06] disabled:text-[color:var(--color-muted)] px-3 py-1.5 text-label font-semibold text-white transition shrink-0 lg:min-h-0"
                     title={o.waId ? "Enviar orçamento via WhatsApp" : "Sem WhatsApp cadastrado"}
                   >
                     {contacted ? <Check size={12} /> : <MessageCircle size={12} />}
@@ -200,7 +200,7 @@ export function OficinasInline({
           {(ranking.outras.length > 0 || (cidade && cidade.total > ranking.top.length)) && (
             <button
               onClick={onOpenFullPicker}
-              className="mt-3 w-full text-label text-[color:var(--color-muted)] hover:text-white transition inline-flex items-center justify-center gap-1"
+              className="mt-3 w-full min-h-11 text-label text-[color:var(--color-muted)] hover:text-white transition inline-flex items-center justify-center gap-1 lg:min-h-0"
             >
               Ver mais {ranking.outras.length} oficinas em {cidade?.nome}
               <ChevronRight size={12} />

@@ -16,6 +16,7 @@ import {
   Plus,
   MessageSquare,
   ImagePlus,
+  Trash2,
 } from "lucide-react";
 import { forwardRef, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { CarPart, DamageRecord } from "@/types";
@@ -587,7 +588,10 @@ const DamageRow = forwardRef<HTMLDivElement, {
           </p>
         </div>
 
-        <div className="flex flex-col items-end justify-between shrink-0">
+        {/* Desktop: ícones pequenos ao lado do texto (mouse acerta 13px).
+            No celular essa coluna sai e as mesmas ações vão pra a faixa de
+            botões de 44px logo abaixo. */}
+        <div className="hidden lg:flex flex-col items-end justify-between shrink-0">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -640,6 +644,60 @@ const DamageRow = forwardRef<HTMLDivElement, {
         </div>
       </div>
 
+      {/* Celular: faixa de ações com alvo de 44px. "Remover" fica no fim e
+          separado dos outros (e já pede confirmação). Histórico e Recalcular
+          ficam só no desktop: um mostra "em breve" e o outro só seleciona a
+          peça, então não merecem um alvo de toque aqui. */}
+      <div className="flex items-center gap-2 lg:hidden">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onEdit();
+          }}
+          className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.04] text-label font-medium text-white"
+        >
+          Personalizar <SlidersHorizontal size={14} />
+        </button>
+        {slotsLeft > 0 && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              fileRef.current?.click();
+            }}
+            aria-label="Adicionar foto"
+            className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-[color:var(--color-muted)]"
+          >
+            <ImagePlus size={18} />
+          </button>
+        )}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleResolved();
+          }}
+          aria-label={detail.resolved ? "Reabrir dano" : "Marcar como resolvido"}
+          aria-pressed={detail.resolved}
+          className={cn(
+            "flex size-11 shrink-0 items-center justify-center rounded-xl border",
+            detail.resolved
+              ? "border-[color:var(--color-success)]/30 bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]"
+              : "border-white/[0.08] bg-white/[0.04] text-[color:var(--color-muted)]",
+          )}
+        >
+          <CircleCheck size={18} />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+          aria-label="Remover dano"
+          className="ml-2 flex size-11 shrink-0 items-center justify-center rounded-xl border border-[color:var(--color-danger)]/30 bg-[color:var(--color-danger)]/10 text-[color:var(--color-danger)]"
+        >
+          <Trash2 size={18} />
+        </button>
+      </div>
+
       {/* Comentário fixado */}
       {editingNote ? (
         <div
@@ -660,7 +718,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
                 setNoteDraft(detail.notes ?? "");
                 setEditingNote(false);
               }}
-              className="rounded-md px-2 py-1 text-[10px] text-[color:var(--color-muted)] hover:text-white"
+              className="rounded-md px-4 min-h-11 text-meta text-[color:var(--color-muted)] hover:text-white lg:min-h-0 lg:px-2 lg:py-1 lg:text-[10px]"
             >
               Cancelar
             </button>
@@ -669,7 +727,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
                 onNotesChange(noteDraft.trim());
                 setEditingNote(false);
               }}
-              className="rounded-md bg-[color:var(--color-primary)] hover:brightness-110 px-2 py-1 text-[10px] font-semibold text-white"
+              className="rounded-md bg-[color:var(--color-primary)] hover:brightness-110 px-4 min-h-11 text-meta font-semibold text-white lg:min-h-0 lg:px-2 lg:py-1 lg:text-[10px]"
             >
               Salvar
             </button>
@@ -694,9 +752,9 @@ const DamageRow = forwardRef<HTMLDivElement, {
             setNoteDraft("");
             setEditingNote(true);
           }}
-          className="mt-1 self-start inline-flex items-center gap-1 text-[10px] text-[color:var(--color-muted)] hover:text-white transition-colors"
+          className="mt-1 self-start inline-flex min-h-11 items-center gap-1.5 text-meta text-[color:var(--color-muted)] hover:text-white transition-colors lg:min-h-0 lg:gap-1 lg:text-[10px]"
         >
-          <MessageSquare size={10} />
+          <MessageSquare size={12} />
           + Adicionar comentário
         </button>
       )}
