@@ -113,7 +113,7 @@ function VehicleForm({ vehicle }: { vehicle: Vehicle }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3">
-        <Field label="Placa" value={plate} onChange={setPlate} placeholder="ABC1D23" />
+        <Field label="Placa" value={plate} onChange={setPlate} placeholder="Ex.: ABC1D23" />
         <Field label="Cor" value={color} onChange={setColor} />
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -176,7 +176,7 @@ function AccidentForm({ vehicle }: { vehicle: Vehicle }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 py-2 text-sm text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
+          className="mt-1 w-full rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 py-2 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
         />
       </label>
       <div className="flex items-center justify-between">
@@ -256,7 +256,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
+        className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
       />
     </label>
   );

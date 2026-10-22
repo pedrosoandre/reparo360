@@ -63,7 +63,7 @@ export function VehiclePickerModal({ onPick, onClose }: Props) {
                 setBrand(e.target.value);
                 setModel("");
               }}
-              className="w-full appearance-none rounded-lg bg-white/[0.06] border border-white/[0.08] px-3 py-2 text-sm text-white outline-none focus:border-white/25 pr-9"
+              className="w-full appearance-none rounded-lg bg-white/[0.06] border border-white/[0.08] px-3 py-2 text-body text-white outline-none focus:border-white/25 pr-9"
             >
               <option value="" className="bg-[#111318]">Selecione…</option>
               {VEHICLE_BRANDS.map((b) => (
@@ -79,7 +79,7 @@ export function VehiclePickerModal({ onPick, onClose }: Props) {
               value={model}
               onChange={(e) => setModel(e.target.value)}
               disabled={!brand}
-              className="w-full appearance-none rounded-lg bg-white/[0.06] border border-white/[0.08] px-3 py-2 text-sm text-white outline-none focus:border-white/25 pr-9 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full appearance-none rounded-lg bg-white/[0.06] border border-white/[0.08] px-3 py-2 text-body text-white outline-none focus:border-white/25 pr-9 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <option value="" className="bg-[#111318]">
                 {brand ? "Selecione…" : "Escolha a marca primeiro"}

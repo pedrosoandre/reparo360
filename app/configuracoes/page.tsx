@@ -199,7 +199,7 @@ function Field({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-white placeholder:text-[color:var(--color-muted)]/60 outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
+        className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white placeholder:text-[color:var(--color-muted)]/60 outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
       />
     </label>
   );

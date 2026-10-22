@@ -175,7 +175,7 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
                       ? `Buscar entre ${brandModels.length} modelo${brandModels.length === 1 ? "" : "s"} ${openBrand}…`
                       : `Buscar entre ${VEHICLE_CATALOG.length} veículos…`
                   }
-                  className="w-full bg-transparent text-[16px] lg:text-xs text-white placeholder:text-[color:var(--color-muted)] outline-none"
+                  className="w-full bg-transparent text-[16px] lg:text-body text-white placeholder:text-[color:var(--color-muted)] outline-none"
                 />
               </div>
             </div>

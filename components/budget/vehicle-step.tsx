@@ -102,7 +102,7 @@ export function VehicleStep() {
             type="text"
             value={vehicle.color ?? ""}
             onChange={(e) => setVehicle({ color: e.target.value })}
-            placeholder="Prata metálico"
+            placeholder="Ex.: Prata metálico"
             className="input"
           />
         </Field>
@@ -112,7 +112,7 @@ export function VehicleStep() {
             type="text"
             value={vehicle.plate ?? ""}
             onChange={(e) => setVehicle({ plate: e.target.value.toUpperCase() })}
-            placeholder="ABC-1D23"
+            placeholder="Ex.: ABC-1D23"
             className="input"
           />
         </Field>
@@ -122,7 +122,7 @@ export function VehicleStep() {
             type="number"
             value={vehicle.mileage ?? ""}
             onChange={(e) => setVehicle({ mileage: Number(e.target.value) })}
-            placeholder="65000"
+            placeholder="Ex.: 65000"
             className="input"
           />
         </Field>

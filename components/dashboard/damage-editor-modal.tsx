@@ -232,7 +232,7 @@ export function DamageEditorModal({
             value={part}
             onChange={(e) => setPart(e.target.value as CarPart)}
             disabled={!!editing}
-            className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors disabled:opacity-60"
+            className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors disabled:opacity-60"
           >
             <option value="" className="bg-[#111318]">
               Selecione…
@@ -432,7 +432,7 @@ export function DamageEditorModal({
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="Ex.: Av. Paulista, altura do 1500"
-            className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
+            className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
           />
         </div>
 
@@ -446,7 +446,7 @@ export function DamageEditorModal({
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
             placeholder="Detalhes que ajudam a oficina a entender o dano"
-            className="mt-1 w-full rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 py-2 text-sm text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
+            className="mt-1 w-full rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 py-2 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
           />
         </div>
 

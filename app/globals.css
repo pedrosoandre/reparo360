@@ -95,6 +95,28 @@ html, body { caret-color: var(--color-primary-glow); }
    "R$ 1.280,00" muda de largura a cada centavo e o card inteiro treme. */
 .tabular { font-variant-numeric: tabular-nums; }
 
+/* Rede de segurança: piso de 16px em campo, onde se toca com o dedo.
+ *
+ * O Safari do iPhone dá zoom na página ao focar um campo com fonte menor que
+ * 16px, e não desfaz ao sair. Os 11 campos que estavam em `text-sm`/`text-xs`
+ * foram corrigidos no próprio componente (papel `body`) — esta regra existe
+ * para o campo novo que entrar amanhã com `text-sm` por hábito.
+ *
+ * `pointer: coarse` é a condição real (dedo), não a largura da janela. O
+ * seletor de atributo leva especificidade 0-1-1, que vence `.text-sm` (0-1-0)
+ * sem precisar de `!important`. No mouse nada muda.
+ *
+ * Não deu pra confirmar no emulador do navegador: a emulação móvel distorce o
+ * `getComputedStyle` de campo (devolve 14px até com style inline de 22px
+ * !important). Precisa de iPhone de verdade. */
+@media (pointer: coarse) {
+  input[class],
+  select[class],
+  textarea[class] {
+    font-size: 16px;
+  }
+}
+
 /* Premium card - matches the reference perfectly */
 .premium-card {
   background: linear-gradient(180deg, #111318 0%, #0F1116 100%);

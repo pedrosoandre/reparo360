@@ -101,7 +101,7 @@ export function PhotosStep() {
               type="text"
               value={customerName}
               onChange={(e) => setCustomer({ name: e.target.value })}
-              placeholder="Ana Silva"
+              placeholder="Ex.: Ana Silva"
               className="input"
             />
           </Field>
@@ -110,7 +110,7 @@ export function PhotosStep() {
               type="tel"
               value={customerPhone}
               onChange={(e) => setCustomer({ phone: e.target.value })}
-              placeholder="(11) 98765-4321"
+              placeholder="Ex.: (11) 98765-4321"
               className="input"
             />
           </Field>

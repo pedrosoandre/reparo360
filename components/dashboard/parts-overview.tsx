@@ -710,7 +710,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
             onChange={(e) => setNoteDraft(e.target.value)}
             rows={2}
             placeholder="Descreva o dano pra oficina…"
-            className="w-full bg-transparent text-xs text-white placeholder:text-[color:var(--color-muted)] outline-none resize-none"
+            className="w-full bg-transparent text-body text-white placeholder:text-[color:var(--color-muted)] outline-none resize-none"
           />
           <div className="flex items-center justify-end gap-1.5 mt-1">
             <button

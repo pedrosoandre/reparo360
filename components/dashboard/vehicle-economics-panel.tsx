@@ -145,7 +145,7 @@ export function VehicleEconomicsPanel({ vehicleId, fipe, repairTotal, deductible
                     onKeyDown={(e) => e.key === "Enter" && saveDeductible()}
                     inputMode="decimal"
                     placeholder="Ex.: 3200"
-                    className="h-9 flex-1 min-w-0 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-sm text-white outline-none focus:border-[color:var(--color-primary)]/50"
+                    className="h-9 flex-1 min-w-0 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50"
                   />
                   <button
                     onClick={saveDeductible}
