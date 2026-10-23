@@ -117,7 +117,7 @@ export function SidebarBody({ onNavigate }: { onNavigate?: () => void } = {}) {
         </span>
       </button>
 
-      <div className="rounded-2xl p-4 bg-gradient-to-br from-[#4F6BFF] to-[#3B4FD9] shadow-[0_20px_40px_-20px_rgba(79,107,255,0.6)] relative overflow-hidden">
+      <div className="rounded-2xl p-4 bg-[color:var(--color-primary)] relative overflow-hidden">
         <span className="absolute top-2 right-2 text-[8px] uppercase tracking-wider text-white/60">
           Anúncio
         </span>
@@ -135,7 +135,7 @@ export function SidebarBody({ onNavigate }: { onNavigate?: () => void } = {}) {
             toast("GaraGO Seguros — em breve integração com cotação.");
             onNavigate?.();
           }}
-          className="mt-3 w-full h-8 rounded-lg bg-white text-[#3B4FD9] text-xs font-semibold hover:bg-slate-100 transition-colors"
+          className="mt-3 w-full h-11 bg-[#141414] text-[color:var(--color-text)] text-label font-semibold hover:bg-black transition-colors"
         >
           Fazer cotação
         </button>

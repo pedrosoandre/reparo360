@@ -1,28 +1,57 @@
+/* As fontes da identidade sobem para cá porque `@import` precisa vir antes de
+   qualquer regra: dentro de identidade-pit-lane.css o import acabava depois
+   das regras do Tailwind quando o arquivo é inlinado, e o Turbopack recusa. */
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,800;1,800&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
+@import "../identidade-pit-lane.css";
 
+/* Identidade "Pit Lane", variante escura.
+ *
+ * Os tokens abaixo são os mesmos nomes de sempre — os componentes não mudam —
+ * com os valores da identidade. Vermelho de largada, preto de pneu, amarelo de
+ * bandeira. Barlow para interface, Barlow Condensed itálico em caixa alta para
+ * título, IBM Plex Mono para placa e valor.
+ *
+ * Por que a variante escura e não a clara, que é o padrão do arquivo: o app
+ * tem 533 cores cravadas que pressupõem fundo escuro (223 `white/[...]`, 154
+ * `text-white`, 132 `bg-white/`, 24 `black/`). Sobre o papel #EFEDE8 da
+ * variante clara, cada uma delas vira texto invisível ou painel que some.
+ * Trocar o tema é migrar as 533 primeiro — é outro trabalho, não uma troca de
+ * token. */
 @theme {
-  --color-bg: #0A0B0F;
-  --color-surface: #111318;
-  --color-surface-2: #171A21;
-  --color-surface-3: #1D212B;
+  --color-bg: #141414;               /* pneu */
+  --color-surface: #1C1C1B;
+  --color-surface-2: #1C1C1B;
+  --color-surface-3: #2E2D2B;
 
-  --color-border: rgba(255,255,255,0.06);
-  --color-border-strong: rgba(255,255,255,0.10);
+  --color-border: #2E2D2B;
+  --color-border-strong: #5C5A55;
 
-  --color-primary: #4F6BFF;
-  --color-primary-hover: #6480FF;
-  --color-primary-soft: rgba(79,107,255,0.12);
-  --color-primary-glow: #7B8EFF;
+  --color-primary: #E23B2E;          /* largada */
+  --color-primary-hover: #C92F23;
+  --color-primary-soft: rgba(226,59,46,0.14);
+  --color-primary-glow: #F05A4E;     /* clareado: o vermelho puro não lê como texto sobre #141414 */
 
-  --color-text: #F5F7FB;
-  --color-text-secondary: #9AA3B2;
-  --color-muted: #9AA3B2;
+  --color-text: #EFEDE8;
+  --color-text-secondary: #A8A59F;
+  --color-muted: #A8A59F;
 
-  --color-success: #22C55E;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
+  --color-success: #2F8F4E;
+  --color-warning: #F2C230;          /* bandeira */
+  --color-danger: #E23B2E;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Barlow", system-ui, -apple-system, sans-serif;
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* Canto reto em tudo: é a forma da identidade, não um detalhe. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
 
   /* Escala tipográfica por papel.
    *
@@ -59,18 +88,30 @@
 }
 
 html, body {
-  background: #0A0B0F;
+  background: #141414;
   color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background:
-    radial-gradient(circle at top, rgba(79,107,255,0.12), transparent 35%),
-    radial-gradient(circle at bottom, rgba(255,255,255,0.03), transparent 40%),
-    #0A0B0F;
+  /* Fundo chapado. O halo azul radial era do mundo anterior; Pit Lane não tem
+     brilho difuso — tem asfalto, tinta e borda reta. */
+  background: #141414;
   min-height: 100vh;
+}
+
+/* Canto reto também onde o utilitário não passa por token: no Tailwind v4 o
+   `rounded-full` é um valor fixo, não um `--radius-*`. */
+.rounded-full { border-radius: 0; }
+
+/* Título com a voz da marca: condensada, itálica, caixa alta. */
+h1, h2, h3, .titulo-pit {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -117,33 +158,36 @@ html, body { caret-color: var(--color-primary-glow); }
   }
 }
 
-/* Premium card - matches the reference perfectly */
+/* Painel: chapado, borda visível, canto reto. O gradiente e a sombra de 60px
+   eram o "premium" do mundo anterior — aqui o que separa um bloco do outro é
+   a linha, como numa prancha técnica. */
 .premium-card {
-  background: linear-gradient(180deg, #111318 0%, #0F1116 100%);
-  border: 1px solid rgba(255,255,255,0.06);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.04),
-    0 20px 60px rgba(0,0,0,0.45);
-  border-radius: 24px;
+  background: #1C1C1B;
+  border: 1px solid #2E2D2B;
+  border-radius: 0;
 }
 
 .premium-card-flat {
-  background: #171A21;
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 20px;
+  background: #1C1C1B;
+  border: 1px solid #2E2D2B;
+  border-radius: 0;
 }
 
+/* Sem gradiente em texto: ênfase vem de peso e caixa. Vira a voz da marca. */
 .text-gradient {
-  background: linear-gradient(135deg, #F8FAFC 0%, #7B8EFF 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+  color: var(--color-primary-glow);
+  background: none;
+  -webkit-text-fill-color: currentColor;
 }
 
 .grid-bg {
   background-image:
-    radial-gradient(circle at 20% 0%, rgba(79,107,255,0.15), transparent 40%),
-    radial-gradient(circle at 80% 100%, rgba(123,142,255,0.1), transparent 40%);
+    repeating-linear-gradient(90deg, rgba(239,237,232,0.04) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(0deg, rgba(239,237,232,0.04) 0 1px, transparent 1px 48px);
 }
 
 @keyframes pulse-dot {
@@ -161,14 +205,13 @@ html, body { caret-color: var(--color-primary-glow); }
 .drawer-slide-in { animation: drawer-slide-in 0.18s ease-out; }
 
 .glass {
-  background: linear-gradient(180deg, rgba(17,19,24,0.85) 0%, rgba(10,11,15,0.6) 100%);
+  background: rgba(20,20,20,0.92);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.06);
+  border: 1px solid #2E2D2B;
 }
 
+/* Destaque por contorno, não por halo: o vermelho marca a borda em vez de
+   vazar luz para fora dela. */
 .glow-primary {
-  box-shadow:
-    0 0 0 1px rgba(79,107,255,0.4),
-    0 0 40px -10px rgba(79,107,255,0.5),
-    0 20px 40px -20px rgba(79,107,255,0.35);
+  box-shadow: 0 0 0 1.5px var(--color-primary);
 }

@@ -1,0 +1,169 @@
+/* Reparo360 — Identidade visual "Pit Lane"
+   Uso: importe no layout raiz (ex.: app/globals.css → @import "./identidade-pit-lane.css";)
+   Tema escuro: adicione class="dark" (ou data-theme="dark") no <html>. */
+
+/* As fontes são carregadas no topo de app/globals.css, não aqui: quando este
+   arquivo é inlinado depois do Tailwind, um @import nesta posição vira erro de
+   build ("@import rules must precede all rules"). Para usar este arquivo
+   sozinho, reponha a linha abaixo no topo dele:
+
+   @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,800;1,800&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap"); */
+
+:root {
+  /* Marca */
+  --r360-largada: #E23B2E;   /* ação principal, dano, valor */
+  --r360-pneu: #141414;      /* texto, sidebar, texto sobre vermelho/amarelo */
+  --r360-bandeira: #F2C230;  /* alerta, área de dano, promo */
+  --r360-verde: #2F8F4E;     /* aprovado, seguro válido */
+  --r360-mercosul: #1D3A8A;  /* faixa da placa */
+
+  /* Superfícies (claro) */
+  --r360-bg: #EFEDE8;
+  --r360-panel: #FBFAF7;
+  --r360-line: #D9D5CC;
+  --r360-text: #141414;
+  --r360-muted: #5C5A55;
+  --r360-subtle: #8C8A85;
+  --r360-sidebar: #141414;
+  --r360-sidebar-text: #EFEDE8;
+  --r360-sidebar-muted: #A8A59F;
+  --r360-viewer-bg: #E4E1D9;
+  --r360-on-accent: #141414;
+
+  /* Status */
+  --r360-status-rascunho: #D9D5CC;
+  --r360-status-analise: #F2C230;
+  --r360-status-enviado: #141414;
+  --r360-status-aprovado: #2F8F4E;
+
+  /* Tipografia */
+  --r360-font-display: "Barlow Condensed", "Arial Narrow", sans-serif; /* 800 itálico, CAIXA ALTA */
+  --r360-font-ui: "Barlow", system-ui, sans-serif;
+  --r360-font-mono: "IBM Plex Mono", ui-monospace, monospace;          /* placas, valores, specs */
+
+  --r360-text-display: 56px;
+  --r360-text-h1: 44px;
+  --r360-text-h2: 28px;
+  --r360-text-h3: 20px;
+  --r360-text-body: 14px;
+  --r360-text-small: 12px;
+  --r360-text-label: 11px;
+
+  /* Forma */
+  --r360-radius: 0px;        /* cantos retos em tudo */
+  --r360-border: 1.5px;
+  --r360-rule: 3px;          /* linha sob títulos de página */
+  --r360-hit: 44px;          /* alvo mínimo mobile */
+
+  /* Espaço */
+  --r360-space-1: 4px;
+  --r360-space-2: 8px;
+  --r360-space-3: 12px;
+  --r360-space-4: 16px;
+  --r360-space-5: 24px;
+  --r360-space-6: 32px;
+}
+
+.dark, [data-theme="dark"] {
+  --r360-bg: #141414;
+  --r360-panel: #1C1C1B;
+  --r360-line: #2E2D2B;
+  --r360-text: #EFEDE8;
+  --r360-muted: #A8A59F;
+  --r360-subtle: #5C5A55;
+  --r360-sidebar: #0B0B0A;
+  --r360-viewer-bg: #05060A;
+  --r360-status-enviado: #EFEDE8;
+}
+
+/* Base */
+body { background: var(--r360-bg); color: var(--r360-text); font-family: var(--r360-font-ui); }
+a { color: var(--r360-text); text-decoration-color: var(--r360-largada); }
+a:hover { color: var(--r360-largada); }
+
+/* Tipos */
+.r360-display, .r360-h1, .r360-h2, .r360-h3 {
+  font-family: var(--r360-font-display); font-weight: 800; font-style: italic;
+  text-transform: uppercase; line-height: .95; margin: 0;
+}
+.r360-display { font-size: var(--r360-text-display); }
+.r360-h1 { font-size: var(--r360-text-h1); }
+.r360-h2 { font-size: var(--r360-text-h2); }
+.r360-h3 { font-size: var(--r360-text-h3); }
+.r360-mono { font-family: var(--r360-font-mono); font-weight: 500; }
+.r360-label { font-family: var(--r360-font-mono); font-size: var(--r360-text-label); color: var(--r360-muted); text-transform: uppercase; letter-spacing: .04em; }
+.r360-page-title { border-bottom: var(--r360-rule) solid var(--r360-text); padding-bottom: 12px; }
+
+/* Logo */
+.r360-logo { display: inline-flex; font-family: var(--r360-font-display); font-weight: 800; font-style: italic; line-height: 1; }
+.r360-logo b { background: var(--r360-largada); color: var(--r360-on-accent); padding: 0 .2em; margin-left: .12em; font-weight: 800; }
+
+/* Botões */
+.r360-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 10px 16px;
+  border-radius: var(--r360-radius); font: 600 14px var(--r360-font-ui); white-space: nowrap; cursor: pointer; border: var(--r360-border) solid transparent; }
+.r360-btn-primary { background: var(--r360-largada); color: var(--r360-on-accent);
+  font-family: var(--r360-font-display); font-weight: 800; font-style: italic; font-size: 20px; text-transform: uppercase; }
+.r360-btn-primary:hover { background: #C92F23; }
+.r360-btn-dark { background: var(--r360-text); color: var(--r360-bg); }
+.r360-btn-outline { background: transparent; color: var(--r360-text); border-color: var(--r360-text); }
+.r360-btn-outline:hover { background: var(--r360-text); color: var(--r360-bg); }
+.r360-btn-link { background: none; color: var(--r360-muted); text-decoration: underline; font-weight: 500; font-size: 12px; }
+
+/* Painéis e stats */
+.r360-panel { background: var(--r360-panel); border: 1px solid var(--r360-line); border-radius: var(--r360-radius); }
+.r360-stats { display: grid; grid-template-columns: repeat(4, 1fr); border: var(--r360-border) solid var(--r360-text); }
+.r360-stat { padding: 12px 14px; background: var(--r360-panel); border-right: var(--r360-border) solid var(--r360-text); }
+.r360-stat:last-child { border-right: 0; }
+.r360-stat strong { display: block; font: italic 800 26px/1 var(--r360-font-display); }
+.r360-stat span { font: 500 12px var(--r360-font-ui); color: var(--r360-muted); }
+.r360-stat--accent { background: var(--r360-largada); color: var(--r360-on-accent); }
+.r360-stat--accent span { color: var(--r360-on-accent); }
+
+/* Sidebar */
+.r360-sidebar { background: var(--r360-sidebar); color: var(--r360-sidebar-text); }
+.r360-nav-item { display: flex; justify-content: space-between; padding: 10px 12px; color: var(--r360-sidebar-muted); font: 500 14px var(--r360-font-ui); }
+.r360-nav-item[aria-current="page"] { background: var(--r360-largada); color: var(--r360-on-accent); font-weight: 600; }
+.r360-nav-item[aria-current="page"]::after { content: "→"; }
+
+/* Status */
+.r360-status { display: inline-flex; align-items: center; gap: 8px; font: 600 13px var(--r360-font-ui); }
+.r360-status::before { content: ""; width: 10px; height: 10px; background: var(--c, var(--r360-status-rascunho)); }
+.r360-status[data-s="analise"] { --c: var(--r360-status-analise); }
+.r360-status[data-s="enviado"] { --c: var(--r360-status-enviado); }
+.r360-status[data-s="aprovado"] { --c: var(--r360-status-aprovado); }
+
+/* Placa Mercosul */
+.r360-plate { display: inline-flex; flex-direction: column; background: #fff; color: #141414; border: var(--r360-border) solid #141414; }
+.r360-plate::before { content: ""; height: 5px; background: var(--r360-mercosul); }
+.r360-plate { font: 500 13px var(--r360-font-mono); letter-spacing: .05em; }
+.r360-plate > span { padding: 3px 7px; }
+
+/* Selo (badge) */
+.r360-tag { display: inline-block; padding: 4px 10px; background: var(--r360-text); color: var(--r360-bg);
+  font: italic 800 14px var(--r360-font-display); text-transform: uppercase; }
+.r360-tag--accent { background: var(--r360-largada); color: var(--r360-on-accent); }
+
+/* Visualizador 3D (substitui rounded-full bg-black/50 do Car3D) */
+.r360-viewer { background: var(--r360-viewer-bg); border: 1px solid var(--r360-line); }
+.r360-viewer-btn { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  background: var(--r360-panel); color: var(--r360-text); border: var(--r360-border) solid var(--r360-text); border-radius: 0; }
+.r360-viewer-btn:hover { background: var(--r360-text); color: var(--r360-bg); }
+.dark .r360-viewer-btn, [data-theme="dark"] .r360-viewer-btn { border-color: var(--r360-subtle); }
+.r360-viewer-pill { padding: 8px 14px; background: var(--r360-text); color: var(--r360-bg);
+  font: italic 800 15px var(--r360-font-display); text-transform: uppercase; }
+.r360-part-label { padding: 4px 8px; background: var(--r360-text); color: var(--r360-bg); font: 600 11px var(--r360-font-ui); white-space: nowrap; }
+@media (pointer: coarse) { .r360-viewer-btn { width: var(--r360-hit); height: var(--r360-hit); } }
+
+/* Car3D.tsx — constantes equivalentes:
+   const GOLD = "#F2C230"; const GOLD_GLOW = "#F2C230";
+   const DANGER = "#E23B2E"; const NEUTRAL = "#8C8A85"; const PRIMARY = "#141414";
+   <color attach="background" args={["#E4E1D9"]} />  (escuro: "#05060A")
+
+   Tailwind v4 (opcional) — em globals.css:
+   @theme {
+     --color-largada: #E23B2E; --color-pneu: #141414; --color-bandeira: #F2C230;
+     --color-papel: #FBFAF7; --color-asfalto: #EFEDE8; --color-linha: #D9D5CC; --color-box: #5C5A55;
+     --font-display: "Barlow Condensed", sans-serif; --font-sans: "Barlow", sans-serif; --font-mono: "IBM Plex Mono", monospace;
+     --radius-*: initial;
+   }
+*/

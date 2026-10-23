@@ -447,14 +447,13 @@ function MetricCard({
   const interactive = typeof onClick === "function";
   const Tag = interactive ? "button" : "div";
 
-  // O azul da marca é claro demais para carregar texto de 14px: branco puro
-  // sobre `--color-primary` dá 4,30:1 e a AA pede 4,5. O gradiente mantém o
-  // card inequivocamente azul no topo, onde fica o valor (26px, precisa só
-  // 3:1), e escurece na base, onde fica o rótulo — que sobe para 6,5:1.
+  // Texto preto sobre o vermelho de largada, como manda a identidade
+  // (`--r360-on-accent`). Não é só obediência à marca: preto sobre #E23B2E dá
+  // 4,90:1 e passa na AA, enquanto branco dá 4,29 e reprova no rótulo de 14px.
   const surface =
     tone === "accent"
-      ? "border-transparent bg-gradient-to-b from-[color:var(--color-primary)] to-[#3A4FD0] shadow-[0_10px_30px_-12px_rgba(79,107,255,0.55)]"
-      : "bg-[#171A21] border-white/[0.06]";
+      ? "border-transparent bg-[color:var(--color-primary)]"
+      : "bg-[color:var(--color-surface-2)] border-[color:var(--color-border)]";
 
   return (
     <Tag
@@ -473,15 +472,22 @@ function MetricCard({
       {backdrop}
       <div className="relative">
         {value !== undefined ? (
-          <p className="tabular text-metric font-semibold text-white">{value}</p>
+          <p
+            className={
+              "tabular text-metric font-semibold " +
+              (tone === "accent" ? "text-[#141414]" : "text-[color:var(--color-text)]")
+            }
+          >
+            {value}
+          </p>
         ) : (
-          <span className="flex h-[26px] items-center text-white/70">{icon}</span>
+          <span className="flex h-[26px] items-center text-[color:var(--color-muted)]">{icon}</span>
         )}
       </div>
       <p
         className={
           "relative text-label " +
-          (tone === "accent" ? "text-white" : "text-[color:var(--color-muted)]")
+          (tone === "accent" ? "text-[#141414]" : "text-[color:var(--color-muted)]")
         }
       >
         {title}
@@ -780,8 +786,8 @@ function MapTexture() {
         <path d="M 70 -10 L 66 110" />
         <path d="M 130 -10 L 136 110" />
       </g>
-      <circle cx="108" cy="50" r="3" fill="#4F6BFF" />
-      <circle cx="108" cy="50" r="7" fill="#4F6BFF" opacity="0.25" />
+      <circle cx="108" cy="50" r="3" fill="#E23B2E" />
+      <circle cx="108" cy="50" r="7" fill="#E23B2E" opacity="0.25" />
     </svg>
   );
 }

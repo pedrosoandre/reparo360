@@ -142,8 +142,8 @@ export function VehicleStep() {
         }
         .input:focus {
           outline: none;
-          border-color: #4F6BFF;
-          box-shadow: 0 0 0 3px rgba(79,107,255,0.15);
+          border-color: #E23B2E;
+          box-shadow: 0 0 0 3px rgba(226,59,46,0.18);
         }
         .input:disabled {
           opacity: 0.5;

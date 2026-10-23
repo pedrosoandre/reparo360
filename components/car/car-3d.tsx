@@ -22,11 +22,14 @@ import {
 import { assetUrl } from "@/lib/assets";
 import { VIEWER_BOX } from "./viewer-box";
 
-const GOLD = "#F5A524";
-const GOLD_GLOW = "#FBBF24";
-const DANGER = "#EF4444";
-const NEUTRAL = "#64748B";
-const PRIMARY = "#4F6BFF";
+/* Cores da identidade "Pit Lane" — os mesmos valores do arquivo de marca.
+   Amarelo de bandeira marca a área selecionada, vermelho de largada marca o
+   dano, e o neutro é a areia do asfalto, não um cinza-azulado. */
+const GOLD = "#F2C230";
+const GOLD_GLOW = "#F2C230";
+const DANGER = "#E23B2E";
+const NEUTRAL = "#8C8A85";
+const PRIMARY = "#141414";
 const CAR_URL = assetUrl(`/cars/${VEHICLE_CATALOG[0].glb}`);
 
 const CAMERA_START: [number, number, number] = [3.6, 1.9, 4.4];
