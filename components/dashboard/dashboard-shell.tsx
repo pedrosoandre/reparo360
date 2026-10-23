@@ -34,7 +34,7 @@ export function DashboardShell({ children, aside, scrollableMain = true }: Dashb
   return (
     <div className="lg:h-screen lg:overflow-hidden flex flex-col">
       <MobileProfileHeader />
-      <div className="flex-1 min-h-0 w-full p-2 sm:p-3 md:p-4 bg-gradient-to-b from-[#111318] to-[#0F1116]">
+      <div className="flex-1 min-h-0 w-full p-2 sm:p-3 md:p-4 bg-gradient-to-b from-[color:var(--color-surface)] to-[color:var(--color-surface)]">
         <div className={`grid grid-cols-1 ${gridCols} gap-3 sm:gap-4 lg:h-full lg:min-h-0`}>
           <div className="hidden lg:block order-2 lg:order-1 lg:min-h-0">
             <Sidebar />
@@ -50,13 +50,13 @@ export function DashboardShell({ children, aside, scrollableMain = true }: Dashb
         </div>
       </div>
 
-      <footer className="w-full border-t border-white/[0.06] bg-[#0F1116] shrink-0">
+      <footer className="w-full border-t border-[color:var(--color-border)] bg-[color:var(--color-surface)] shrink-0">
         <div className="px-3 sm:px-4 md:px-5 py-2 flex flex-wrap items-center justify-center md:justify-between gap-3 text-xs text-[color:var(--color-muted)]">
           <span className="opacity-60">© {new Date().getFullYear()} Reparo360</span>
           <nav className="flex flex-wrap items-center gap-4 sm:gap-6">
-            <a className="hover:text-white transition-colors cursor-pointer">Sobre</a>
-            <a className="hover:text-white transition-colors cursor-pointer">Política de privacidade</a>
-            <a className="hover:text-white transition-colors cursor-pointer">Informações legais</a>
+            <a className="hover:text-[color:var(--color-text)] transition-colors cursor-pointer">Sobre</a>
+            <a className="hover:text-[color:var(--color-text)] transition-colors cursor-pointer">Política de privacidade</a>
+            <a className="hover:text-[color:var(--color-text)] transition-colors cursor-pointer">Informações legais</a>
           </nav>
         </div>
       </footer>

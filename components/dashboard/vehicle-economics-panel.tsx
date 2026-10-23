@@ -46,7 +46,7 @@ export function VehicleEconomicsPanel({ vehicleId, fipe, repairTotal, deductible
 
   if (fipe.status === "loading") {
     return (
-      <div className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-4">
+      <div className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-4">
         <p className="text-xs text-[color:var(--color-muted)]">Consultando a tabela FIPE…</p>
       </div>
     );
@@ -54,7 +54,7 @@ export function VehicleEconomicsPanel({ vehicleId, fipe, repairTotal, deductible
 
   if (fipe.status === "absent" || fipe.status === "error") {
     return (
-      <div className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-4">
+      <div className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-4">
         <p className="flex items-start gap-1.5 text-xs text-[color:var(--color-muted)]">
           <Info size={13} className="mt-px shrink-0" />
           {fipe.reason ?? "Sem valor de mercado para este veículo."} Sem ele não dá pra
@@ -77,7 +77,7 @@ export function VehicleEconomicsPanel({ vehicleId, fipe, repairTotal, deductible
               ? "bg-[color:var(--color-danger)]/10 border-[color:var(--color-danger)]/30"
               : totalLoss.verdict === "approaching"
                 ? "bg-[color:var(--color-warning,#f59e0b)]/10 border-[color:var(--color-warning,#f59e0b)]/30"
-                : "bg-white/[0.02] border-white/[0.06]",
+                : "bg-[color:var(--color-surface)] border-[color:var(--color-border)]",
           )}
         >
           <div className="flex items-start gap-2">
@@ -127,7 +127,7 @@ export function VehicleEconomicsPanel({ vehicleId, fipe, repairTotal, deductible
       )}
 
       {/* Vale acionar o seguro? */}
-      <div className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-4">
+      <div className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-4">
         <div className="flex items-start gap-2">
           <ShieldQuestion size={15} className="mt-0.5 shrink-0 text-[color:var(--color-muted)]" />
           <div className="min-w-0 flex-1">
@@ -145,11 +145,11 @@ export function VehicleEconomicsPanel({ vehicleId, fipe, repairTotal, deductible
                     onKeyDown={(e) => e.key === "Enter" && saveDeductible()}
                     inputMode="decimal"
                     placeholder="Ex.: 3200"
-                    className="h-9 flex-1 min-w-0 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50"
+                    className="h-9 flex-1 min-w-0 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-primary)]/50"
                   />
                   <button
                     onClick={saveDeductible}
-                    className="shrink-0 rounded-xl border border-white/[0.12] px-3 py-2 text-xs hover:bg-white/[0.06] transition"
+                    className="shrink-0 rounded-xl border border-[color:var(--color-border-strong)] px-3 py-2 text-xs hover:bg-[color:var(--color-surface-3)] transition"
                   >
                     Salvar
                   </button>
@@ -185,7 +185,7 @@ export function VehicleEconomicsPanel({ vehicleId, fipe, repairTotal, deductible
       </div>
 
       {/* Valor de mercado e depreciação própria */}
-      <div className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-4">
+      <div className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-4">
         <div className="flex items-start gap-2">
           <TrendingDown size={15} className="mt-0.5 shrink-0 text-[color:var(--color-muted)]" />
           <div className="min-w-0">

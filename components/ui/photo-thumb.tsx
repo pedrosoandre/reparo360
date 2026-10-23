@@ -57,7 +57,7 @@ export function PhotoThumb({
         )}
       </svg>
       {label && (
-        <span className="absolute bottom-1.5 left-1.5 text-[9px] font-medium bg-black/60 backdrop-blur px-1.5 py-0.5 rounded text-white/90">
+        <span className="absolute bottom-1.5 left-1.5 text-[9px] font-medium bg-[color:var(--color-surface)]/90 backdrop-blur px-1.5 py-0.5 rounded text-[color:var(--color-text)]">
           {label}
         </span>
       )}

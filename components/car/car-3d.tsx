@@ -386,7 +386,8 @@ export function Car3D({
         )}
 
         <Suspense fallback={<LoadingBox />}>
-          <color attach="background" args={["#05060A"]} />
+          {/* Papel do viewer na identidade clara (--r360-viewer-bg). */}
+          <color attach="background" args={["#E4E1D9"]} />
 
           <SceneryScene id={scenery.id} />
 
@@ -478,7 +479,7 @@ export function Car3D({
           </div>
           {openPicker === "scenery" && (
             <div
-              className="mb-1 max-h-64 overflow-y-auto rounded-lg bg-black/70 backdrop-blur border border-white/[0.12] p-1.5 flex flex-col gap-0.5 min-w-[170px]"
+              className="mb-1 max-h-64 overflow-y-auto rounded-lg bg-[color:var(--color-surface)]/95 backdrop-blur border border-[color:var(--color-border-strong)] p-1.5 flex flex-col gap-0.5 min-w-[170px]"
               role="listbox"
               aria-label="Cenário"
             >
@@ -496,8 +497,8 @@ export function Car3D({
                     className={
                       "text-left px-2 py-1 rounded text-xs transition-colors " +
                       (active
-                        ? "bg-blue-500/25 text-white"
-                        : "text-white/75 hover:bg-white/10 hover:text-white")
+                        ? "bg-blue-500/25 text-[color:var(--color-text)]"
+                        : "text-[color:var(--color-text)]/75 hover:bg-[color:var(--color-surface-3)] hover:text-[color:var(--color-text)]")
                     }
                   >
                     {s.label}
@@ -508,7 +509,7 @@ export function Car3D({
           )}
           {openPicker === "color" && onBodyColorChange && paintTarget && (
             <div
-              className="mb-1 rounded-lg bg-black/70 backdrop-blur border border-white/[0.12] p-1.5 min-w-[170px]"
+              className="mb-1 rounded-lg bg-[color:var(--color-surface)]/95 backdrop-blur border border-[color:var(--color-border-strong)] p-1.5 min-w-[170px]"
               role="listbox"
               aria-label="Cor do veículo"
             >
@@ -535,14 +536,14 @@ export function Car3D({
                       style={c.hex ? { backgroundColor: c.hex } : undefined}
                     >
                       {!c.hex && (
-                        <RotateCcw size={11} className="text-white/70" />
+                        <RotateCcw size={11} className="text-[color:var(--color-muted)]" />
                       )}
                     </button>
                   );
                 })}
               </div>
               {paintTarget?.textured && bodyColor && (
-                <p className="mt-1.5 text-[10px] text-white/50 leading-tight">
+                <p className="mt-1.5 text-[10px] text-[color:var(--color-muted)] leading-tight">
                   este modelo tem textura própria — a cor tinge o original
                 </p>
               )}
@@ -555,7 +556,7 @@ export function Car3D({
         <button
           onClick={toggleHood}
           aria-pressed={hoodOpen}
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 h-8 px-3.5 rounded-full bg-black/60 backdrop-blur border border-white/[0.14] text-white/90 hover:text-white hover:bg-black/75 transition-colors text-xs font-medium flex items-center gap-1.5"
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 h-8 px-3.5 rounded-full bg-[color:var(--color-surface)]/90 backdrop-blur border border-[color:var(--color-border-strong)] text-[color:var(--color-text)] hover:text-[color:var(--color-text)] hover:bg-[color:var(--color-surface)]/95 transition-colors text-xs font-medium flex items-center gap-1.5"
         >
           <Wrench size={13} />
           {hoodOpen ? "Fechar capô" : "Abrir capô"}
@@ -608,7 +609,7 @@ function ZoomBtn({
     <button
       onClick={onClick}
       aria-label={label}
-      className="w-8 h-8 rounded-full bg-black/50 backdrop-blur border border-white/[0.12] text-white/80 hover:text-white hover:bg-black/70 transition-colors flex items-center justify-center"
+      className="w-8 h-8 rounded-full bg-[color:var(--color-surface)]/85 backdrop-blur border border-[color:var(--color-border-strong)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] hover:bg-[color:var(--color-surface)]/95 transition-colors flex items-center justify-center"
     >
       {children}
     </button>
@@ -988,7 +989,7 @@ function Hotspot({
       {(hover || isActive) && (
         <Html position={[0, 0.18, 0]} center>
           <div
-            className="pointer-events-none whitespace-nowrap rounded bg-black/70 backdrop-blur-sm border border-white/[0.08] text-white/90 font-medium tracking-tight"
+            className="pointer-events-none whitespace-nowrap rounded bg-[color:var(--color-surface)]/95 backdrop-blur-sm border border-[color:var(--color-border)] text-[color:var(--color-text)] font-medium tracking-tight"
             style={{ fontSize: "11px", padding: "3px 7px", lineHeight: 1.2 }}
           >
             {PART_LABELS[hotspot.id]}

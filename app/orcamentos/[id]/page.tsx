@@ -44,7 +44,7 @@ const STATUS_LABEL: Record<BudgetStatus, string> = {
 };
 
 const STATUS_COLOR: Record<BudgetStatus, string> = {
-  draft: "bg-white/[0.06] text-white/70",
+  draft: "bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)]",
   sent: "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary-glow)]",
   reviewing: "bg-yellow-500/15 text-yellow-300",
   approved: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
@@ -153,7 +153,7 @@ export default function BudgetDetailPage() {
         <div className="flex items-center justify-between">
           <Link
             href="/dashboard"
-            className="inline-flex items-center gap-1 text-label text-[color:var(--color-muted)] hover:text-white transition-colors"
+            className="inline-flex items-center gap-1 text-label text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
           >
             <ChevronLeft size={13} /> Voltar ao dashboard
           </Link>
@@ -232,7 +232,7 @@ export default function BudgetDetailPage() {
             {budget.items.map((item) => (
               <div
                 key={item.id}
-                className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3"
+                className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3"
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
@@ -260,23 +260,23 @@ export default function BudgetDetailPage() {
           </div>
 
           {/* Breakdown compacto — só a matemática, sem competir com o total */}
-          <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-meta text-[color:var(--color-muted)]">
+          <div className="mt-4 pt-3 border-t border-[color:var(--color-border)] flex items-center justify-between text-meta text-[color:var(--color-muted)]">
             <span>
               Mão de obra + pintura:{" "}
-              <span className="text-white font-medium">
+              <span className="text-[color:var(--color-text)] font-medium">
                 {formatBRL(serviceTotal)}
               </span>
             </span>
             <span>
               Peças:{" "}
-              <span className="text-white font-medium">
+              <span className="text-[color:var(--color-text)] font-medium">
                 {formatBRL(budget.partsTotal)}
               </span>
             </span>
             {extrasTotal > 0 && (
               <span>
                 Extras:{" "}
-                <span className="text-white font-medium">
+                <span className="text-[color:var(--color-text)] font-medium">
                   {formatBRL(extrasTotal)}
                 </span>
               </span>
@@ -302,7 +302,7 @@ export default function BudgetDetailPage() {
               </button>
               <button
                 onClick={() => addExtra(budget.id, "wheel_alignment")}
-                className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 px-2.5 py-1 text-label font-medium text-white transition"
+                className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 px-2.5 py-1 text-label font-medium text-[color:var(--color-text)] transition"
               >
                 <Plus size={11} /> Geometria + balanceamento
               </button>
@@ -318,9 +318,9 @@ export default function BudgetDetailPage() {
               {budget.extras!.map((e) => (
                 <div
                   key={e.id}
-                  className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
+                  className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 flex items-center gap-3"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.06] flex items-center justify-center shrink-0 text-[color:var(--color-muted)]">
+                  <div className="w-9 h-9 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] flex items-center justify-center shrink-0 text-[color:var(--color-muted)]">
                     {e.kind === "oil_change" ? (
                       <Droplet size={15} />
                     ) : (
@@ -377,7 +377,7 @@ export default function BudgetDetailPage() {
               {budget.contactedOficinas!.map((c, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between gap-3 rounded-xl bg-white/[0.02] border border-white/[0.06] px-3 py-2"
+                  className="flex items-center justify-between gap-3 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 py-2"
                 >
                   <div className="min-w-0">
                     <p className="text-body font-medium truncate">{c.nome}</p>
@@ -432,7 +432,7 @@ export default function BudgetDetailPage() {
               {budget.status === "draft" && (
                 <button
                   onClick={() => router.push("/dashboard")}
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3.5 py-2 text-label font-medium text-white transition lg:min-h-0"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-3.5 py-2 text-label font-medium text-[color:var(--color-text)] transition lg:min-h-0"
                 >
                   <FileEdit size={13} /> Continuar editando
                 </button>
@@ -441,24 +441,24 @@ export default function BudgetDetailPage() {
           )}
 
           {/* Exportar + apagar — separados visualmente pra não competir com status */}
-          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-white/[0.06]">
+          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-[color:var(--color-border)]">
             <button
               onClick={handlePDF}
               disabled={pdfBusy}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition disabled:opacity-60 lg:min-h-0"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-3 py-1.5 text-label font-medium text-[color:var(--color-text)] transition disabled:opacity-60 lg:min-h-0"
             >
               <FileText size={12} /> {pdfBusy ? "Gerando…" : "Baixar PDF"}
             </button>
             <button
               onClick={exportJSON}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3 py-1.5 text-label font-medium text-white transition lg:min-h-0"
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-3 py-1.5 text-label font-medium text-[color:var(--color-text)] transition lg:min-h-0"
               title="Exportar JSON bruto (backup)"
             >
               <Download size={12} /> Exportar JSON
             </button>
             {/* "Apagar" sozinho numa linha, com divisória: no celular ele ficava
                 8px abaixo do PDF e do JSON, com a mesma altura. */}
-            <div className="ml-auto max-lg:ml-0 max-lg:mt-2 max-lg:w-full max-lg:border-t max-lg:border-white/[0.06] max-lg:pt-4">
+            <div className="ml-auto max-lg:ml-0 max-lg:mt-2 max-lg:w-full max-lg:border-t max-lg:border-[color:var(--color-border)] max-lg:pt-4">
               <button
                 onClick={async () => {
                   const ok = await confirmDialog({
@@ -471,7 +471,7 @@ export default function BudgetDetailPage() {
                     router.push("/dashboard");
                   }
                 }}
-                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-white/[0.02] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-label font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition max-lg:w-full max-lg:justify-center lg:min-h-0"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-danger)]/15 border border-[color:var(--color-border)] hover:border-[color:var(--color-danger)]/30 px-3 py-1.5 text-label font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] transition max-lg:w-full max-lg:justify-center lg:min-h-0"
               >
                 <Trash2 size={12} /> Apagar orçamento
               </button>
@@ -495,7 +495,7 @@ export default function BudgetDetailPage() {
                 block: "start",
               })
             }
-            className="h-12 shrink-0 rounded-2xl bg-[color:var(--color-primary)] px-5 text-label font-semibold text-white flex items-center gap-2"
+            className="h-12 shrink-0 rounded-2xl bg-[color:var(--color-primary)] px-5 text-label font-semibold text-[color:var(--color-text)] flex items-center gap-2"
           >
             <MessageCircle size={16} />
             Enviar para oficina
@@ -529,7 +529,7 @@ function BudgetPhotoGrid({ refs }: { refs: string[] }) {
       {refs.map((ref, i) => (
         <div
           key={ref}
-          className="aspect-square rounded-lg overflow-hidden border border-white/[0.06] bg-white/[0.03]"
+          className="aspect-square rounded-lg overflow-hidden border border-[color:var(--color-border)] bg-[color:var(--color-surface)]"
         >
           {urls[i] && (
             // eslint-disable-next-line @next/next/no-img-element

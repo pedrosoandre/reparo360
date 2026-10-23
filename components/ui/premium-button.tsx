@@ -28,10 +28,10 @@ export function PremiumButton({
 
   const variants = {
     primary:
-      "bg-[color:var(--color-primary)] text-white shadow-[0_8px_24px_-8px_rgba(37,99,235,0.6)] hover:bg-[color:var(--color-primary-glow)] hover:shadow-[0_12px_32px_-8px_rgba(59,130,246,0.7)]",
+      "bg-[color:var(--color-primary)] text-[color:var(--color-on-accent)] shadow-[0_8px_24px_-8px_rgba(37,99,235,0.6)] hover:bg-[color:var(--color-primary-glow)] hover:shadow-[0_12px_32px_-8px_rgba(59,130,246,0.7)]",
     secondary:
       "bg-[color:var(--color-card)] text-text border border-[color:var(--color-border)] hover:border-[color:var(--color-primary-soft)]",
-    ghost: "text-text-secondary hover:text-text hover:bg-white/5",
+    ghost: "text-text-secondary hover:text-text hover:bg-[color:var(--color-surface)]",
   };
 
   return (

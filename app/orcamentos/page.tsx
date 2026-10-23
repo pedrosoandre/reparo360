@@ -21,7 +21,7 @@ const STATUS_LABEL: Record<BudgetStatus, string> = {
 };
 
 const STATUS_STYLES: Record<BudgetStatus, string> = {
-  draft: "bg-white/[0.06] text-white/70",
+  draft: "bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)]",
   sent: "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary-glow)]",
   reviewing: "bg-yellow-500/15 text-yellow-300",
   approved: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
@@ -82,8 +82,8 @@ export default function OrcamentosPage() {
                   className={cn(
                     "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-label transition-colors",
                     active
-                      ? "bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/40 text-white"
-                      : "bg-white/[0.02] border-white/[0.06] text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.05]",
+                      ? "bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/40 text-[color:var(--color-text)]"
+                      : "bg-[color:var(--color-surface)] border-[color:var(--color-border)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] hover:bg-[color:var(--color-surface)]",
                   )}
                 >
                   {f.label}
@@ -108,7 +108,7 @@ export default function OrcamentosPage() {
               {filtered.map((b) => (
                 <div
                   key={b.id}
-                  className="flex items-center gap-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 hover:border-white/[0.12] transition-colors"
+                  className="flex items-center gap-3 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 hover:border-[color:var(--color-border-strong)] transition-colors"
                 >
                   <div className="w-10 h-10 rounded-xl bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20 flex items-center justify-center text-[color:var(--color-primary-glow)] shrink-0">
                     <Receipt size={16} />
@@ -139,7 +139,7 @@ export default function OrcamentosPage() {
                     <Link
                       href={`/orcamentos/${b.id}`}
                       aria-label="Abrir"
-                      className="w-8 h-8 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors"
+                      className="w-8 h-8 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors"
                     >
                       <ChevronRight size={14} />
                     </Link>
@@ -153,7 +153,7 @@ export default function OrcamentosPage() {
                         if (ok) removeBudget(b.id);
                       }}
                       aria-label="Apagar"
-                      className="w-8 h-8 rounded-xl bg-white/[0.03] hover:bg-[color:var(--color-danger)]/15 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] flex items-center justify-center transition-colors"
+                      className="w-8 h-8 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-danger)]/15 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] flex items-center justify-center transition-colors"
                     >
                       <Trash2 size={13} />
                     </button>

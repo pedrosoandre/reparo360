@@ -39,13 +39,13 @@ export function VehiclePickerModal({ onPick, onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-sm premium-card border border-white/[0.08] p-5 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[color:var(--color-surface)]/95 backdrop-blur-sm">
+      <div className="w-full max-w-sm premium-card border border-[color:var(--color-border)] p-5 relative">
         {onClose && (
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors"
+            className="absolute top-3 right-3 w-7 h-7 rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors"
           >
             <X size={14} />
           </button>
@@ -63,11 +63,11 @@ export function VehiclePickerModal({ onPick, onClose }: Props) {
                 setBrand(e.target.value);
                 setModel("");
               }}
-              className="w-full appearance-none rounded-lg bg-white/[0.06] border border-white/[0.08] px-3 py-2 text-body text-white outline-none focus:border-white/25 pr-9"
+              className="w-full appearance-none rounded-lg bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-3 py-2 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-border-strong)] pr-9"
             >
-              <option value="" className="bg-[#111318]">Selecione…</option>
+              <option value="" className="bg-[color:var(--color-surface)]">Selecione…</option>
               {VEHICLE_BRANDS.map((b) => (
-                <option key={b} value={b} className="bg-[#111318]">
+                <option key={b} value={b} className="bg-[color:var(--color-surface)]">
                   {b}
                 </option>
               ))}
@@ -79,13 +79,13 @@ export function VehiclePickerModal({ onPick, onClose }: Props) {
               value={model}
               onChange={(e) => setModel(e.target.value)}
               disabled={!brand}
-              className="w-full appearance-none rounded-lg bg-white/[0.06] border border-white/[0.08] px-3 py-2 text-body text-white outline-none focus:border-white/25 pr-9 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full appearance-none rounded-lg bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-3 py-2 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-border-strong)] pr-9 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <option value="" className="bg-[#111318]">
+              <option value="" className="bg-[color:var(--color-surface)]">
                 {brand ? "Selecione…" : "Escolha a marca primeiro"}
               </option>
               {models.map((m) => (
-                <option key={m.model} value={m.model} className="bg-[#111318]">
+                <option key={m.model} value={m.model} className="bg-[color:var(--color-surface)]">
                   {m.model}
                 </option>
               ))}
@@ -96,7 +96,7 @@ export function VehiclePickerModal({ onPick, onClose }: Props) {
         <button
           onClick={confirm}
           disabled={!ready}
-          className="mt-5 w-full h-10 rounded-full bg-[color:var(--color-primary)] text-white text-sm font-medium hover:brightness-110 transition disabled:opacity-40 disabled:cursor-not-allowed"
+          className="mt-5 w-full h-10 rounded-full bg-[color:var(--color-primary)] text-[color:var(--color-on-accent)] text-sm font-medium hover:brightness-110 transition disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Confirmar
         </button>

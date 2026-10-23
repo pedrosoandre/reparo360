@@ -24,7 +24,7 @@ export function ConfirmDialog() {
 
   return (
     <div
-      className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-[color:var(--color-surface)]/95 backdrop-blur-sm"
       onClick={() => answer(false)}
     >
       <div
@@ -32,7 +32,7 @@ export function ConfirmDialog() {
         aria-modal="true"
         aria-label={pending.title ?? "Confirmação"}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm premium-card border border-white/[0.08] p-5"
+        className="w-full max-w-sm premium-card border border-[color:var(--color-border)] p-5"
       >
         {pending.title && <h2 className="text-base font-semibold mb-1">{pending.title}</h2>}
         <p className="text-sm text-[color:var(--color-muted)]">{pending.message}</p>
@@ -40,7 +40,7 @@ export function ConfirmDialog() {
         <div className="mt-5 flex items-center justify-end gap-2">
           <button
             onClick={() => answer(false)}
-            className="rounded-xl border border-white/[0.12] px-3 py-2 text-xs font-medium hover:bg-white/[0.06] transition"
+            className="rounded-xl border border-[color:var(--color-border-strong)] px-3 py-2 text-xs font-medium hover:bg-[color:var(--color-surface-3)] transition"
           >
             {pending.cancelLabel ?? "Cancelar"}
           </button>

@@ -198,14 +198,14 @@ export function PartsOverview({
         <div className="flex items-center gap-2">
           <button
             onClick={() => setEditorState({ mode: "create" })}
-            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 hover:bg-[color:var(--color-primary)]/25 px-4 py-2 text-sm font-semibold text-white transition"
+            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 hover:bg-[color:var(--color-primary)]/25 px-4 py-2 text-sm font-semibold text-[color:var(--color-text)] transition"
           >
             <Plus size={16} /> Iniciar orçamento
           </button>
           <button
             onClick={handleReset}
             title="Limpa seleção (peça ativa, categoria, cor) — mantém os danos"
-            className="inline-flex items-center gap-1 rounded-full bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] px-2.5 py-1 text-[11px] font-medium text-[color:var(--color-muted)] hover:text-white transition"
+            className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-2.5 py-1 text-[11px] font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition"
           >
             <RotateCcw size={11} /> Reiniciar orçamento
           </button>
@@ -216,7 +216,7 @@ export function PartsOverview({
       {/* Visualizador + lista de peças abaixo */}
       <div className="min-w-0 lg:flex lg:flex-col lg:flex-1 lg:min-h-0">
         {/* Visualizador do carro */}
-        <div className="relative rounded-2xl overflow-hidden border border-white/[0.06] mb-2 shrink-0 bg-[#05060A]">
+        <div className="relative rounded-2xl overflow-hidden border border-[color:var(--color-border)] mb-2 shrink-0 bg-[#05060A]">
           <Car3DLazy
             modelUrl={glbUrl}
             bodyColor={bodyColor}
@@ -234,14 +234,14 @@ export function PartsOverview({
 
           {/* Só um "toast" mínimo mostrando a peça selecionada — detalhes cheios ficam na lista abaixo */}
           {activePart && (
-            <div className="absolute top-3 left-3 z-20 rounded-full bg-black/70 backdrop-blur border border-white/[0.1] pl-3 pr-1 py-1 flex items-center gap-2">
-              <span className="text-[10px] font-medium text-white truncate max-w-[180px]">
+            <div className="absolute top-3 left-3 z-20 rounded-full bg-[color:var(--color-surface)]/95 backdrop-blur border border-[color:var(--color-border)] pl-3 pr-1 py-1 flex items-center gap-2">
+              <span className="text-[10px] font-medium text-[color:var(--color-text)] truncate max-w-[180px]">
                 {PART_LABELS[activePart]}
               </span>
               <button
                 onClick={() => setActivePart(null)}
                 aria-label="Limpar seleção"
-                className="w-5 h-5 rounded-full hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors"
+                className="w-5 h-5 rounded-full hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors"
               >
                 <X size={11} />
               </button>
@@ -255,7 +255,7 @@ export function PartsOverview({
         <div className="lg:hidden mb-3 shrink-0 flex items-center gap-2">
           <button
             onClick={() => setEditorState({ mode: "create" })}
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 hover:bg-[color:var(--color-primary)]/25 px-4 py-2.5 text-sm font-semibold text-white transition"
+            className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 hover:bg-[color:var(--color-primary)]/25 px-4 py-2.5 text-sm font-semibold text-[color:var(--color-text)] transition"
           >
             <Plus size={16} /> Iniciar orçamento
           </button>
@@ -263,7 +263,7 @@ export function PartsOverview({
             onClick={handleReset}
             title="Reiniciar orçamento — mantém os danos"
             aria-label="Reiniciar orçamento"
-            className="inline-flex items-center justify-center rounded-full bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] w-10 h-10 text-[color:var(--color-muted)] hover:text-white transition shrink-0"
+            className="inline-flex items-center justify-center rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] w-10 h-10 text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition shrink-0"
           >
             <RotateCcw size={14} />
           </button>
@@ -297,7 +297,7 @@ export function PartsOverview({
             value={
               <>
                 {totalMain}
-                <span className="text-white/55">,{totalCents}</span>
+                <span className="text-[color:var(--color-text)]/55">,{totalCents}</span>
               </>
             }
           />
@@ -318,13 +318,13 @@ export function PartsOverview({
             depois dele, não ao bloco que acabou. */}
         <h3 className="text-title font-semibold mt-5 mb-2.5 shrink-0">Detalhes dos danos</h3>
         {summary.items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/[0.08] p-6 text-center">
+          <div className="rounded-2xl border border-dashed border-[color:var(--color-border)] p-6 text-center">
             <p className="text-xs text-[color:var(--color-muted)]">
               Clique num ponto do carro pra adicionar o primeiro dano.
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-2 lg:flex-1 lg:min-h-0 lg:overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="flex flex-col gap-2 lg:flex-1 lg:min-h-0 lg:overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-[color:var(--color-surface-3)] [&::-webkit-scrollbar-thumb]:rounded-full">
             {summary.items.map((d) => (
               <DamageRow
                 key={d.id}
@@ -465,7 +465,7 @@ function MetricCard({
         "flex min-h-[76px] flex-col justify-between",
         surface,
         interactive
-          ? "transition-colors hover:border-white/[0.14] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-primary-glow)]"
+          ? "transition-colors hover:border-[color:var(--color-border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-primary-glow)]"
           : "",
       ].join(" ")}
     >
@@ -475,7 +475,7 @@ function MetricCard({
           <p
             className={
               "tabular text-metric font-semibold " +
-              (tone === "accent" ? "text-[#141414]" : "text-[color:var(--color-text)]")
+              (tone === "accent" ? "text-[color:var(--color-on-accent)]" : "text-[color:var(--color-text)]")
             }
           >
             {value}
@@ -487,7 +487,7 @@ function MetricCard({
       <p
         className={
           "relative text-label " +
-          (tone === "accent" ? "text-[#141414]" : "text-[color:var(--color-muted)]")
+          (tone === "accent" ? "text-[color:var(--color-on-accent)]" : "text-[color:var(--color-muted)]")
         }
       >
         {title}
@@ -532,7 +532,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
         "flex flex-col gap-2 rounded-2xl border p-3 cursor-pointer transition-colors",
         active
           ? "bg-[color:var(--color-primary)]/10 border-[color:var(--color-primary)]/40"
-          : "bg-[#171A21] border-white/[0.06] hover:border-white/[0.12]",
+          : "bg-[color:var(--color-surface)] border-[color:var(--color-border)] hover:border-[color:var(--color-border-strong)]",
         detail.resolved && "opacity-60",
       )}
     >
@@ -543,7 +543,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
             if (detail.photos.length > 0) onOpenPhotos(0);
             else fileRef.current?.click();
           }}
-          className="relative w-20 h-16 shrink-0 rounded-xl overflow-hidden border border-white/[0.08] bg-white/[0.04] flex items-center justify-center hover:border-white/[0.20] transition-colors"
+          className="relative w-20 h-16 shrink-0 rounded-xl overflow-hidden border border-[color:var(--color-border)] bg-[color:var(--color-surface)] flex items-center justify-center hover:border-[color:var(--color-border-strong)] transition-colors"
         >
           {thumbUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -553,7 +553,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
               className="w-full h-full object-cover"
             />
           ) : detail.photos.length > 0 ? (
-            <div className="w-full h-full animate-pulse bg-white/[0.06]" />
+            <div className="w-full h-full animate-pulse bg-[color:var(--color-surface-3)]" />
           ) : (
             <div className="flex flex-col items-center gap-0.5 text-[color:var(--color-muted)]">
               <ImagePlus size={16} />
@@ -561,7 +561,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
             </div>
           )}
           {detail.photos.length > 0 && (
-            <span className="absolute top-1 left-1 flex items-center gap-1 rounded-md bg-black/60 backdrop-blur px-1.5 py-0.5 text-[9px] text-white">
+            <span className="absolute top-1 left-1 flex items-center gap-1 rounded-md bg-[color:var(--color-surface)]/90 backdrop-blur px-1.5 py-0.5 text-[9px] text-[color:var(--color-text)]">
               <Camera size={9} /> {detail.photos.length}
             </span>
           )}
@@ -603,7 +603,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
               e.stopPropagation();
               onEdit();
             }}
-            className="flex items-center gap-1.5 text-xs text-white/90 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-xs text-[color:var(--color-text)] hover:text-[color:var(--color-text)] transition-colors"
           >
             Personalizar <SlidersHorizontal size={12} />
           </button>
@@ -615,7 +615,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
                   fileRef.current?.click();
                 }}
                 title="Adicionar foto"
-                className="hover:text-white transition-colors"
+                className="hover:text-[color:var(--color-text)] transition-colors"
               >
                 <ImagePlus size={13} />
               </button>
@@ -631,7 +631,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
                     toast("Histórico de preço da peça — em breve.");
                 }}
                 title={label}
-                className="hover:text-white transition-colors"
+                className="hover:text-[color:var(--color-text)] transition-colors"
               >
                 <Icon size={13} />
               </button>
@@ -660,7 +660,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
             e.stopPropagation();
             onEdit();
           }}
-          className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.04] text-label font-medium text-white"
+          className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-label font-medium text-[color:var(--color-text)]"
         >
           Personalizar <SlidersHorizontal size={14} />
         </button>
@@ -671,7 +671,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
               fileRef.current?.click();
             }}
             aria-label="Adicionar foto"
-            className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.04] text-[color:var(--color-muted)]"
+            className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-muted)]"
           >
             <ImagePlus size={18} />
           </button>
@@ -687,7 +687,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
             "flex size-11 shrink-0 items-center justify-center rounded-xl border",
             detail.resolved
               ? "border-[color:var(--color-success)]/30 bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]"
-              : "border-white/[0.08] bg-white/[0.04] text-[color:var(--color-muted)]",
+              : "border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-[color:var(--color-muted)]",
           )}
         >
           <CircleCheck size={18} />
@@ -708,7 +708,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
       {editingNote ? (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="mt-1 rounded-xl border border-white/[0.08] bg-black/20 p-2"
+          className="mt-1 rounded-xl border border-[color:var(--color-border)] bg-black/20 p-2"
         >
           <textarea
             autoFocus
@@ -716,7 +716,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
             onChange={(e) => setNoteDraft(e.target.value)}
             rows={2}
             placeholder="Descreva o dano pra oficina…"
-            className="w-full bg-transparent text-body text-white placeholder:text-[color:var(--color-muted)] outline-none resize-none"
+            className="w-full bg-transparent text-body text-[color:var(--color-text)] placeholder:text-[color:var(--color-muted)] outline-none resize-none"
           />
           <div className="flex items-center justify-end gap-1.5 mt-1">
             <button
@@ -724,7 +724,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
                 setNoteDraft(detail.notes ?? "");
                 setEditingNote(false);
               }}
-              className="rounded-md px-4 min-h-11 text-meta text-[color:var(--color-muted)] hover:text-white lg:min-h-0 lg:px-2 lg:py-1 lg:text-[10px]"
+              className="rounded-md px-4 min-h-11 text-meta text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] lg:min-h-0 lg:px-2 lg:py-1 lg:text-[10px]"
             >
               Cancelar
             </button>
@@ -733,7 +733,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
                 onNotesChange(noteDraft.trim());
                 setEditingNote(false);
               }}
-              className="rounded-md bg-[color:var(--color-primary)] hover:brightness-110 px-4 min-h-11 text-meta font-semibold text-white lg:min-h-0 lg:px-2 lg:py-1 lg:text-[10px]"
+              className="rounded-md bg-[color:var(--color-primary)] hover:brightness-110 px-4 min-h-11 text-meta font-semibold text-[color:var(--color-text)] lg:min-h-0 lg:px-2 lg:py-1 lg:text-[10px]"
             >
               Salvar
             </button>
@@ -746,10 +746,10 @@ const DamageRow = forwardRef<HTMLDivElement, {
             setNoteDraft(detail.notes ?? "");
             setEditingNote(true);
           }}
-          className="mt-1 rounded-xl bg-black/20 border border-white/[0.05] px-2.5 py-2 flex items-start gap-2 hover:border-white/[0.12] transition-colors"
+          className="mt-1 rounded-xl bg-black/20 border border-[color:var(--color-border)] px-2.5 py-2 flex items-start gap-2 hover:border-[color:var(--color-border-strong)] transition-colors"
         >
           <MessageSquare size={11} className="text-[color:var(--color-muted)] mt-0.5 shrink-0" />
-          <p className="text-[11px] text-white/80 italic flex-1">"{detail.notes}"</p>
+          <p className="text-[11px] text-[color:var(--color-muted)] italic flex-1">"{detail.notes}"</p>
         </div>
       ) : (
         <button
@@ -758,7 +758,7 @@ const DamageRow = forwardRef<HTMLDivElement, {
             setNoteDraft("");
             setEditingNote(true);
           }}
-          className="mt-1 self-start inline-flex min-h-11 items-center gap-1.5 text-meta text-[color:var(--color-muted)] hover:text-white transition-colors lg:min-h-0 lg:gap-1 lg:text-[10px]"
+          className="mt-1 self-start inline-flex min-h-11 items-center gap-1.5 text-meta text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors lg:min-h-0 lg:gap-1 lg:text-[10px]"
         >
           <MessageSquare size={12} />
           + Adicionar comentário

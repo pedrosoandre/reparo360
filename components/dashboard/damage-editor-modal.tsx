@@ -206,12 +206,12 @@ export function DamageEditorModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-lg premium-card border border-white/[0.08] p-5 relative max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[color:var(--color-surface)]/95 backdrop-blur-sm">
+      <div className="w-full max-w-lg premium-card border border-[color:var(--color-border)] p-5 relative max-h-[92vh] overflow-y-auto">
         <button
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors"
         >
           <X size={15} />
         </button>
@@ -232,9 +232,9 @@ export function DamageEditorModal({
             value={part}
             onChange={(e) => setPart(e.target.value as CarPart)}
             disabled={!!editing}
-            className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors disabled:opacity-60"
+            className="mt-1 w-full h-10 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-primary)]/50 transition-colors disabled:opacity-60"
           >
-            <option value="" className="bg-[#111318]">
+            <option value="" className="bg-[color:var(--color-surface)]">
               Selecione…
             </option>
             {ALL_PARTS.map((p) => (
@@ -242,7 +242,7 @@ export function DamageEditorModal({
                 key={p}
                 value={p}
                 disabled={!editing && disabledParts.includes(p) && p !== initialPart}
-                className="bg-[#111318]"
+                className="bg-[color:var(--color-surface)]"
               >
                 {PART_LABELS[p]}
                 {disabledParts.includes(p) && p !== initialPart ? " (já cadastrada)" : ""}
@@ -266,8 +266,8 @@ export function DamageEditorModal({
                   className={cn(
                     "flex items-center gap-2 rounded-xl border px-3 py-2 text-xs text-left transition-all",
                     active
-                      ? "bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/40 text-white"
-                      : "bg-white/[0.02] border-white/[0.06] text-[color:var(--color-muted)] hover:text-white hover:border-white/[0.14]",
+                      ? "bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/40 text-[color:var(--color-text)]"
+                      : "bg-[color:var(--color-surface)] border-[color:var(--color-border)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] hover:border-[color:var(--color-border-strong)]",
                   )}
                 >
                   <span
@@ -275,10 +275,10 @@ export function DamageEditorModal({
                       "w-4 h-4 rounded-md border flex items-center justify-center shrink-0",
                       active
                         ? "bg-[color:var(--color-primary)] border-[color:var(--color-primary)]"
-                        : "border-white/20",
+                        : "border-[color:var(--color-border-strong)]",
                     )}
                   >
-                    {active && <Check size={10} className="text-white" />}
+                    {active && <Check size={10} className="text-[color:var(--color-text)]" />}
                   </span>
                   <span className="truncate">{DAMAGE_LABELS[d]}</span>
                 </button>
@@ -311,14 +311,14 @@ export function DamageEditorModal({
           {photos.length > 0 ? (
             <div className="grid grid-cols-4 gap-2">
               {photos.map((p, i) => (
-                <div key={p} className="relative aspect-square rounded-lg overflow-hidden border border-white/[0.06] bg-white/[0.03]">
+                <div key={p} className="relative aspect-square rounded-lg overflow-hidden border border-[color:var(--color-border)] bg-[color:var(--color-surface)]">
                   {photoUrls[i] && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={photoUrls[i]!} alt="" className="w-full h-full object-cover" />
                   )}
                   <button
                     onClick={() => removePhotoAt(i)}
-                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/70 border border-white/20 text-white/90 hover:bg-black/90 flex items-center justify-center"
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-[color:var(--color-surface)]/95 border border-[color:var(--color-border-strong)] text-[color:var(--color-text)] hover:bg-black/90 flex items-center justify-center"
                     aria-label="Remover foto"
                   >
                     <X size={10} />
@@ -358,7 +358,7 @@ export function DamageEditorModal({
           )}
 
           {analysis && (
-            <div className="mt-2 rounded-xl bg-white/[0.02] border border-white/[0.06] p-3">
+            <div className="mt-2 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3">
               <p className="text-[10px] uppercase tracking-wider text-[color:var(--color-muted)] mb-2">
                 Leitura da IA — confira antes de aplicar
               </p>
@@ -395,7 +395,7 @@ export function DamageEditorModal({
                       <button
                         onClick={() => applyDetection(d)}
                         disabled={!!editing && d.part !== part}
-                        className="shrink-0 rounded-lg border border-white/[0.12] px-2 py-1 text-[11px] hover:bg-white/[0.06] transition disabled:opacity-40"
+                        className="shrink-0 rounded-lg border border-[color:var(--color-border-strong)] px-2 py-1 text-[11px] hover:bg-[color:var(--color-surface-3)] transition disabled:opacity-40"
                         title={
                           !!editing && d.part !== part
                             ? "A peça está travada na edição"
@@ -432,7 +432,7 @@ export function DamageEditorModal({
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             placeholder="Ex.: Av. Paulista, altura do 1500"
-            className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
+            className="mt-1 w-full h-10 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
           />
         </div>
 
@@ -446,7 +446,7 @@ export function DamageEditorModal({
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
             placeholder="Detalhes que ajudam a oficina a entender o dano"
-            className="mt-1 w-full rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 py-2 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
+            className="mt-1 w-full rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 py-2 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
           />
         </div>
 
@@ -500,13 +500,13 @@ export function DamageEditorModal({
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="rounded-xl bg-white/[0.04] hover:bg-white/[0.08] px-4 py-2 text-xs font-medium text-white transition"
+              className="rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] px-4 py-2 text-xs font-medium text-[color:var(--color-text)] transition"
             >
               Cancelar
             </button>
             <button
               onClick={handleSave}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-primary)] hover:brightness-110 px-4 py-2 text-xs font-semibold text-white transition"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-primary)] hover:brightness-110 px-4 py-2 text-xs font-semibold text-[color:var(--color-text)] transition"
             >
               <Save size={13} />
               Salvar

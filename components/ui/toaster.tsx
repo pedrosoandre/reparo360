@@ -34,7 +34,7 @@ export function Toaster() {
                 ? "bg-[color:var(--color-danger)]/15 border-[color:var(--color-danger)]/40"
                 : t.kind === "success"
                   ? "bg-[color:var(--color-success)]/15 border-[color:var(--color-success)]/40"
-                  : "bg-black/70 border-white/[0.12]",
+                  : "bg-[color:var(--color-surface)]/95 border-[color:var(--color-border-strong)]",
             )}
           >
             <Icon
@@ -48,11 +48,11 @@ export function Toaster() {
                     : "text-[color:var(--color-muted)]",
               )}
             />
-            <p className="flex-1 text-xs text-white">{t.message}</p>
+            <p className="flex-1 text-xs text-[color:var(--color-text)]">{t.message}</p>
             <button
               onClick={() => dismiss(t.id)}
               aria-label="Fechar aviso"
-              className="shrink-0 text-white/50 hover:text-white transition-colors"
+              className="shrink-0 text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
             >
               <X size={13} />
             </button>

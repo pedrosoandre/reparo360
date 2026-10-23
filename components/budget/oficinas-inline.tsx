@@ -136,7 +136,7 @@ export function OficinasInline({
           <Loader2 size={13} className="animate-spin" /> Carregando oficinas…
         </div>
       ) : !ranking || ranking.top.length === 0 ? (
-        <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-4 text-center">
+        <div className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-4 text-center">
           <p className="text-label text-[color:var(--color-muted)]">
             Nenhuma oficina catalogada em {cidade?.nome ?? "sua cidade"}.
           </p>
@@ -155,9 +155,9 @@ export function OficinasInline({
               return (
                 <div
                   key={o.nome + o.endereco}
-                  className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
+                  className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 flex items-center gap-3"
                 >
-                  <span className="w-7 h-7 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-label font-bold text-white flex items-center justify-center shrink-0">
+                  <span className="w-7 h-7 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-label font-bold text-[color:var(--color-text)] flex items-center justify-center shrink-0">
                     {i + 1}
                   </span>
                   <div className="flex-1 min-w-0">
@@ -170,7 +170,7 @@ export function OficinasInline({
                     {o.rating !== null ? (
                       <>
                         <Star size={11} className="text-[#F5A524] fill-[#F5A524]" />
-                        <span className="text-white/85">
+                        <span className="text-[color:var(--color-text)]">
                           {o.rating.toFixed(1)}
                         </span>
                         <span className="text-[color:var(--color-muted)]">
@@ -186,7 +186,7 @@ export function OficinasInline({
                   <button
                     onClick={() => handleSend(o)}
                     disabled={!o.waId}
-                    className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-white/[0.06] disabled:text-[color:var(--color-muted)] px-3 py-1.5 text-label font-semibold text-white transition shrink-0 lg:min-h-0"
+                    className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-[color:var(--color-surface-3)] disabled:text-[color:var(--color-muted)] px-3 py-1.5 text-label font-semibold text-[color:var(--color-text)] transition shrink-0 lg:min-h-0"
                     title={o.waId ? "Enviar orçamento via WhatsApp" : "Sem WhatsApp cadastrado"}
                   >
                     {contacted ? <Check size={12} /> : <MessageCircle size={12} />}
@@ -200,7 +200,7 @@ export function OficinasInline({
           {(ranking.outras.length > 0 || (cidade && cidade.total > ranking.top.length)) && (
             <button
               onClick={onOpenFullPicker}
-              className="mt-3 w-full min-h-11 text-label text-[color:var(--color-muted)] hover:text-white transition inline-flex items-center justify-center gap-1 lg:min-h-0"
+              className="mt-3 w-full min-h-11 text-label text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition inline-flex items-center justify-center gap-1 lg:min-h-0"
             >
               Ver mais {ranking.outras.length} oficinas em {cidade?.nome}
               <ChevronRight size={12} />

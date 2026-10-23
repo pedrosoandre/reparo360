@@ -41,7 +41,7 @@ export function PartsStep() {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="flex items-center justify-between rounded-2xl bg-white/[0.03] border border-[color:var(--color-border)] px-4 py-3"
+                className="flex items-center justify-between rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-4 py-3"
               >
                 <span className="text-body">{PART_LABELS[it.part]}</span>
                 <button

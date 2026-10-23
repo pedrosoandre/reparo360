@@ -14,7 +14,7 @@ const Car3D = dynamic(() => import("./car-3d").then((m) => m.Car3D), {
 
 function LoadingPlaceholder() {
   return (
-    <div className={`${VIEWER_BOX} rounded-2xl bg-gradient-to-b from-[#0F1523] to-[#0B0F17] flex items-center justify-center`}>
+    <div className={`${VIEWER_BOX} rounded-2xl bg-gradient-to-b from-[color:var(--color-surface)] to-[color:var(--color-surface-3)] flex items-center justify-center`}>
       <div className="flex flex-col items-center gap-3">
         <div className="w-10 h-10 rounded-full border-2 border-[color:var(--color-primary)]/30 border-t-[color:var(--color-primary)] animate-spin" />
         <p className="text-xs text-text-secondary">Carregando visualização…</p>
@@ -47,7 +47,7 @@ export function Car3DLazy(props: ComponentProps<typeof Car3D>) {
       ]),
     );
     return (
-      <div className={`${VIEWER_BOX} rounded-2xl overflow-hidden bg-gradient-to-b from-[#0F1523] to-[#0B0F17] flex items-center justify-center relative`}>
+      <div className={`${VIEWER_BOX} rounded-2xl overflow-hidden bg-gradient-to-b from-[color:var(--color-surface)] to-[color:var(--color-surface-3)] flex items-center justify-center relative`}>
         <CarSvg
           selectedParts={highlighted}
           onSelectPart={props.onSelectPart}
@@ -114,18 +114,18 @@ function ViewerNotice({ title, detail }: { title: string; detail: string }) {
   return (
     <div
       role="status"
-      className="absolute inset-x-3 top-3 z-20 flex items-start gap-3 rounded-xl border border-white/[0.12] bg-black/75 px-3 py-2 backdrop-blur"
+      className="absolute inset-x-3 top-3 z-20 flex items-start gap-3 rounded-xl border border-[color:var(--color-border-strong)] bg-[color:var(--color-surface)]/95 px-3 py-2 backdrop-blur"
     >
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-medium text-white">{title}</p>
-        <p className="truncate text-[10px] text-white/45" title={detail}>
+        <p className="text-xs font-medium text-[color:var(--color-text)]">{title}</p>
+        <p className="truncate text-[10px] text-[color:var(--color-text)]/45" title={detail}>
           {detail}
         </p>
       </div>
       <button
         type="button"
         onClick={() => window.location.reload()}
-        className="shrink-0 rounded-full bg-[color:var(--color-primary)] px-3 py-1 text-[11px] font-medium text-white hover:opacity-90"
+        className="shrink-0 rounded-full bg-[color:var(--color-primary)] px-3 py-1 text-[11px] font-medium text-[color:var(--color-text)] hover:opacity-90"
       >
         Tentar de novo
       </button>

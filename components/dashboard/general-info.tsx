@@ -94,7 +94,7 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
     <aside className="premium-card p-4 sm:p-5 flex flex-col gap-4">
       {/* Cabeçalho — pill azul só no mobile pra bater com o CTA "Iniciar orçamento" */}
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold lg:p-0 lg:bg-transparent lg:border-0 lg:rounded-none lg:text-base inline-flex items-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 px-4 py-2 text-sm text-white">
+        <h3 className="font-semibold lg:p-0 lg:bg-transparent lg:border-0 lg:rounded-none lg:text-base inline-flex items-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 px-4 py-2 text-sm text-[color:var(--color-text)]">
           Escolha seu carro
         </h3>
       </div>
@@ -119,15 +119,15 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
             <span className="text-label font-semibold text-[color:var(--color-primary-glow)] shrink-0">
               {vehicle.brand}
             </span>
-            <span className="text-title font-semibold text-white truncate">
+            <span className="text-title font-semibold text-[color:var(--color-text)] truncate">
               {vehicle.model}, {vehicle.year}
             </span>
           </span>
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-300 border border-white/30 shrink-0" />
+          <span className="inline-block w-2.5 h-2.5 rounded-full bg-slate-300 border border-[color:var(--color-border-strong)] shrink-0" />
           <ChevronDown
             size={16}
             className={cn(
-              "ml-auto text-[color:var(--color-muted)] group-hover:text-white transition-transform shrink-0",
+              "ml-auto text-[color:var(--color-muted)] group-hover:text-[color:var(--color-text)] transition-transform shrink-0",
               pickerOpen && "rotate-180",
             )}
           />
@@ -157,14 +157,14 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
               <button
                 onClick={closePicker}
                 aria-label="Fechar seletor"
-                className="ml-auto text-[color:var(--color-muted)] hover:text-white transition-colors"
+                className="ml-auto text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
               >
                 <X size={13} />
               </button>
             </div>
 
             <div className="p-2">
-              <div className="flex items-center gap-2 rounded-xl bg-white/[0.04] px-2.5 py-1.5">
+              <div className="flex items-center gap-2 rounded-xl bg-[color:var(--color-surface)] px-2.5 py-1.5">
                 <Search size={13} className="text-[color:var(--color-muted)] shrink-0" />
                 {/* text-[16px] evita o auto-zoom do iOS Safari em input focado (<16px zooma). No desktop volta pro text-xs. */}
                 <input
@@ -175,12 +175,12 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
                       ? `Buscar entre ${brandModels.length} modelo${brandModels.length === 1 ? "" : "s"} ${openBrand}…`
                       : `Buscar entre ${VEHICLE_CATALOG.length} veículos…`
                   }
-                  className="w-full bg-transparent text-[16px] lg:text-body text-white placeholder:text-[color:var(--color-muted)] outline-none"
+                  className="w-full bg-transparent text-[16px] lg:text-body text-[color:var(--color-text)] placeholder:text-[color:var(--color-muted)] outline-none"
                 />
               </div>
             </div>
 
-            <div className="max-h-72 overflow-y-auto p-1.5 border-t border-white/[0.06]">
+            <div className="max-h-72 overflow-y-auto p-1.5 border-t border-[color:var(--color-border)]">
               {searching && (
                 <>
                   {searchResults.length === 0 && (
@@ -214,13 +214,13 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
                       className={cn(
                         "w-full flex items-center gap-2.5 px-3 py-3 lg:py-2.5 rounded-xl transition-colors text-left",
                         isCurrent
-                          ? "bg-[color:var(--color-primary)]/15 text-white"
-                          : "text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.04]",
+                          ? "bg-[color:var(--color-primary)]/15 text-[color:var(--color-text)]"
+                          : "text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] hover:bg-[color:var(--color-surface)]",
                       )}
                     >
                       <BrandBadge brand={brand} />
                       {/* Mobile: nome da marca grande e branco pra ficar fácil de ler; desktop mantém text-sm/font-medium */}
-                      <span className="truncate text-lg lg:text-sm font-bold lg:font-medium text-white lg:text-inherit">
+                      <span className="truncate text-lg lg:text-sm font-bold lg:font-medium text-[color:var(--color-text)] lg:text-inherit">
                         {brand}
                       </span>
                       <span className="ml-auto text-[10px] opacity-60">
@@ -390,11 +390,11 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
                   <img
                     src={photoUrls[i]!}
                     alt="Foto do dano"
-                    className="w-full h-full object-cover rounded-lg border border-white/[0.06] group-hover:border-white/[0.2] transition-colors"
+                    className="w-full h-full object-cover rounded-lg border border-[color:var(--color-border)] group-hover:border-[color:var(--color-border-strong)] transition-colors"
                     loading="lazy"
                   />
                 ) : (
-                  <div className="w-full h-full rounded-lg border border-white/[0.06] bg-white/[0.04] animate-pulse" />
+                  <div className="w-full h-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] animate-pulse" />
                 )}
               </button>
             ))}
@@ -407,14 +407,14 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
       <div className="flex flex-col gap-2">
         <button
           onClick={handleClearAll}
-          className="w-full h-11 lg:h-9 rounded-xl bg-transparent hover:bg-[color:var(--color-danger)]/10 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] font-medium text-meta lg:text-[11px] transition-colors flex items-center justify-center gap-1.5"
+          className="w-full h-11 lg:h-9 rounded-xl bg-transparent hover:bg-[color:var(--color-danger)]/10 border border-[color:var(--color-border)] hover:border-[color:var(--color-danger)]/30 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] font-medium text-meta lg:text-[11px] transition-colors flex items-center justify-center gap-1.5"
         >
           <Eraser size={12} />
           Apagar tudo (mantém o veículo)
         </button>
         <button
           onClick={handleSaveDraft}
-          className="w-full h-11 lg:h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white font-medium text-xs transition-colors flex items-center justify-center gap-1.5"
+          className="w-full h-11 lg:h-10 rounded-2xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] text-[color:var(--color-text)] font-medium text-xs transition-colors flex items-center justify-center gap-1.5"
         >
           <FileEdit size={13} />
           Salvar rascunho
@@ -424,7 +424,7 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
         <button
           onClick={handleFinalize}
           className={cn(
-            "w-full h-12 rounded-2xl bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)] text-white font-semibold text-sm shadow-[0_10px_30px_-10px_rgba(79,107,255,0.6)] transition-colors flex items-center justify-center gap-2",
+            "w-full h-12 rounded-2xl bg-[color:var(--color-primary)] hover:bg-[color:var(--color-primary-hover)] text-[color:var(--color-on-accent)] font-semibold text-sm shadow-[0_10px_30px_-10px_rgba(79,107,255,0.6)] transition-colors flex items-center justify-center gap-2",
             summary.activeCount > 0 && "max-lg:hidden",
           )}
         >
@@ -450,7 +450,7 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
         </div>
         <button
           onClick={handleFinalize}
-          className="h-12 shrink-0 rounded-2xl bg-[color:var(--color-primary)] px-5 text-label font-semibold text-white flex items-center gap-2"
+          className="h-12 shrink-0 rounded-2xl bg-[color:var(--color-primary)] px-5 text-label font-semibold text-[color:var(--color-text)] flex items-center gap-2"
         >
           <Send size={14} />
           Finalizar orçamento
@@ -488,13 +488,13 @@ function ModelRow({
       className={cn(
         "w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm transition-colors text-left",
         active
-          ? "bg-[color:var(--color-primary)]/15 text-white"
-          : "text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.04]",
+          ? "bg-[color:var(--color-primary)]/15 text-[color:var(--color-text)]"
+          : "text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] hover:bg-[color:var(--color-surface)]",
       )}
     >
       <Car size={14} className="shrink-0" />
       <span className="truncate">{label}</span>
-      <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-md bg-white/[0.06] shrink-0">
+      <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-md bg-[color:var(--color-surface-3)] shrink-0">
         {CATEGORY_LABELS[category]}
       </span>
       <span className="text-[10px] opacity-60 shrink-0">{year}</span>
@@ -511,7 +511,7 @@ function BrandBadge({ brand }: { brand: string }) {
     .slice(0, 2)
     .toUpperCase();
   return (
-    <span className="w-6 h-6 rounded-full bg-white/[0.08] border border-white/[0.08] flex items-center justify-center text-[9px] font-bold shrink-0">
+    <span className="w-6 h-6 rounded-full bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] flex items-center justify-center text-[9px] font-bold shrink-0">
       {initials}
     </span>
   );

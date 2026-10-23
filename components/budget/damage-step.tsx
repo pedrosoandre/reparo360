@@ -53,7 +53,7 @@ export function DamageStep() {
                     "rounded-2xl px-4 py-2.5 text-label border transition-all duration-200",
                     active
                       ? "bg-[color:var(--color-primary)]/15 border-[color:var(--color-primary)]/50 text-[color:var(--color-primary-soft)]"
-                      : "bg-white/[0.02] border-[color:var(--color-border)] text-text-secondary hover:text-text hover:border-[color:var(--color-primary)]/30",
+                      : "bg-[color:var(--color-surface)] border-[color:var(--color-border)] text-text-secondary hover:text-text hover:border-[color:var(--color-primary)]/30",
                   )}
                 >
                   {DAMAGE_LABELS[d]}
@@ -72,7 +72,7 @@ export function DamageStep() {
             onChange={(e) => setNotes(e.target.value)}
             rows={4}
             placeholder="Descreva contexto adicional: colisão traseira, batida em poste, etc."
-            className="w-full p-4 rounded-2xl bg-white/[0.03] border border-[color:var(--color-border)] text-body resize-none focus:outline-none focus:border-[color:var(--color-primary)] focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
+            className="w-full p-4 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] text-body resize-none focus:outline-none focus:border-[color:var(--color-primary)] focus:ring-2 focus:ring-[color:var(--color-primary)]/20"
           />
         </label>
       </GlassCard>

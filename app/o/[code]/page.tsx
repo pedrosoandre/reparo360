@@ -71,7 +71,7 @@ export default function OrcamentoPublicoPage() {
     return (
       <PageWrap>
         <div className="premium-card p-6 text-center max-w-md mx-auto">
-          <div className="w-8 h-8 rounded-full border-2 border-white/20 border-t-white animate-spin mx-auto" />
+          <div className="w-8 h-8 rounded-full border-2 border-[color:var(--color-border-strong)] border-t-white animate-spin mx-auto" />
         </div>
       </PageWrap>
     );
@@ -122,7 +122,7 @@ export default function OrcamentoPublicoPage() {
               </div>
               <p className="font-mono tabular text-title font-semibold">{budget.code}</p>
               <p className="text-label text-[color:var(--color-muted)] mt-1">
-                Solicitado por <span className="text-white font-medium">{budget.customerName}</span>
+                Solicitado por <span className="text-[color:var(--color-text)] font-medium">{budget.customerName}</span>
                 {budget.customerPhone && ` · ${budget.customerPhone}`}
               </p>
             </div>
@@ -157,7 +157,7 @@ export default function OrcamentoPublicoPage() {
             {budget.items.map((it, i) => (
               <div
                 key={i}
-                className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
+                className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 flex items-center gap-3"
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-body font-medium truncate">{it.label}</p>
@@ -183,9 +183,9 @@ export default function OrcamentoPublicoPage() {
               {budget.extras.map((e, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 flex items-center gap-3"
+                  className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 flex items-center gap-3"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/[0.06] flex items-center justify-center shrink-0 text-[color:var(--color-muted)]">
+                  <div className="w-8 h-8 rounded-lg bg-[color:var(--color-surface)] border border-[color:var(--color-border)] flex items-center justify-center shrink-0 text-[color:var(--color-muted)]">
                     {/oleo|óleo/i.test(e.label) ? <Droplet size={14} /> : <Wrench size={14} />}
                   </div>
                   <p className="text-body flex-1">{e.label}</p>
@@ -208,7 +208,7 @@ export default function OrcamentoPublicoPage() {
             <span className="text-[color:var(--color-muted)]">Serviços extras</span>
             <span>{formatBRL(budget.totalExtras)}</span>
           </div>
-          <div className="mt-3 pt-3 border-t border-white/[0.08] flex justify-between items-center">
+          <div className="mt-3 pt-3 border-t border-[color:var(--color-border)] flex justify-between items-center">
             <span className="font-semibold">Total geral</span>
             <span className="tabular text-metric font-semibold">
               {formatBRL(budget.grandTotal)}
@@ -234,13 +234,13 @@ export default function OrcamentoPublicoPage() {
             </button>
             <button
               onClick={() => respond("contra")}
-              className="h-11 rounded-2xl bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 text-white font-semibold text-label flex items-center justify-center gap-2 transition"
+              className="h-11 rounded-2xl bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/40 text-[color:var(--color-text)] font-semibold text-label flex items-center justify-center gap-2 transition"
             >
               <MessageCircle size={14} /> Contra-proposta
             </button>
             <button
               onClick={() => respond("recusar")}
-              className="h-11 rounded-2xl bg-white/[0.04] hover:bg-[color:var(--color-danger)]/15 border border-white/[0.06] hover:border-[color:var(--color-danger)]/30 hover:text-[color:var(--color-danger)] text-[color:var(--color-muted)] font-semibold text-label flex items-center justify-center gap-2 transition"
+              className="h-11 rounded-2xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-danger)]/15 border border-[color:var(--color-border)] hover:border-[color:var(--color-danger)]/30 hover:text-[color:var(--color-danger)] text-[color:var(--color-muted)] font-semibold text-label flex items-center justify-center gap-2 transition"
             >
               <X size={14} /> Recusar
             </button>
@@ -248,7 +248,7 @@ export default function OrcamentoPublicoPage() {
           {budget.customerPhone && (
             <a
               href={`tel:${budget.customerPhone}`}
-              className="mt-2 w-full h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-label font-medium flex items-center justify-center gap-2 transition"
+              className="mt-2 w-full h-10 rounded-2xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] text-[color:var(--color-text)] text-label font-medium flex items-center justify-center gap-2 transition"
             >
               <Phone size={12} /> Ligar pro cliente ({budget.customerPhone})
             </a>
@@ -261,7 +261,7 @@ export default function OrcamentoPublicoPage() {
 
 function PageWrap({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#111318] to-[#0F1116] py-6 sm:py-10 px-3 sm:px-5">
+    <div className="min-h-screen bg-gradient-to-b from-[color:var(--color-surface)] to-[color:var(--color-surface)] py-6 sm:py-10 px-3 sm:px-5">
       {children}
     </div>
   );

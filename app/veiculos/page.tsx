@@ -58,7 +58,7 @@ export default function VeiculosPage() {
           </div>
           <button
             onClick={() => setPicking(true)}
-            className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-3.5 py-2 text-xs font-semibold text-white hover:brightness-110 transition"
+            className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-3.5 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition"
           >
             <Plus size={14} /> Novo veículo
           </button>
@@ -72,7 +72,7 @@ export default function VeiculosPage() {
             action={
               <button
                 onClick={() => setPicking(true)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-white hover:brightness-110 transition"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition"
               >
                 <Plus size={14} /> Cadastrar veículo
               </button>
@@ -114,13 +114,13 @@ export default function VeiculosPage() {
                   <div className="flex items-center gap-2 mt-auto">
                     <button
                       onClick={() => goDashboard(v.id)}
-                      className="flex-1 h-9 rounded-xl bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/30 text-xs font-semibold text-white transition-colors"
+                      className="flex-1 h-9 rounded-xl bg-[color:var(--color-primary)]/15 hover:bg-[color:var(--color-primary)]/25 border border-[color:var(--color-primary)]/30 text-xs font-semibold text-[color:var(--color-text)] transition-colors"
                     >
                       Abrir
                     </button>
                     <button
                       onClick={() => handleRemove(v.id)}
-                      className="h-9 w-9 rounded-xl bg-white/[0.03] hover:bg-[color:var(--color-danger)]/15 hover:text-[color:var(--color-danger)] border border-white/[0.06] text-[color:var(--color-muted)] transition-colors flex items-center justify-center"
+                      className="h-9 w-9 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-danger)]/15 hover:text-[color:var(--color-danger)] border border-[color:var(--color-border)] text-[color:var(--color-muted)] transition-colors flex items-center justify-center"
                       aria-label="Remover"
                     >
                       <Trash2 size={13} />

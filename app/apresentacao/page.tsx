@@ -44,7 +44,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-30 backdrop-blur-xl border-b border-[color:var(--color-border)] bg-bg/70">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary-soft)] flex items-center justify-center text-white font-bold">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary-soft)] flex items-center justify-center text-[color:var(--color-text)] font-bold">
               R
             </div>
             <span className="font-semibold tracking-tight text-lg">Reparo360</span>

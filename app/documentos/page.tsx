@@ -90,7 +90,7 @@ export default function DocumentosPage() {
               CRLV, seguro, CNH — guardados só no seu navegador
             </p>
           </div>
-          <label className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-3.5 py-2 text-xs font-semibold text-white hover:brightness-110 transition cursor-pointer">
+          <label className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-3.5 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition cursor-pointer">
             <Upload size={14} />
             Enviar
             <input
@@ -115,15 +115,15 @@ export default function DocumentosPage() {
             {documents.map((d) => (
               <div
                 key={d.id}
-                className="flex items-center gap-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3"
+                className="flex items-center gap-3 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3"
               >
-                <div className="w-10 h-10 rounded-xl bg-white/[0.04] flex items-center justify-center text-[color:var(--color-muted)] shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-[color:var(--color-surface)] flex items-center justify-center text-[color:var(--color-muted)] shrink-0">
                   <FileText size={16} />
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium truncate">{d.name}</p>
                   <p className="text-[11px] text-[color:var(--color-muted)] flex items-center gap-2 mt-0.5">
-                    <span className="px-1.5 py-0.5 rounded bg-white/[0.06] text-[9px] uppercase tracking-wider">
+                    <span className="px-1.5 py-0.5 rounded bg-[color:var(--color-surface-3)] text-[9px] uppercase tracking-wider">
                       {CATEGORY_LABELS[d.category]}
                     </span>
                     <span>{formatSize(d.size)}</span>
@@ -134,7 +134,7 @@ export default function DocumentosPage() {
                   <button
                     onClick={() => download(d)}
                     aria-label="Baixar"
-                    className="w-8 h-8 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors"
                   >
                     <Download size={13} />
                   </button>
@@ -148,7 +148,7 @@ export default function DocumentosPage() {
                       if (ok) removeDocument(d.id);
                     }}
                     aria-label="Remover"
-                    className="w-8 h-8 rounded-xl bg-white/[0.03] hover:bg-[color:var(--color-danger)]/15 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-danger)]/15 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] flex items-center justify-center transition-colors"
                   >
                     <Trash2 size={13} />
                   </button>

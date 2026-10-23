@@ -29,7 +29,7 @@ export function MobileProfileHeader() {
 
   return (
     <>
-      <header className="lg:hidden sticky top-0 z-30 bg-[#0F1116]/85 backdrop-blur border-b border-white/[0.06]">
+      <header className="lg:hidden sticky top-0 z-30 bg-[color:var(--color-surface)]/85 backdrop-blur border-b border-[color:var(--color-border)]">
         <div className="flex items-center gap-3 px-3 py-2.5">
           <Link
             href="/dashboard"
@@ -37,18 +37,18 @@ export function MobileProfileHeader() {
             aria-label="Voltar ao dashboard"
             className="flex items-center gap-2.5 min-w-0 flex-1 group"
           >
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 border border-white/10 group-hover:border-white/30 transition-colors flex items-center justify-center font-semibold text-white shrink-0 text-label">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 border border-[color:var(--color-border)] group-hover:border-[color:var(--color-border-strong)] transition-colors flex items-center justify-center font-semibold text-[color:var(--color-text)] shrink-0 text-label">
               {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="font-medium text-body truncate leading-tight group-hover:text-white transition-colors">
+              <p className="font-medium text-body truncate leading-tight group-hover:text-[color:var(--color-text)] transition-colors">
                 {displayName}
               </p>
               <p className="text-meta text-[color:var(--color-muted)] mt-0.5 flex items-center gap-1.5">
                 <MapPin size={12} className="shrink-0" />
                 <span className="truncate">
                   {user?.city ? (
-                    <span className="text-white font-medium">{user.city}</span>
+                    <span className="text-[color:var(--color-text)] font-medium">{user.city}</span>
                   ) : (
                     <span className="italic">Cidade não definida</span>
                   )}
@@ -63,7 +63,7 @@ export function MobileProfileHeader() {
             onClick={openMenu}
             title="Abrir menu"
             aria-label="Abrir menu"
-            className="relative w-10 h-10 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white transition-colors flex items-center justify-center shrink-0 after:absolute after:-inset-1 after:content-['']"
+            className="relative w-10 h-10 rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors flex items-center justify-center shrink-0 after:absolute after:-inset-1 after:content-['']"
           >
             <Menu size={18} />
           </button>

@@ -133,12 +133,12 @@ export function SendWorkshopModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-lg premium-card border border-white/[0.08] p-5 relative max-h-[85vh] overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[color:var(--color-surface)]/95 backdrop-blur-sm">
+      <div className="w-full max-w-lg premium-card border border-[color:var(--color-border)] p-5 relative max-h-[85vh] overflow-hidden flex flex-col">
         <button
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute top-3 right-3 w-7 h-7 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors z-10"
+          className="absolute top-3 right-3 w-7 h-7 rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors z-10"
         >
           <X size={14} />
         </button>
@@ -150,7 +150,7 @@ export function SendWorkshopModal({
               onClick={() =>
                 setStep(step === "send" ? "oficina" : "city")
               }
-              className="text-[color:var(--color-muted)] hover:text-white transition-colors"
+              className="text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition-colors"
               aria-label="Voltar"
             >
               <ChevronLeft size={16} />
@@ -178,14 +178,14 @@ export function SendWorkshopModal({
         {/* Step: city */}
         {step === "city" && (
           <>
-            <div className="flex items-center gap-2 rounded-xl bg-white/[0.04] px-2.5 py-1.5 mb-3">
+            <div className="flex items-center gap-2 rounded-xl bg-[color:var(--color-surface)] px-2.5 py-1.5 mb-3">
               <Search size={13} className="text-[color:var(--color-muted)] shrink-0" />
               <input
                 autoFocus
                 value={cityQuery}
                 onChange={(e) => setCityQuery(e.target.value)}
                 placeholder={`Buscar entre ${catalog?.cidades.length ?? "…"} cidades`}
-                className="w-full bg-transparent text-body text-white placeholder:text-[color:var(--color-muted)] outline-none"
+                className="w-full bg-transparent text-body text-[color:var(--color-text)] placeholder:text-[color:var(--color-muted)] outline-none"
               />
             </div>
             {!catalog ? (
@@ -193,16 +193,16 @@ export function SendWorkshopModal({
                 <Loader2 size={13} className="animate-spin" /> Carregando catálogo…
               </div>
             ) : (
-              <div className="flex-1 min-h-0 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+              <div className="flex-1 min-h-0 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-[color:var(--color-surface-3)] [&::-webkit-scrollbar-thumb]:rounded-full">
                 {cidadesFiltradas.map((c) => (
                   <button
                     key={c.nome}
                     onClick={() => pickCity(c)}
-                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-label text-left text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.04] transition-colors"
+                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl text-label text-left text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] hover:bg-[color:var(--color-surface)] transition-colors"
                   >
                     <MapPin size={13} className="shrink-0" />
                     <span className="truncate flex-1 font-medium">{c.nome}</span>
-                    <span className="text-meta px-1.5 py-0.5 rounded-md bg-white/[0.06] shrink-0">
+                    <span className="text-meta px-1.5 py-0.5 rounded-md bg-[color:var(--color-surface-3)] shrink-0">
                       {c.total} oficina{c.total === 1 ? "" : "s"}
                     </span>
                   </button>
@@ -219,7 +219,7 @@ export function SendWorkshopModal({
 
         {/* Step: oficina */}
         {step === "oficina" && selectedCity && (
-          <div className="flex-1 min-h-0 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+          <div className="flex-1 min-h-0 overflow-y-auto pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:bg-[color:var(--color-surface-3)] [&::-webkit-scrollbar-thumb]:rounded-full">
             {ranking.top.length > 0 && (
               <>
                 <p className="text-meta uppercase tracking-[0.08em] text-[color:var(--color-muted)] px-1 mb-1">
@@ -260,14 +260,14 @@ export function SendWorkshopModal({
         {/* Step: send */}
         {step === "send" && selectedOficina && (
           <div className="flex flex-col gap-3">
-            <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-3">
+            <div className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3">
               <p className="tabular text-body font-semibold">{selectedOficina.nome}</p>
               <p className="text-meta text-[color:var(--color-muted)] mt-0.5">
                 {selectedOficina.endereco} · {selectedOficina.cidade}
               </p>
               <div className="flex items-center gap-3 mt-2 text-meta text-[color:var(--color-muted)]">
                 {selectedOficina.rating !== null && (
-                  <span className="inline-flex items-center gap-1 text-white/85">
+                  <span className="inline-flex items-center gap-1 text-[color:var(--color-text)]">
                     <Star size={11} className="text-[#F5A524] fill-[#F5A524]" />
                     {selectedOficina.rating.toFixed(1)} ({selectedOficina.reviews})
                   </span>
@@ -283,7 +283,7 @@ export function SendWorkshopModal({
             <button
               onClick={handleWhatsApp}
               disabled={!selectedOficina.waId}
-              className="w-full h-11 rounded-2xl bg-[#25D366] hover:brightness-105 text-white font-semibold text-label flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition"
+              className="w-full h-11 rounded-2xl bg-[#25D366] hover:brightness-105 text-[color:var(--color-text)] font-semibold text-label flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition"
             >
               <MessageCircle size={15} />
               {selectedOficina.waId
@@ -294,7 +294,7 @@ export function SendWorkshopModal({
             <button
               onClick={handleDownloadPDF}
               disabled={pdfBusy}
-              className="w-full h-10 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-label font-medium flex items-center justify-center gap-2 transition disabled:opacity-60"
+              className="w-full h-10 rounded-2xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] text-[color:var(--color-text)] text-label font-medium flex items-center justify-center gap-2 transition disabled:opacity-60"
             >
               {pdfBusy ? (
                 <Loader2 size={13} className="animate-spin" />
@@ -328,11 +328,11 @@ function OficinaRow({
     <button
       onClick={onClick}
       className={cn(
-        "w-full text-left px-3 py-2.5 rounded-xl transition-colors hover:bg-white/[0.04] flex items-center gap-3",
+        "w-full text-left px-3 py-2.5 rounded-xl transition-colors hover:bg-[color:var(--color-surface)] flex items-center gap-3",
       )}
     >
       {rank !== undefined && (
-        <span className="w-6 h-6 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-label font-bold text-white flex items-center justify-center shrink-0">
+        <span className="w-6 h-6 rounded-full bg-[color:var(--color-primary)]/20 border border-[color:var(--color-primary)]/40 text-label font-bold text-[color:var(--color-text)] flex items-center justify-center shrink-0">
           {rank}
         </span>
       )}
@@ -343,7 +343,7 @@ function OficinaRow({
         </p>
       </div>
       {oficina.rating !== null ? (
-        <span className="inline-flex items-center gap-1 text-meta text-white/85 shrink-0">
+        <span className="inline-flex items-center gap-1 text-meta text-[color:var(--color-text)] shrink-0">
           <Star size={11} className="text-[#F5A524] fill-[#F5A524]" />
           {oficina.rating.toFixed(1)}
           <span className="text-[color:var(--color-muted)]">

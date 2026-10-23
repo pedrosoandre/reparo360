@@ -46,7 +46,7 @@ export default function RascunhosPage() {
             {drafts.map((b) => (
               <div
                 key={b.id}
-                className="flex items-center gap-3 rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 hover:border-white/[0.12] transition-colors"
+                className="flex items-center gap-3 rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 hover:border-[color:var(--color-border-strong)] transition-colors"
               >
                 <div className="w-10 h-10 rounded-xl bg-[color:var(--color-primary)]/10 border border-[color:var(--color-primary)]/20 flex items-center justify-center text-[color:var(--color-primary-glow)] shrink-0">
                   <FileEdit size={16} />
@@ -77,7 +77,7 @@ export default function RascunhosPage() {
                   <Link
                     href={`/orcamentos/${b.id}`}
                     aria-label="Abrir"
-                    className="w-8 h-8 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors"
                   >
                     <ChevronRight size={14} />
                   </Link>
@@ -91,7 +91,7 @@ export default function RascunhosPage() {
                       if (ok) removeBudget(b.id);
                     }}
                     aria-label="Apagar"
-                    className="w-8 h-8 rounded-xl bg-white/[0.03] hover:bg-[color:var(--color-danger)]/15 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] flex items-center justify-center transition-colors"
+                    className="w-8 h-8 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-danger)]/15 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] flex items-center justify-center transition-colors"
                   >
                     <Trash2 size={13} />
                   </button>

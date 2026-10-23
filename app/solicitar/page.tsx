@@ -115,7 +115,7 @@ export default function SolicitarPage() {
             <h2 className="text-metric font-semibold">Orçamento pronto!</h2>
             <p className="text-text-secondary mt-2">
               Código{" "}
-              <span className="font-mono font-semibold text-white">{savedBudget.code}</span>
+              <span className="font-mono font-semibold text-[color:var(--color-text)]">{savedBudget.code}</span>
               . Escolha as oficinas que vão receber, ou acompanhe no dashboard.
             </p>
             <div className="mt-6 flex flex-col gap-2">
@@ -126,7 +126,7 @@ export default function SolicitarPage() {
                 <MessageCircle size={16} /> Enviar para oficina
               </PremiumButton>
               <Link href={`/orcamentos/${savedBudget.id}`}>
-                <button className="w-full h-11 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] text-white text-label font-medium transition">
+                <button className="w-full h-11 rounded-2xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] text-[color:var(--color-text)] text-label font-medium transition">
                   Ver detalhes do orçamento
                 </button>
               </Link>
@@ -165,7 +165,7 @@ export default function SolicitarPage() {
       <header className="sticky top-0 z-30 backdrop-blur-xl border-b border-[color:var(--color-border)] bg-bg/70">
         <div className="max-w-6xl mx-auto flex items-center justify-between gap-3 px-4 sm:px-6 py-4">
           <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary-soft)] flex items-center justify-center text-white font-bold shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[color:var(--color-primary)] to-[color:var(--color-primary-soft)] flex items-center justify-center text-[color:var(--color-text)] font-bold shrink-0">
               R
             </div>
             {/* No celular o nome sai e fica só a marca: o logo ocupava 146px
@@ -194,7 +194,7 @@ export default function SolicitarPage() {
             primeira tela, depois do formulário inteiro). Do lg pra cima volta
             a ser a linha de sempre, logo abaixo do passo. O contêiner da
             página já reserva o espaço com pb-24. */}
-        <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-white/[0.08] bg-[#0F1116] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-12px_30px_-12px_rgba(0,0,0,0.6)] lg:static lg:mt-8 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+        <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-[color:var(--color-border)] bg-[color:var(--color-surface)] px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-12px_30px_-12px_rgba(0,0,0,0.6)] lg:static lg:mt-8 lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
           <PremiumButton variant="ghost" onClick={back} disabled={step === 0}>
             <ArrowLeft size={16} />
             Voltar

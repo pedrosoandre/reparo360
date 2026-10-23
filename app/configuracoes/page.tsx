@@ -111,7 +111,7 @@ export default function ConfiguracoesPage() {
               )}
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-white hover:brightness-110 transition"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition"
               >
                 Salvar
               </button>
@@ -141,7 +141,7 @@ export default function ConfiguracoesPage() {
               {pwdMsg ? <Feedback ok={pwdMsg.ok} msg={pwdMsg.msg} /> : <span />}
               <button
                 type="submit"
-                className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-white hover:brightness-110 transition"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition"
               >
                 Alterar
               </button>
@@ -157,7 +157,7 @@ export default function ConfiguracoesPage() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={exportData}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] px-3.5 py-2 text-xs font-medium text-white transition"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-3.5 py-2 text-xs font-medium text-[color:var(--color-text)] transition"
             >
               <Download size={13} />
               Exportar backup (JSON)
@@ -199,7 +199,7 @@ function Field({
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white placeholder:text-[color:var(--color-muted)]/60 outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
+        className="mt-1 w-full h-10 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 text-body text-[color:var(--color-text)] placeholder:text-[color:var(--color-muted)]/60 outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
       />
     </label>
   );

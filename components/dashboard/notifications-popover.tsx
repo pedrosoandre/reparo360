@@ -24,7 +24,7 @@ export function NotificationsPopover({ onClose }: Props) {
 
   return (
     <div className="premium-card-flat shadow-[0_20px_60px_rgba(0,0,0,0.6)] overflow-hidden">
-      <div className="flex items-center justify-between px-3 py-2 border-b border-white/[0.06]">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-[color:var(--color-border)]">
         <span className="text-xs font-semibold">Notificações</span>
         <div className="flex items-center gap-1">
           {items.length > 0 && (
@@ -38,7 +38,7 @@ export function NotificationsPopover({ onClose }: Props) {
           <button
             onClick={onClose}
             aria-label="Fechar"
-            className="w-6 h-6 rounded-md hover:bg-white/[0.06] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center"
+            className="w-6 h-6 rounded-md hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center"
           >
             <X size={12} />
           </button>
@@ -57,7 +57,7 @@ export function NotificationsPopover({ onClose }: Props) {
           items.map((n) => (
             <div
               key={n.id}
-              className={`flex items-start gap-2 px-3 py-2.5 border-b border-white/[0.04] last:border-b-0 ${
+              className={`flex items-start gap-2 px-3 py-2.5 border-b border-[color:var(--color-border)] last:border-b-0 ${
                 !n.read ? "bg-[color:var(--color-primary)]/5" : ""
               }`}
             >
@@ -71,7 +71,7 @@ export function NotificationsPopover({ onClose }: Props) {
                     }}
                     className="block"
                   >
-                    <p className="text-xs font-medium text-white truncate">{n.title}</p>
+                    <p className="text-xs font-medium text-[color:var(--color-text)] truncate">{n.title}</p>
                     {n.body && (
                       <p className="text-[11px] text-[color:var(--color-muted)] truncate mt-0.5">
                         {n.body}
@@ -80,7 +80,7 @@ export function NotificationsPopover({ onClose }: Props) {
                   </Link>
                 ) : (
                   <>
-                    <p className="text-xs font-medium text-white">{n.title}</p>
+                    <p className="text-xs font-medium text-[color:var(--color-text)]">{n.title}</p>
                     {n.body && (
                       <p className="text-[11px] text-[color:var(--color-muted)] mt-0.5">
                         {n.body}
@@ -97,7 +97,7 @@ export function NotificationsPopover({ onClose }: Props) {
                   <button
                     onClick={() => markRead(n.id)}
                     aria-label="Marcar como lida"
-                    className="w-5 h-5 rounded hover:bg-white/[0.06] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center"
+                    className="w-5 h-5 rounded hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center"
                   >
                     <Check size={11} />
                   </button>
@@ -105,7 +105,7 @@ export function NotificationsPopover({ onClose }: Props) {
                 <button
                   onClick={() => remove(n.id)}
                   aria-label="Remover"
-                  className="w-5 h-5 rounded hover:bg-white/[0.06] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center"
+                  className="w-5 h-5 rounded hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center"
                 >
                   <X size={11} />
                 </button>

@@ -37,12 +37,12 @@ export function DetailsSheet({ kind, vehicle, onClose }: Props) {
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="w-full max-w-md premium-card border border-white/[0.08] p-5 relative max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[color:var(--color-surface)]/95 backdrop-blur-sm">
+      <div className="w-full max-w-md premium-card border border-[color:var(--color-border)] p-5 relative max-h-[92vh] overflow-y-auto">
         <button
           onClick={onClose}
           aria-label="Fechar"
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white flex items-center justify-center transition-colors"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] flex items-center justify-center transition-colors"
         >
           <X size={15} />
         </button>
@@ -83,7 +83,7 @@ function DriverForm() {
         <span className="text-[11px] text-[color:var(--color-muted)]">{msg}</span>
         <button
           onClick={save}
-          className="rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-white hover:brightness-110 transition"
+          className="rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition"
         >
           Salvar
         </button>
@@ -130,7 +130,7 @@ function VehicleForm({ vehicle }: { vehicle: Vehicle }) {
         <span className="text-[11px] text-[color:var(--color-muted)]">{msg}</span>
         <button
           onClick={save}
-          className="rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-white hover:brightness-110 transition"
+          className="rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition"
         >
           Salvar
         </button>
@@ -176,14 +176,14 @@ function AccidentForm({ vehicle }: { vehicle: Vehicle }) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={3}
-          className="mt-1 w-full rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 py-2 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
+          className="mt-1 w-full rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 py-2 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-primary)]/50 transition-colors resize-none"
         />
       </label>
       <div className="flex items-center justify-between">
         <span className="text-[11px] text-[color:var(--color-muted)]">{msg}</span>
         <button
           onClick={save}
-          className="rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-white hover:brightness-110 transition"
+          className="rounded-full bg-[color:var(--color-primary)] px-4 py-2 text-xs font-semibold text-[color:var(--color-text)] hover:brightness-110 transition"
         >
           Salvar
         </button>
@@ -212,13 +212,13 @@ function HistoryList() {
         <a
           key={b.id}
           href={`/orcamentos/${b.id}`}
-          className="rounded-2xl bg-white/[0.02] border border-white/[0.06] p-3 hover:border-white/[0.12] transition-colors"
+          className="rounded-2xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] p-3 hover:border-[color:var(--color-border-strong)] transition-colors"
         >
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium truncate">
               {b.vehicleSnapshot.brand} {b.vehicleSnapshot.model}
             </p>
-            <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-white/[0.06]">
+            <span className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-[color:var(--color-surface-3)]">
               {b.status}
             </span>
           </div>
@@ -256,7 +256,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1 w-full h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] px-3 text-body text-white outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
+        className="mt-1 w-full h-10 rounded-xl bg-[color:var(--color-surface)] border border-[color:var(--color-border)] px-3 text-body text-[color:var(--color-text)] outline-none focus:border-[color:var(--color-primary)]/50 transition-colors"
       />
     </label>
   );

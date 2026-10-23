@@ -43,7 +43,7 @@ export function PhotosStep() {
 
         <button
           onClick={() => inputRef.current?.click()}
-          className="w-full h-40 rounded-2xl border-2 border-dashed border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50 bg-white/[0.02] hover:bg-[color:var(--color-primary)]/[0.05] transition-all flex flex-col items-center justify-center gap-2"
+          className="w-full h-40 rounded-2xl border-2 border-dashed border-[color:var(--color-border)] hover:border-[color:var(--color-primary)]/50 bg-[color:var(--color-surface)] hover:bg-[color:var(--color-primary)]/[0.05] transition-all flex flex-col items-center justify-center gap-2"
         >
           <Upload size={28} className="text-[color:var(--color-primary-soft)]" />
           <span className="text-body font-medium">Arraste ou clique para enviar</span>
@@ -76,7 +76,7 @@ export function PhotosStep() {
                 )}
                 <button
                   onClick={() => handleRemove(ref)}
-                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/70 backdrop-blur text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-[color:var(--color-surface)]/95 backdrop-blur text-[color:var(--color-text)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <X size={14} />
                 </button>
