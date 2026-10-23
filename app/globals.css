@@ -82,9 +82,6 @@
   --text-metric: 1.625rem;           /* 26px — o número que responde. */
   --text-metric--line-height: 1.1;
   --text-metric--letter-spacing: -0.02em;
-
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
 }
 
 html, body {
