@@ -61,19 +61,22 @@ export function SidebarBody({ onNavigate }: { onNavigate?: () => void } = {}) {
               href={it.href}
               onClick={onNavigate}
               className={cn(
-                "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm transition-all",
+                "flex items-center gap-3 px-3 py-2.5 text-label transition-colors",
                 active
-                  ? "bg-[color:var(--color-primary)] text-white shadow-[0_8px_24px_-8px_rgba(79,107,255,0.5)]"
-                  : "text-[color:var(--color-muted)] hover:text-white hover:bg-white/[0.04]",
+                  ? "bg-[color:var(--color-primary)] text-[color:var(--color-on-accent)] font-semibold"
+                  : "text-[color:var(--color-sidebar-muted)] hover:text-[color:var(--color-sidebar-text)] hover:bg-white/[0.06]",
               )}
             >
               <span className="relative shrink-0">
                 <it.icon size={17} />
                 {"dot" in it && it.dot && (
-                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[color:var(--color-danger)]" />
+                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[color:var(--color-warning)]" />
                 )}
               </span>
               <span className="truncate flex-1">{it.label}</span>
+              {/* A seta marca onde você está — é o sinal do mockup, e some
+                  quando o item não é o ativo. */}
+              {active && <span aria-hidden className="shrink-0">→</span>}
               {badge !== undefined && (
                 <span
                   className={cn(
@@ -160,7 +163,21 @@ export function Sidebar() {
   // nav+promo abrem via botão no `MobileMenuDrawer`. `hidden lg:flex` evita
   // duplicar layout em telas pequenas.
   return (
-    <aside className="premium-card p-4 hidden lg:flex flex-col gap-5 lg:h-full">
+    // A barra fica preta no tema claro — é assim no mockup, e é o contraste que
+    // dá a leitura de pista: faixa escura à esquerda, papel à direita. Por isso
+    // ela não usa `premium-card`, que agora é papel.
+    <aside className="p-4 hidden lg:flex flex-col gap-5 lg:h-full bg-[color:var(--color-sidebar)]">
+      {/* Logotipo: nome em condensada itálica, "360" em bloco vermelho. É a
+          primeira coisa da barra no mockup. */}
+      <Link
+        href="/dashboard"
+        aria-label="Reparo360 — ir para o dashboard"
+        className="inline-flex items-baseline self-start text-[22px] leading-none"
+        style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 800 }}
+      >
+        <span className="text-[color:var(--color-sidebar-text)]">REPARO</span>
+        <span className="ml-[.12em] bg-[color:var(--color-primary)] px-[.2em] text-[color:var(--color-on-accent)]">360</span>
+      </Link>
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard"

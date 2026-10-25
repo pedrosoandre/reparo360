@@ -194,23 +194,32 @@ export function PartsOverview({
     <div className="premium-card p-3 sm:p-4 min-w-0 lg:h-full lg:flex lg:flex-col lg:min-h-0">
       {/* Toolbar do topo só no desktop. No mobile o "Iniciar orçamento" vive
          abaixo do 3D — ver bloco `lg:hidden` mais adiante. */}
-      <div className="hidden lg:flex items-center justify-between mb-2 gap-2 flex-wrap">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setEditorState({ mode: "create" })}
-            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 hover:bg-[color:var(--color-primary)]/25 px-4 py-2 text-sm font-semibold text-[color:var(--color-text)] transition"
-          >
-            <Plus size={16} /> Iniciar orçamento
-          </button>
-          <button
-            onClick={handleReset}
-            title="Limpa seleção (peça ativa, categoria, cor) — mantém os danos"
-            className="inline-flex items-center gap-1 rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] px-2.5 py-1 text-[11px] font-medium text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition"
-          >
-            <RotateCcw size={11} /> Reiniciar orçamento
-          </button>
+      {/* Cabeçalho da página. A tela não tinha título nenhum — o mockup abre
+          com o caminho em mono, o nome em condensada itálica e uma régua
+          grossa por baixo, que é o que separa cabeçalho de conteúdo nesta
+          identidade (não há sombra nem card para fazer isso). */}
+      <div className="hidden lg:block mb-3">
+        <p className="text-meta uppercase tracking-[0.1em] text-[color:var(--color-muted)]" style={{ fontFamily: "var(--font-mono)" }}>
+          Orçamento {vehicle ? `· ${vehicle.brand} ${vehicle.model}` : ""} · Rascunho
+        </p>
+        <div className="mt-1 flex items-end justify-between gap-3 flex-wrap border-b-[3px] border-[color:var(--color-text)] pb-2.5">
+          <h1 className="text-[34px] leading-none">Avaliação de danos</h1>
+          <div className="flex items-center gap-2 pb-0.5">
+            <button
+              onClick={handleReset}
+              title="Limpa seleção (peça ativa, categoria, cor) — mantém os danos"
+              className="inline-flex items-center gap-1.5 border border-[color:var(--color-text)] bg-transparent hover:bg-[color:var(--color-text)] hover:text-[color:var(--color-bg)] px-3 py-2 text-label font-medium text-[color:var(--color-text)] transition-colors"
+            >
+              <RotateCcw size={13} /> Reiniciar orçamento
+            </button>
+            <button
+              onClick={() => setEditorState({ mode: "create" })}
+              className="inline-flex items-center gap-2 bg-[color:var(--color-text)] hover:bg-black px-4 py-2 text-label font-semibold text-[color:var(--color-bg)] transition-colors"
+            >
+              <Plus size={15} /> Iniciar orçamento
+            </button>
+          </div>
         </div>
-        <h2 className="text-sm font-semibold text-[color:var(--color-muted)]">Informações do dano</h2>
       </div>
 
       {/* Visualizador + lista de peças abaixo */}
@@ -270,7 +279,9 @@ export function PartsOverview({
         </div>
 
         {/* Métricas + Detalhes dos danos */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mb-3 shrink-0">
+        {/* Régua de métricas: no mockup as quatro células são coladas, com
+            divisória de 1,5px, e não cards soltos. O contorno é o que agrupa. */}
+        <div className="grid grid-cols-2 md:grid-cols-4 mb-4 shrink-0 border-[1.5px] border-[color:var(--color-text)] divide-x-[1.5px] divide-y-[1.5px] md:divide-y-0 divide-[color:var(--color-text)]">
           <MetricCard
             title="Local do acidente"
             icon={<MapPin size={22} />}
@@ -452,20 +463,20 @@ function MetricCard({
   // 4,90:1 e passa na AA, enquanto branco dá 4,29 e reprova no rótulo de 14px.
   const surface =
     tone === "accent"
-      ? "border-transparent bg-[color:var(--color-primary)]"
-      : "bg-[color:var(--color-surface-2)] border-[color:var(--color-border)]";
+      ? "bg-[color:var(--color-primary)]"
+      : "bg-[color:var(--color-surface)]";
 
   return (
     <Tag
       {...(interactive ? { onClick, type: "button" as const } : {})}
       className={[
-        "relative isolate overflow-hidden rounded-2xl border p-3 text-left",
+        "relative isolate overflow-hidden p-3 text-left",
         // Altura mínima igual nos quatro: é o que faz a grade ler como grade.
         // `justify-between` ancora o rótulo embaixo mesmo quando o valor quebra.
         "flex min-h-[76px] flex-col justify-between",
         surface,
         interactive
-          ? "transition-colors hover:border-[color:var(--color-border-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-primary-glow)]"
+          ? "transition-colors hover:bg-[color:var(--color-surface-3)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-primary-glow)]"
           : "",
       ].join(" ")}
     >

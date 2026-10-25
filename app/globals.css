@@ -3,7 +3,12 @@
    das regras do Tailwind quando o arquivo é inlinado, e o Turbopack recusa. */
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,800;1,800&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
-@import "../identidade-pit-lane.css";
+/* `layer(base)` não é detalhe: o arquivo de marca traz regras de elemento sem
+   camada (`a { color: ... }`, `body { ... }`), e CSS sem camada vence CSS em
+   camada. Sem isto, aquele `a {}` sobrescrevia a cor de TODO link do app,
+   qualquer que fosse a classe do Tailwind — os itens da barra lateral ficavam
+   pretos sobre preto mesmo com a classe correta aplicada. */
+@import "../identidade-pit-lane.css" layer(base);
 
 /* Identidade "Pit Lane", variante escura.
  *
