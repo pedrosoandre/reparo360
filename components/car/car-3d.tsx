@@ -552,13 +552,31 @@ export function Car3D({
         </div>
       )}
 
+      {/* Estado do giro, no canto de cima. No mockup é "• GIRANDO · 24s/volta":
+          diz o que está acontecendo e a que ritmo, em vez de deixar o
+          movimento sem explicação. */}
+      {interactive && (
+        <span
+          className="absolute top-3 left-3 z-10 inline-flex items-center gap-2 bg-[color:var(--color-text)] px-2.5 py-1 text-meta uppercase tracking-[0.08em] text-[color:var(--color-bg)]"
+          style={{ fontFamily: "var(--font-mono)" }}
+        >
+          <span
+            aria-hidden
+            className="inline-block h-1.5 w-1.5"
+            style={{ background: spinning ? "var(--color-primary)" : "var(--color-muted)" }}
+          />
+          {spinning ? `Girando · ${TURNTABLE_SECONDS}s/volta` : "Parado"}
+        </span>
+      )}
+
       {interactive && hoodAvailable && (
         <button
           onClick={toggleHood}
           aria-pressed={hoodOpen}
-          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 h-8 px-3.5 rounded-full bg-[color:var(--color-surface)]/90 backdrop-blur border border-[color:var(--color-border-strong)] text-[color:var(--color-text)] hover:text-[color:var(--color-text)] hover:bg-[color:var(--color-surface)]/95 transition-colors text-xs font-medium flex items-center gap-1.5"
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 h-9 px-4 bg-[color:var(--color-text)] text-[color:var(--color-bg)] hover:bg-black transition-colors text-label font-semibold uppercase tracking-[0.04em] flex items-center gap-1.5"
+          style={{ fontFamily: "var(--font-display)", fontStyle: "italic" }}
         >
-          <Wrench size={13} />
+          <Wrench size={14} />
           {hoodOpen ? "Fechar capô" : "Abrir capô"}
         </button>
       )}

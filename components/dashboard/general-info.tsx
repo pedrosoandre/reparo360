@@ -92,12 +92,14 @@ export function VehiclePickerCard({ vehicle, onSelectVehicle }: VehiclePickerCar
 
   return (
     <aside className="premium-card p-4 sm:p-5 flex flex-col gap-4">
-      {/* Cabeçalho — pill azul só no mobile pra bater com o CTA "Iniciar orçamento" */}
-      <div className="flex items-center justify-between">
-        <h3 className="font-semibold lg:p-0 lg:bg-transparent lg:border-0 lg:rounded-none lg:text-base inline-flex items-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 px-4 py-2 text-sm text-[color:var(--color-text)]">
-          Escolha seu carro
-        </h3>
-      </div>
+      {/* Rótulo de seção: mono, caixa alta, pequeno. No mockup a coluna
+          direita é marcada assim — a pílula vermelha competia com o CTA. */}
+      <h3
+        className="text-meta uppercase tracking-[0.1em] text-[color:var(--color-muted)]"
+        style={{ fontFamily: "var(--font-mono)" }}
+      >
+        Escolha seu carro
+      </h3>
 
       {/* Info + troca de veículo */}
       <div className="relative">
@@ -365,11 +367,12 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
       {/* Fotos */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-title font-semibold">
+          <h4
+            className="text-meta uppercase tracking-[0.1em] text-[color:var(--color-muted)]"
+            style={{ fontFamily: "var(--font-mono)" }}
+          >
             Fotos dos danos{" "}
-            <span className="tabular text-[color:var(--color-muted)] text-label font-normal">
-              ({damagePhotos.length})
-            </span>
+            <span className="tabular text-[color:var(--color-text)]">({damagePhotos.length})</span>
           </h4>
         </div>
         {damagePhotos.length === 0 ? (

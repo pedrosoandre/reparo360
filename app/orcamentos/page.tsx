@@ -5,29 +5,16 @@ import Link from "next/link";
 import { Receipt, Filter, ChevronRight, Trash2 } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { EmptyState } from "@/components/ui/empty-state";
+import { StatusBadge, STATUS_LABEL } from "@/components/ui/status-badge";
 import { useCurrentUser } from "@/stores/auth-store";
 import { useBudgetsStore } from "@/stores/budgets-store";
 import { formatBRL, formatDate, cn } from "@/lib/utils";
 import type { BudgetStatus } from "@/types";
 import { confirmDialog } from "@/stores/confirm-store";
 
-const STATUS_LABEL: Record<BudgetStatus, string> = {
-  draft: "Rascunho",
-  sent: "Enviado",
-  reviewing: "Em análise",
-  approved: "Aprovado",
-  rejected: "Recusado",
-  completed: "Concluído",
-};
-
-const STATUS_STYLES: Record<BudgetStatus, string> = {
-  draft: "bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)]",
-  sent: "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary-glow)]",
-  reviewing: "bg-yellow-500/15 text-yellow-300",
-  approved: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
-  rejected: "bg-[color:var(--color-danger)]/15 text-[color:var(--color-danger)]",
-  completed: "bg-emerald-500/15 text-emerald-300",
-};
+/* Rótulo e cor do status moram em components/ui/status-badge.tsx: eram
+   duplicados aqui e no detalhe, com textos diferentes para o mesmo estado
+   ("Enviado" numa tela, "Enviado à oficina" na outra). */
 
 const FILTERS: { key: BudgetStatus | "all"; label: string }[] = [
   { key: "all", label: "Todos" },
@@ -126,14 +113,7 @@ export default function OrcamentosPage() {
                   </div>
                   <div className="text-right shrink-0 mr-2">
                     <p className="tabular text-body font-semibold">{formatBRL(b.total)}</p>
-                    <span
-                      className={cn(
-                        "inline-block mt-1 text-meta font-semibold uppercase tracking-[0.08em] px-2 py-0.5 rounded",
-                        STATUS_STYLES[b.status],
-                      )}
-                    >
-                      {STATUS_LABEL[b.status]}
-                    </span>
+                    <StatusBadge status={b.status} className="mt-1" />
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
                     <Link

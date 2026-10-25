@@ -23,6 +23,7 @@ import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { SendWorkshopModal } from "@/components/budget/send-workshop-modal";
 import { OficinasInline } from "@/components/budget/oficinas-inline";
 import { MobileActionBar } from "@/components/ui/mobile-action-bar";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useCurrentUser } from "@/stores/auth-store";
 import { EXTRA_CATALOG, useBudgetsStore } from "@/stores/budgets-store";
 import { downloadBudgetPDF } from "@/lib/budget-pdf";
@@ -34,23 +35,9 @@ import { usePhotoUrls } from "@/lib/use-photo-urls";
 import type { BudgetStatus } from "@/types";
 import { confirmDialog } from "@/stores/confirm-store";
 
-const STATUS_LABEL: Record<BudgetStatus, string> = {
-  draft: "Rascunho",
-  sent: "Enviado",
-  reviewing: "Em análise",
-  approved: "Aprovado",
-  rejected: "Recusado",
-  completed: "Concluído",
-};
-
-const STATUS_COLOR: Record<BudgetStatus, string> = {
-  draft: "bg-[color:var(--color-surface-3)] text-[color:var(--color-muted)]",
-  sent: "bg-[color:var(--color-primary)]/15 text-[color:var(--color-primary-glow)]",
-  reviewing: "bg-yellow-500/15 text-yellow-300",
-  approved: "bg-[color:var(--color-success)]/15 text-[color:var(--color-success)]",
-  rejected: "bg-[color:var(--color-danger)]/15 text-[color:var(--color-danger)]",
-  completed: "bg-emerald-500/15 text-emerald-300",
-};
+/* Rótulo e cor do status saíram daqui para components/ui/status-badge.tsx:
+   estavam duplicados nesta tela e na lista, e divergiam — o mesmo estado era
+   "Enviado" aqui e "Enviado à oficina" lá. */
 
 /** Confiança abaixo disso vira alerta amarelo. */
 const LOW_CONFIDENCE_THRESHOLD = 40;
@@ -157,11 +144,7 @@ export default function BudgetDetailPage() {
           >
             <ChevronLeft size={13} /> Voltar ao dashboard
           </Link>
-          <span
-            className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-meta font-semibold uppercase tracking-[0.08em] ${STATUS_COLOR[budget.status]}`}
-          >
-            {STATUS_LABEL[budget.status]}
-          </span>
+          <StatusBadge status={budget.status} />
         </div>
 
         {/* HEADER — código, veículo, total dominante, aviso de confiança */}

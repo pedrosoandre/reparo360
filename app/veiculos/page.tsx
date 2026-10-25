@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Car, Plus, Trash2, Check } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { EmptyState } from "@/components/ui/empty-state";
+import { Plate } from "@/components/ui/plate";
 import { VehiclePickerModal } from "@/components/dashboard/vehicle-picker-modal";
 import { useCurrentUser } from "@/stores/auth-store";
 import { useVehiclesStore } from "@/stores/vehicles-store";
@@ -90,12 +91,15 @@ export default function VeiculosPage() {
                 >
                   <div className="flex items-start justify-between">
                     <div className="min-w-0">
-                      <p className="font-semibold text-sm truncate">
+                      <p className="font-semibold text-body truncate">
                         {v.brand} {v.model}
                       </p>
-                      <p className="text-[11px] text-[color:var(--color-muted)] uppercase tracking-wider mt-0.5">
+                      <p className="text-meta text-[color:var(--color-muted)] uppercase tracking-[0.08em] mt-0.5" style={{ fontFamily: "var(--font-mono)" }}>
                         {v.year} · {CATEGORY_LABELS[v.category as VehicleCategory] ?? v.category}
                       </p>
+                      {/* A placa é o que identifica o carro para quem trabalha
+                          com ele — aparece como placa de verdade, não texto. */}
+                      {v.plate && <Plate value={v.plate} className="mt-2" />}
                     </div>
                     {active && (
                       <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[color:var(--color-primary-glow)]">
