@@ -130,46 +130,6 @@ export function Sidebar() {
         <span className="ml-[.12em] bg-[color:var(--color-primary)] px-[.2em] text-[color:var(--color-on-accent)]">360</span>
       </Link>
       <SidebarBody />
-
-      {/* Perfil no rodapé da barra, como no mockup: a navegação vem primeiro,
-          e quem você é fecha a coluna. `mt-auto` empurra para baixo. */}
-      <div className="mt-auto">
-      <div className="flex items-center gap-3">
-        <Link
-          href="/dashboard"
-          title="Voltar ao dashboard"
-          aria-label="Voltar ao dashboard"
-          className="flex items-center gap-3 min-w-0 flex-1 group"
-        >
-          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-slate-500 to-slate-800 border border-white/10 group-hover:border-white/30 transition-colors flex items-center justify-center font-semibold text-white shrink-0 text-sm">
-            {initials}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-medium text-sm truncate group-hover:text-white transition-colors">
-              {displayName}
-            </p>
-            <p className="text-[11px] mt-1 text-[color:var(--color-muted)] flex items-center gap-1">
-              <MapPin size={11} className="shrink-0" />
-              <span className="truncate">
-                {user?.city ? (
-                  <span className="text-white font-medium">{user.city}</span>
-                ) : (
-                  <span className="italic">Sem cidade</span>
-                )}
-              </span>
-            </p>
-          </div>
-        </Link>
-        <Link
-          href="/configuracoes"
-          title="Editar perfil"
-          aria-label="Editar perfil"
-          className="w-8 h-8 rounded-full bg-white/[0.04] hover:bg-white/[0.1] text-[color:var(--color-muted)] hover:text-white transition-colors flex items-center justify-center shrink-0"
-        >
-          <Settings size={14} />
-        </Link>
-      </div>
-      </div>
     </aside>
   );
 }

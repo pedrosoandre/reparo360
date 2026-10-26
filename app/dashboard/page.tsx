@@ -9,7 +9,7 @@ import { VehiclePickerModal } from "@/components/dashboard/vehicle-picker-modal"
 import { useAuthStore, useAuthHydrated, useCurrentUser } from "@/stores/auth-store";
 import { useVehiclesStore } from "@/stores/vehicles-store";
 import type { Vehicle } from "@/types";
-import type { SelectedVehicle } from "@/lib/vehicles";
+import { VEHICLE_CATALOG, type SelectedVehicle } from "@/lib/vehicles";
 import { assetUrl } from "@/lib/assets";
 
 export default function DashboardPage() {
@@ -41,6 +41,23 @@ export default function DashboardPage() {
       setActive(activeVehicle.id);
     }
   }, [activeVehicle, activeVehicleId, setActive]);
+
+  // Primeira visita: semeia um veículo genérico para o dashboard abrir pronto,
+  // sem passar pela tela de escolha. É neutro de propósito — não sugere marca.
+  useEffect(() => {
+    if (!hydrated || !user || vehicles.length > 0) return;
+    const padrao = VEHICLE_CATALOG.find(
+      (v) => v.brand === "Genérico" && v.model === "Compacto",
+    );
+    if (!padrao) return;
+    addVehicle(user.id, {
+      brand: padrao.brand,
+      model: padrao.model,
+      year: padrao.years[padrao.years.length - 1],
+      glb: padrao.glb,
+      category: padrao.category,
+    });
+  }, [hydrated, user, vehicles.length, addVehicle]);
 
   function handlePickNew(v: SelectedVehicle) {
     if (!user) return;
@@ -80,10 +97,14 @@ export default function DashboardPage() {
     );
   }
 
+  // Sem veículo o app mostrava a tela de escolher carro antes do dashboard.
+  // Agora entra direto: semeia um genérico e o usuário troca pelo "Escolha seu
+  // carro" da coluna direita, que já faz isso. Quem chega vê o produto
+  // funcionando em vez de um formulário.
   if (!activeVehicle) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-[color:var(--color-surface)] to-[color:var(--color-surface)]">
-        <VehiclePickerModal onPick={handlePickNew} />
+      <div className="min-h-screen bg-[color:var(--color-bg)] flex items-center justify-center">
+        <div className="h-10 w-10 animate-spin border-2 border-[color:var(--color-border-strong)] border-t-[color:var(--color-primary)]" />
       </div>
     );
   }
@@ -92,7 +113,10 @@ export default function DashboardPage() {
     <div className="lg:h-screen lg:overflow-hidden flex flex-col">
       <MobileProfileHeader />
       <div className="flex-1 min-h-0 w-full p-2 sm:p-3 md:p-4 bg-gradient-to-b from-[color:var(--color-surface)] to-[color:var(--color-surface)]">
-        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr_320px] xl:grid-cols-[260px_1fr_340px] lg:grid-rows-[auto_1fr] gap-3 sm:gap-4 lg:h-full lg:min-h-0">
+        {/* Colunas laterais enxugadas (240→208, 320→288) para o carro ganhar
+            largura: a do meio é a única que cresce, e o viewer é `w-full`
+            dentro dela. No celular nada muda — continua em coluna única. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[208px_1fr_288px] xl:grid-cols-[224px_1fr_308px] lg:grid-rows-[auto_1fr] gap-3 sm:gap-4 lg:h-full lg:min-h-0">
           <div className="order-1 lg:order-none lg:col-start-3 lg:row-start-1">
             <VehiclePickerCard
               vehicle={activeVehicle}
