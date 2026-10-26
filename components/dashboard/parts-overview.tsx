@@ -460,9 +460,9 @@ function MetricCard({
   const interactive = typeof onClick === "function";
   const Tag = interactive ? "button" : "div";
 
-  // Texto preto sobre o vermelho de largada, como manda a identidade
-  // (`--r360-on-accent`). Não é só obediência à marca: preto sobre #E23B2E dá
-  // 4,90:1 e passa na AA, enquanto branco dá 4,29 e reprova no rótulo de 14px.
+  // Texto claro sobre o vermelho de largada, via `--color-on-accent`. Com o
+  // vermelho fechado em #C9241B a conta virou: claro dá 5,4:1 e passa na AA,
+  // preto dá 3,8:1 e reprova no rótulo de 14px — era o contrário no #E23B2E.
   const surface =
     tone === "accent"
       ? "bg-[color:var(--color-primary)]"
@@ -805,8 +805,8 @@ function MapTexture() {
         <path d="M 70 -10 L 66 110" />
         <path d="M 130 -10 L 136 110" />
       </g>
-      <circle cx="108" cy="50" r="3" fill="#E23B2E" />
-      <circle cx="108" cy="50" r="7" fill="#E23B2E" opacity="0.25" />
+      <circle cx="108" cy="50" r="3" fill="#C9241B" />
+      <circle cx="108" cy="50" r="7" fill="#C9241B" opacity="0.25" />
     </svg>
   );
 }
