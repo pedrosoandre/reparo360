@@ -15,7 +15,6 @@ import {
   Search,
   Send,
   FileEdit,
-  Eraser,
   Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -347,24 +346,6 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
     toast(`Rascunho salvo (${draft.code}).`, "success");
   }
 
-  async function handleClearAll() {
-    if (damages.length === 0 && !bodyColor) {
-      toast("Nada pra apagar — o dashboard já está limpo.");
-      return;
-    }
-    const ok = await confirmDialog({
-      message:
-        damages.length > 0
-          ? `Apagar todos os ${damages.length} dano(s) deste veículo e resetar a cor?`
-          : "Resetar a cor da pintura?",
-      confirmLabel: damages.length > 0 ? "Apagar" : "Resetar",
-      danger: damages.length > 0,
-    });
-    if (!ok) return;
-    clearDamagesForVehicle(vehicle.id);
-    onResetPaint?.();
-  }
-
   return (
     <>
     <aside className="premium-card p-4 sm:p-5 flex flex-col gap-4 lg:h-full lg:min-h-0 lg:overflow-y-auto">
@@ -453,14 +434,8 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
 
       <div className="flex-1" />
 
+      {/* "Apagar tudo" saiu daqui: o "Reiniciar orçamento" do topo faz isso. */}
       <div className="flex flex-col gap-2">
-        <button
-          onClick={handleClearAll}
-          className="w-full h-11 lg:h-9 rounded-xl bg-transparent hover:bg-[color:var(--color-danger)]/10 border border-[color:var(--color-border)] hover:border-[color:var(--color-danger)]/30 text-[color:var(--color-muted)] hover:text-[color:var(--color-danger)] font-medium text-meta lg:text-[11px] transition-colors flex items-center justify-center gap-1.5"
-        >
-          <Eraser size={12} />
-          Apagar tudo (mantém o veículo)
-        </button>
         <button
           onClick={handleSaveDraft}
           className="w-full h-11 lg:h-10 rounded-2xl bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] text-[color:var(--color-text)] font-medium text-xs transition-colors flex items-center justify-center gap-1.5"

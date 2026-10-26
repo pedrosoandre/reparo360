@@ -105,6 +105,7 @@ export function PartsOverview({
   const updateDamage = useDamagesStore((s) => s.updateDamage);
   const removeDamage = useDamagesStore((s) => s.removeDamage);
   const toggleResolved = useDamagesStore((s) => s.toggleResolved);
+  const clearForVehicle = useDamagesStore((s) => s.clearForVehicle);
   const addPhotosToDamage = useDamagesStore((s) => s.addPhotos);
   const setDamageNotes = useDamagesStore((s) => s.setNotes);
   const [lightbox, setLightbox] = useState<{ photos: string[]; index: number } | null>(null);
@@ -155,12 +156,26 @@ export function PartsOverview({
     if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [activePart, damageByPart]);
 
-  function handleReset() {
-    // Só limpa a seleção atual (peça ativa, categoria, cor) — não apaga danos
+  // Recomeça o orçamento deste carro: apaga os danos (com confirmação), tira a
+  // seleção e volta a cor original. Antes só limpava a seleção, e quem apagava
+  // de verdade era um "Apagar tudo" separado na coluna da direita.
+  async function handleReset() {
+    if (damages.length > 0) {
+      const ok = await confirmDialog({
+        message: `Apagar ${damages.length === 1 ? "o dano" : `os ${damages.length} danos`} deste carro e começar o orçamento de novo?`,
+        confirmLabel: "Apagar e recomeçar",
+        danger: true,
+      });
+      if (!ok) return;
+      clearForVehicle(vehicleId);
+      toast("Orçamento reiniciado.", "success");
+    }
     setActivePart(null);
     setSelectedGroup("parts_overview");
     onBodyColorChange(null);
   }
+  // Sem dano ainda o botão começa o orçamento; depois disso, cada clique é mais um dano.
+  const addLabel = damages.length === 0 ? "Iniciar orçamento" : "Adicionar dano";
 
   const [totalMain, totalCents] = splitBRLCents(formatBRL(summary.total));
 
@@ -207,7 +222,7 @@ export function PartsOverview({
           <div className="flex items-center gap-2 pb-0.5">
             <button
               onClick={handleReset}
-              title="Limpa seleção (peça ativa, categoria, cor) — mantém os danos"
+              title="Apaga os danos deste carro e volta a cor original"
               className="inline-flex items-center gap-1.5 border border-[color:var(--color-text)] bg-transparent hover:bg-[color:var(--color-text)] hover:text-[color:var(--color-bg)] px-3 py-2 text-label font-medium text-[color:var(--color-text)] transition-colors"
             >
               <RotateCcw size={13} /> Reiniciar orçamento
@@ -216,7 +231,7 @@ export function PartsOverview({
               onClick={() => setEditorState({ mode: "create" })}
               className="inline-flex items-center gap-2 bg-[color:var(--color-text)] hover:bg-black px-4 py-2 text-label font-semibold text-[color:var(--color-bg)] transition-colors"
             >
-              <Plus size={15} /> Iniciar orçamento
+              <Plus size={15} /> {addLabel}
             </button>
           </div>
         </div>
@@ -268,11 +283,11 @@ export function PartsOverview({
             onClick={() => setEditorState({ mode: "create" })}
             className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-[color:var(--color-primary)]/15 border border-[color:var(--color-primary)]/40 hover:bg-[color:var(--color-primary)]/25 px-4 py-2.5 text-sm font-semibold text-[color:var(--color-text)] transition"
           >
-            <Plus size={16} /> Iniciar orçamento
+            <Plus size={16} /> {addLabel}
           </button>
           <button
             onClick={handleReset}
-            title="Reiniciar orçamento — mantém os danos"
+            title="Reiniciar orçamento — apaga os danos deste carro"
             aria-label="Reiniciar orçamento"
             className="inline-flex items-center justify-center rounded-full bg-[color:var(--color-surface)] hover:bg-[color:var(--color-surface-3)] border border-[color:var(--color-border)] w-10 h-10 text-[color:var(--color-muted)] hover:text-[color:var(--color-text)] transition shrink-0"
           >
