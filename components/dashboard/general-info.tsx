@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { usePhotoUrls } from "@/lib/use-photo-urls";
+import { filesToPhotos } from "@/lib/photos";
 import { useFipe } from "@/lib/use-fipe";
 import {
   ChevronRight,
@@ -15,6 +16,7 @@ import {
   Send,
   FileEdit,
   Eraser,
+  Plus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -290,6 +292,8 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
   const saveDraft = useBudgetsStore((s) => s.saveDraft);
   const pushNotification = useNotificationsStore((s) => s.push);
 
+  const addPhotos = useDamagesStore((s) => s.addPhotos);
+  const fotoInputRef = useRef<HTMLInputElement>(null);
   const damagePhotos = damages.flatMap((d) => d.photos);
   const photoUrls = usePhotoUrls(damagePhotos.slice(0, 8));
 
@@ -375,34 +379,76 @@ export function DamagesActionsCard({ vehicle, bodyColor, onResetPaint }: Damages
             <span className="tabular text-[color:var(--color-text)]">({damagePhotos.length})</span>
           </h4>
         </div>
-        {damagePhotos.length === 0 ? (
-          <p className="text-label text-[color:var(--color-muted)]">
-            Envie fotos ao cadastrar um dano.
-          </p>
-        ) : (
-          <div className="grid grid-cols-4 gap-2">
-            {damagePhotos.slice(0, 8).map((ref, i) => (
-              <button
-                key={ref}
-                onClick={() => setLightboxIndex(i)}
-                className="relative aspect-square group"
-                aria-label={`Abrir foto ${i + 1} do dano`}
+        {/* Grade de três espaços, como no mockup: o que já tem foto mostra a
+            miniatura com o número; o que está vazio mostra o tracejado com o
+            "+". Mostrar os espaços vazios é o que convida a adicionar — a
+            frase "envie fotos ao cadastrar um dano" não convidava nada. */}
+        <div className="grid grid-cols-3 gap-2">
+          {damagePhotos.slice(0, 8).map((ref, i) => (
+            <button
+              key={ref}
+              onClick={() => setLightboxIndex(i)}
+              className="relative aspect-square border border-[color:var(--color-border)] hover:border-[color:var(--color-text)] transition-colors overflow-hidden"
+              aria-label={`Abrir foto ${i + 1} do dano`}
+            >
+              {photoUrls[i] ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={photoUrls[i]!} alt="" className="h-full w-full object-cover" loading="lazy" />
+              ) : (
+                <span className="block h-full w-full animate-pulse bg-[color:var(--color-surface-3)]" />
+              )}
+              <span
+                aria-hidden
+                className="absolute left-0 top-0 px-1.5 py-0.5 text-meta font-semibold text-[color:var(--color-on-accent)] bg-[color:var(--color-primary)]"
+                style={{ fontFamily: "var(--font-mono)" }}
               >
-                {photoUrls[i] ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={photoUrls[i]!}
-                    alt="Foto do dano"
-                    className="w-full h-full object-cover rounded-lg border border-[color:var(--color-border)] group-hover:border-[color:var(--color-border-strong)] transition-colors"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full rounded-lg border border-[color:var(--color-border)] bg-[color:var(--color-surface)] animate-pulse" />
-                )}
+                {i + 1}
+              </span>
+            </button>
+          ))}
+
+          {/* Completa até três espaços. O último é o botão de adicionar. */}
+          {Array.from({ length: Math.max(0, 3 - Math.min(damagePhotos.length, 8)) }).map((_, i, arr) =>
+            i === arr.length - 1 ? (
+              <button
+                key="add"
+                onClick={() => fotoInputRef.current?.click()}
+                disabled={damages.length === 0}
+                title={
+                  damages.length === 0
+                    ? "Cadastre um dano antes de anexar fotos"
+                    : "Adicionar fotos do dano"
+                }
+                aria-label="Adicionar fotos do dano"
+                className="flex aspect-square items-center justify-center border border-dashed border-[color:var(--color-border-strong)] text-[color:var(--color-muted)] transition-colors hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:border-[color:var(--color-border-strong)] disabled:hover:text-[color:var(--color-muted)]"
+              >
+                <Plus size={20} />
               </button>
-            ))}
-          </div>
-        )}
+            ) : (
+              <span
+                key={`vazio-${i}`}
+                aria-hidden
+                className="aspect-square border border-dashed border-[color:var(--color-border)]"
+              />
+            ),
+          )}
+        </div>
+
+        <input
+          ref={fotoInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          hidden
+          onChange={async (e) => {
+            const alvo = damages[0];
+            if (!alvo) return;
+            const { refs, rejected } = await filesToPhotos(e.target.files, 8 - damagePhotos.length);
+            if (refs.length) addPhotos(alvo.id, refs);
+            for (const r of rejected) toast(`${r.name}: ${r.reason}`);
+            e.target.value = "";
+          }}
+        />
       </div>
 
       <div className="flex-1" />
