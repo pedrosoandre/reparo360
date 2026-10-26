@@ -54,9 +54,20 @@ console.log(`deploy: checando ${sha}…`);
 run("npm", ["run", "check"], { cwd: ROOT });
 
 // 3. Cópia limpa do commit + os assets que o catálogo dele usa.
-const dir = path.join(tmpdir(), `reparo360-deploy-${sha}`);
+// Sobra de uma tentativa anterior precisa sair, mas no Windows o OneDrive e o
+// antivírus seguram arquivos e o apagar falha com EPERM. Antes isso derrubava
+// o deploy inteiro. Agora tenta remover das três formas e, se ainda assim a
+// pasta resistir, publica de uma pasta nova em vez de desistir.
+const base = path.join(tmpdir(), `reparo360-deploy-${sha}`);
+let dir = base;
+try { git("worktree", "prune"); } catch { /* sem worktrees registrados */ }
 if (existsSync(dir)) {
-  try { git("worktree", "remove", "--force", dir); } catch { rmSync(dir, { recursive: true, force: true }); }
+  try { git("worktree", "remove", "--force", dir); } catch { /* não era worktree */ }
+  if (existsSync(dir)) try { rmSync(dir, { recursive: true, force: true }); } catch { /* travado */ }
+  if (existsSync(dir)) {
+    dir = `${base}-${Date.now().toString(36)}`;
+    console.warn(`deploy: ${base} está travado pelo sistema; usando ${dir}.`);
+  }
 }
 git("worktree", "add", "--detach", dir, "HEAD");
 
