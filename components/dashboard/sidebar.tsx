@@ -27,9 +27,44 @@ const NAV = [
   { icon: Car, label: "Meus veículos", href: "/veiculos" },
   { icon: Trash2, label: "Rascunhos", href: "/rascunhos" },
   { icon: FileText, label: "Meus documentos", href: "/documentos" },
-  { icon: ShieldCheck, label: "Seguro válido", href: "/seguro", dot: true },
   { icon: Settings, label: "Configurações", href: "/configuracoes" },
 ];
+
+/**
+ * O seguro saiu da lista de navegação. Como mais um item cinza entre sete ele
+ * era a linha menos visível da barra — um rótulo apagado com um ponto de 6px.
+ * Virou bloco cheio em amarelo-bandeira: é o maior contraste que existe contra
+ * o preto da sidebar (11:1), e o amarelo é a cor que a identidade já reserva
+ * pra sinalização, então ele chama atenção sem disputar com o vermelho, que
+ * marca onde você está.
+ */
+function SeguroDestaque({ onNavigate }: { onNavigate?: () => void }) {
+  return (
+    <Link
+      href="/seguro"
+      onClick={onNavigate}
+      className="group flex items-center gap-2.5 px-3 py-3 bg-[color:var(--color-warning)] text-[#141414] transition-opacity hover:opacity-90"
+    >
+      <ShieldCheck size={20} strokeWidth={2.5} className="shrink-0" />
+      <span className="flex-1 min-w-0">
+        <span
+          // Na coluna de 208px o rótulo quebra em "SEGURO / VÁLIDO". Entrelinha
+          // travada pra as duas linhas lerem como um carimbo, não como sobra.
+          className="block text-[15px] leading-[1.05] uppercase"
+          style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 800 }}
+        >
+          Seguro válido
+        </span>
+        <span className="block mt-1 text-[11px] leading-none font-semibold opacity-75">
+          Ver cobertura
+        </span>
+      </span>
+      <span aria-hidden className="shrink-0 transition-transform group-hover:translate-x-0.5">
+        →
+      </span>
+    </Link>
+  );
+}
 
 /**
  * Nav + promos, reusado no `Sidebar` (desktop) e no `MobileMenuDrawer`. Fecha
@@ -67,12 +102,7 @@ export function SidebarBody({ onNavigate }: { onNavigate?: () => void } = {}) {
                   : "text-[color:var(--color-sidebar-muted)] hover:text-[color:var(--color-sidebar-text)] hover:bg-white/[0.06]",
               )}
             >
-              <span className="relative shrink-0">
-                <it.icon size={17} />
-                {"dot" in it && it.dot && (
-                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[color:var(--color-warning)]" />
-                )}
-              </span>
+              <it.icon size={17} className="shrink-0" />
               <span className="truncate flex-1">{it.label}</span>
               {/* A seta marca onde você está — é o sinal do mockup, e some
                   quando o item não é o ativo. */}
@@ -94,6 +124,7 @@ export function SidebarBody({ onNavigate }: { onNavigate?: () => void } = {}) {
         })}
       </nav>
 
+      <SeguroDestaque onNavigate={onNavigate} />
     </>
   );
 }
