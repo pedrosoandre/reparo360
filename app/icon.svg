@@ -2,7 +2,7 @@
   <title>Reparo360</title>
   <!-- Quadrado vermelho de largada, canto reto: a marca é reconhecível na aba
        mesmo em 16px, onde desenho fino some. -->
-  <rect width="32" height="32" fill="#E23B2E"/>
+  <rect width="32" height="32" fill="#C9241B"/>
   <!-- Chave de boca: cabo na diagonal e cabeça aberta em cima, desenhada com
        traço grosso porque em 16px linha fina vira cinza. -->
   <g fill="none" stroke="#FBFAF7" stroke-width="4.2" stroke-linecap="round">

@@ -11,7 +11,7 @@
 
 :root {
   /* Marca */
-  --r360-largada: #E23B2E;   /* ação principal, dano, valor */
+  --r360-largada: #C9241B;   /* ação principal, dano, valor */
   --r360-pneu: #141414;      /* texto, sidebar, texto sobre vermelho/amarelo */
   --r360-bandeira: #F2C230;  /* alerta, área de dano, promo */
   --r360-verde: #2F8F4E;     /* aprovado, seguro válido */
@@ -103,7 +103,7 @@ a:hover { color: var(--r360-largada); }
   border-radius: var(--r360-radius); font: 600 14px var(--r360-font-ui); white-space: nowrap; cursor: pointer; border: var(--r360-border) solid transparent; }
 .r360-btn-primary { background: var(--r360-largada); color: var(--r360-on-accent);
   font-family: var(--r360-font-display); font-weight: 800; font-style: italic; font-size: 20px; text-transform: uppercase; }
-.r360-btn-primary:hover { background: #C92F23; }
+.r360-btn-primary:hover { background: #A31C14; }
 .r360-btn-dark { background: var(--r360-text); color: var(--r360-bg); }
 .r360-btn-outline { background: transparent; color: var(--r360-text); border-color: var(--r360-text); }
 .r360-btn-outline:hover { background: var(--r360-text); color: var(--r360-bg); }
@@ -156,12 +156,12 @@ a:hover { color: var(--r360-largada); }
 
 /* Car3D.tsx — constantes equivalentes:
    const GOLD = "#F2C230"; const GOLD_GLOW = "#F2C230";
-   const DANGER = "#E23B2E"; const NEUTRAL = "#8C8A85"; const PRIMARY = "#141414";
+   const DANGER = "#C9241B"; const NEUTRAL = "#8C8A85"; const PRIMARY = "#141414";
    <color attach="background" args={["#E4E1D9"]} />  (escuro: "#05060A")
 
    Tailwind v4 (opcional) — em globals.css:
    @theme {
-     --color-largada: #E23B2E; --color-pneu: #141414; --color-bandeira: #F2C230;
+     --color-largada: #C9241B; --color-pneu: #141414; --color-bandeira: #F2C230;
      --color-papel: #FBFAF7; --color-asfalto: #EFEDE8; --color-linha: #D9D5CC; --color-box: #5C5A55;
      --font-display: "Barlow Condensed", sans-serif; --font-sans: "Barlow", sans-serif; --font-mono: "IBM Plex Mono", monospace;
      --radius-*: initial;

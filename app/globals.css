@@ -32,14 +32,15 @@
   --color-border: #D9D5CC;
   --color-border-strong: #8C8A85;
 
-  --color-primary: #E23B2E;          /* largada */
-  --color-primary-hover: #C92F23;
+  --color-primary: #C9241B;          /* largada */
+  --color-primary-hover: #A31C14;
   --color-primary-soft: rgba(226,59,46,0.10);
-  --color-primary-glow: #C92F23;     /* como texto sobre papel: o tom fechado lê melhor */
+  --color-primary-glow: #A31C14;     /* como texto sobre papel: o tom fechado lê melhor */
 
   /* Texto sobre o vermelho. O arquivo de marca diz #141414, mas os mockups
      usam claro — e é o mockup que é o alvo. Fica registrado que claro sobre
-     #E23B2E dá 4,2:1: passa em texto grande, raspa no rótulo pequeno. */
+     #C9241B dá 5,4:1 — com o vermelho mais fechado o rótulo pequeno passa
+     em AA, o que o #E23B2E anterior não fazia (4,3:1). */
   --color-on-accent: #FBFAF7;
 
   --color-text: #141414;             /* pneu */
@@ -54,7 +55,7 @@
 
   --color-success: #2F8F4E;
   --color-warning: #F2C230;          /* bandeira */
-  --color-danger: #E23B2E;
+  --color-danger: #C9241B;
 
   --font-sans: "Barlow", system-ui, -apple-system, sans-serif;
   --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;

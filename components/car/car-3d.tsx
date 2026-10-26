@@ -27,7 +27,7 @@ import { VIEWER_BOX } from "./viewer-box";
    dano, e o neutro é a areia do asfalto, não um cinza-azulado. */
 const GOLD = "#F2C230";
 const GOLD_GLOW = "#F2C230";
-const DANGER = "#E23B2E";
+const DANGER = "#C9241B";
 const NEUTRAL = "#8C8A85";
 const PRIMARY = "#141414";
 const CAR_URL = assetUrl(`/cars/${VEHICLE_CATALOG[0].glb}`);
