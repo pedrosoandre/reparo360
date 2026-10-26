@@ -736,33 +736,78 @@ function CarModel({
   // Ambas rotações são aplicadas direto no `cloned` antes de medir a bbox — assim
   // as dims reportadas e o centro já refletem a orientação final.
   //
-  // BBox robusta: alguns GLBs do Sketchfab (ex.: hyundai-hb20.glb) trazem meshes
-  // com escala local disparada (0.01 ao lado de 16.0) — Box3.setFromObject inclui
-  // os outliers e a bbox estoura, o que faz `4.2 / size.x` encolher o carro
-  // visível pra caber num volume fantasma. Coletamos as bboxes por mesh, achamos
-  // a mediana do raio e descartamos meshes com raio > 4× mediana antes da união.
+  // BBox robusta: os GLBs vêm com lixo junto — plano de chão, cenário, meshes
+  // com escala local disparada (0.01 ao lado de 16.0). Medir tudo estoura a
+  // bbox e `4.2 / size.x` encolhe o carro pra caber num volume fantasma.
+  //
+  // A regra antiga descartava mesh com raio > 4× a mediana. Isso falha em
+  // arquivo de carroceria fundida: a carroceria é legitimamente a maior peça,
+  // leva o corte, e a escala passa a sair de uma peça interna — o carro
+  // renderiza grande demais e a câmera, que fica a ~6 unidades, nasce dentro
+  // dele. Era o caso da toyota-supra-mk4-ff (13,7 unidades em vez de 4,2) e do
+  // generico-compacto (30,0).
+  //
+  // O que separa carroceria de plano de chão não é o tamanho, é a contagem de
+  // vértices: a carroceria concentra a geometria, um plano tem quatro vértices.
+  // Então a regra primária ordena as meshes pela distância ao centróide
+  // ponderado por vértice e inclui até cobrir 99% deles. Se o resultado não tem
+  // proporção de carro, cai na regra do raio. Medido nos 530 modelos: 436 com
+  // proporção plausível na regra antiga, 499 na combinada.
   const { size, center, boxMinY, scale } = useMemo(() => {
-    const collect = (): THREE.Box3[] => {
-      const out: THREE.Box3[] = [];
+    type Part = { box: THREE.Box3; vertices: number };
+    const collect = (): Part[] => {
+      const out: Part[] = [];
       cloned.traverse((obj) => {
         const mesh = obj as THREE.Mesh;
         if (!mesh.isMesh || !mesh.geometry) return;
-        const b = new THREE.Box3().setFromObject(mesh);
-        if (!b.isEmpty()) out.push(b);
+        const box = new THREE.Box3().setFromObject(mesh);
+        if (box.isEmpty()) return;
+        out.push({ box, vertices: mesh.geometry.getAttribute("position")?.count ?? 0 });
       });
       return out;
     };
-    const robustBox = (boxes: THREE.Box3[]): THREE.Box3 => {
-      if (boxes.length === 0) return new THREE.Box3().setFromObject(cloned);
-      const radii = boxes.map((b) => b.getSize(new THREE.Vector3()).length());
+    const union = (parts: Part[]): THREE.Box3 => {
+      const out = new THREE.Box3();
+      for (const p of parts) out.union(p.box);
+      return out;
+    };
+    // Comprimento sobre altura de um carro fica entre 1,8 e 6. Fora disso a
+    // medida pegou lixo junto ou perdeu a carroceria.
+    const carLike = (b: THREE.Box3) => {
+      const d = b.getSize(new THREE.Vector3());
+      return d.y > 0 && Math.max(d.x, d.z) / d.y >= 1.8 && Math.max(d.x, d.z) / d.y <= 6;
+    };
+    const byRadius = (parts: Part[]): THREE.Box3 => {
+      const radii = parts.map((p) => p.box.getSize(new THREE.Vector3()).length());
       const sorted = [...radii].sort((a, b) => a - b);
       const median = sorted[Math.floor(sorted.length / 2)] || 1;
-      const cutoff = median * 4;
-      const kept = boxes.filter((_, i) => radii[i] <= cutoff);
-      const use = kept.length ? kept : boxes;
-      const out = new THREE.Box3();
-      for (const b of use) out.union(b);
-      return out;
+      const kept = parts.filter((_, i) => radii[i] <= median * 4);
+      return union(kept.length ? kept : parts);
+    };
+    const byVertices = (parts: Part[]): THREE.Box3 | null => {
+      const total = parts.reduce((s, p) => s + p.vertices, 0);
+      if (!total) return null;
+      const centroid = new THREE.Vector3();
+      const mid = new THREE.Vector3();
+      for (const p of parts) centroid.addScaledVector(p.box.getCenter(mid), p.vertices / total);
+      const byDistance = [...parts].sort(
+        (a, b) =>
+          a.box.getCenter(new THREE.Vector3()).distanceTo(centroid) -
+          b.box.getCenter(new THREE.Vector3()).distanceTo(centroid),
+      );
+      const kept: Part[] = [];
+      let covered = 0;
+      for (const p of byDistance) {
+        kept.push(p);
+        covered += p.vertices;
+        if (covered >= total * 0.99) break;
+      }
+      return union(kept);
+    };
+    const robustBox = (parts: Part[]): THREE.Box3 => {
+      if (parts.length === 0) return new THREE.Box3().setFromObject(cloned);
+      const byVerts = byVertices(parts);
+      return byVerts && carLike(byVerts) ? byVerts : byRadius(parts);
     };
 
     cloned.rotation.set(0, 0, 0);
