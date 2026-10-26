@@ -225,7 +225,9 @@ export function PartsOverview({
       {/* Visualizador + lista de peças abaixo */}
       <div className="min-w-0 lg:flex lg:flex-col lg:flex-1 lg:min-h-0">
         {/* Visualizador do carro */}
-        <div className="relative rounded-2xl overflow-hidden border border-[color:var(--color-border)] mb-2 shrink-0 bg-[#05060A]">
+        {/* `--r360-viewer-bg` da identidade. O #05060A era do mundo escuro e
+            aparecia como retângulo preto enquanto o modelo carrega. */}
+        <div className="relative overflow-hidden border border-[color:var(--color-border)] mb-3 shrink-0 bg-[#E4E1D9]">
           <Car3DLazy
             modelUrl={glbUrl}
             bodyColor={bodyColor}
@@ -483,11 +485,15 @@ function MetricCard({
       {backdrop}
       <div className="relative">
         {value !== undefined ? (
+          // `.r360-stat strong` da identidade: condensada itálica, caixa alta,
+          // 26px. Estava em monoespaçada — é o que mais destoava do mockup,
+          // porque o número é o que o olho pega primeiro na régua.
           <p
             className={
-              "tabular text-metric font-semibold " +
+              "tabular text-[26px] leading-none uppercase " +
               (tone === "accent" ? "text-[color:var(--color-on-accent)]" : "text-[color:var(--color-text)]")
             }
+            style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 800 }}
           >
             {value}
           </p>
@@ -497,7 +503,9 @@ function MetricCard({
       </div>
       <p
         className={
-          "relative text-label " +
+          // `.r360-stat span`: 12px, peso médio, apagado. O rótulo é legenda
+          // do número, não concorre com ele.
+          "relative text-meta font-medium " +
           (tone === "accent" ? "text-[color:var(--color-on-accent)]" : "text-[color:var(--color-muted)]")
         }
       >

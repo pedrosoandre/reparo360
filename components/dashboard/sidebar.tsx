@@ -178,6 +178,11 @@ export function Sidebar() {
         <span className="text-[color:var(--color-sidebar-text)]">REPARO</span>
         <span className="ml-[.12em] bg-[color:var(--color-primary)] px-[.2em] text-[color:var(--color-on-accent)]">360</span>
       </Link>
+      <SidebarBody />
+
+      {/* Perfil no rodapé da barra, como no mockup: a navegação vem primeiro,
+          e quem você é fecha a coluna. `mt-auto` empurra para baixo. */}
+      <div className="mt-auto">
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard"
@@ -213,8 +218,7 @@ export function Sidebar() {
           <Settings size={14} />
         </Link>
       </div>
-
-      <SidebarBody />
+      </div>
     </aside>
   );
 }
